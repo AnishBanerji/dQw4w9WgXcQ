@@ -3,6 +3,8 @@ services:
     image: mongo:4.2.5
   myapp:
     build: .
+    volumes:
+      - ./logs:/logs
     environment:
       WAIT_HOSTS: mongo:27017
       DOCKER_DB: true
