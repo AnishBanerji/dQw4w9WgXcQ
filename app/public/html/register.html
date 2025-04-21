@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(ellipse at bottom, #0d0d0d 0%, #000000 100%);
+      font-family: 'Arial', sans-serif;
+      color: white;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-box {
+      background-color: #1a1a1a;
+      border: 5px solid #888;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #333;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 300px;
+    }
+
+    .form-box h1 {
+      text-align: center;
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .form-box input {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #888;
+      border-radius: 8px;
+      background-color: #2a2a2a;
+      color: white;
+    }
+
+    .form-box button, .form-box a.button-link {
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #444;
+      color: white;
+      border: 3px solid #888;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+    }
+
+    .form-box button:hover, .form-box a.button-link:hover {
+      background-color: #666;
+    }
+
+    .form-box .link {
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .form-box .link a {
+      color: #87ceeb;
+      text-decoration: none;
+    }
+
+    .form-box .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <form class="form-box" method="POST" action="/register">
+    <h1>Register</h1>
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+    <button type="submit">Register</button>
+    <a href="/" class="button-link">Back to Home</a>
+    <div class="link">
+      Already have an account? <a href="/login">Log in here</a>
+    </div>
+  </form>
+</body>
+</html>
