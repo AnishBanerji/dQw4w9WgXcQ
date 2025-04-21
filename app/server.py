@@ -11,5 +11,23 @@ def log_req():
     method = request.method
     path = request.path
     log = f'[{dt}]: {ip} {method} {path} \n'
-    with open('./logs/server.log','a') as f:
+    with open('./logs/requests.log','a') as f:
         f.write(log)
+
+@app.route('/',methods=['GET'])
+def load_home():
+    filepath = "public/html/home.html"
+    return send_file(filepath,mimetype='text/html')
+
+@app.route('/login',methods=['GET'])
+def load_login():
+    filepath = "public/html/login.html"
+    return send_file(filepath,mimetype="text/html")
+
+@app.route('/register',methods=["GET"])
+def load_register():
+    filepath = "public/html/register.html"
+    return send_file(filepath,mimetype='text/html')
+
+if __name__ == "__main__":
+    app.run()
