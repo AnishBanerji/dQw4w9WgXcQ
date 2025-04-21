@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Lobby</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(
+          ellipse at bottom,
+          #0d0d0d 0%,
+          #000000 100%
+        );
+        font-family: "Arial", sans-serif;
+        color: white;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .form-box {
+        background-color: #1a1a1a;
+        border: 5px solid #888;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px #333;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 300px;
+      }
+
+      .form-box h1 {
+        text-align: center;
+        margin: 0;
+        font-size: 32px;
+      }
+
+      .form-box input,
+      .form-box select {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #888;
+        border-radius: 8px;
+        background-color: #2a2a2a;
+        color: white;
+      }
+
+      .form-box button,
+      .form-box a.button-link {
+        padding: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #444;
+        color: white;
+        border: 3px solid #888;
+        border-radius: 10px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+      }
+
+      .form-box button:hover,
+      .form-box a.button-link:hover {
+        background-color: #666;
+      }
+
+      .form-box .link {
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .form-box .link a {
+        color: #87ceeb;
+        text-decoration: none;
+      }
+
+      .form-box .link a:hover {
+        text-decoration: underline;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const createLobbyForm = document.querySelector("form");
+
+        createLobbyForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const lobbyName = document.querySelector(
+            'input[name="lobby_name"]'
+          ).value;
+          const lobbyType = document.querySelector(
+            'select[name="lobby_type"]'
+          ).value;
+          const passcode =
+            document.querySelector('input[name="passcode"]')?.value || "";
+          const maxPlayers = document.querySelector(
+            'input[name="max_players"]'
+          ).value;
+
+          const formData = new URLSearchParams();
+          formData.append("lobby_name", lobbyName);
+          formData.append("lobby_type", lobbyType);
+          formData.append("passcode", passcode);
+          formData.append("max_players", maxPlayers);
+
+          try {
+            const response = await fetch("/create-lobby", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: formData,
+              credentials: "include",
+            });
+
+            const data = await response.json();
+            if (data.lobbyId) {
+              window.location.href = `/lobby.html?lobbyId=${data.lobbyId}`;
+            } else {
+              alert("Failed to create lobby.");
+            }
+          } catch (err) {
+            console.error("Error submitting form:", err);
+            alert("An error occurred.");
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <form class="form-box" method="POST" action="/create-lobby">
+      <h1>Create Lobby</h1>
+
+      <input type="text" name="lobby_name" placeholder="Lobby Name" required />
+
+      <select
+        name="lobby_type"
+        id="lobbyType"
+        onchange="togglePasscodeField()"
+        required
+      >
+        <option value="">Select Lobby Type</option>
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+
+      <div id="passcode-field" style="display: none">
+        <input
+          type="text"
+          name="passcode"
+          pattern="\d{6}"
+          maxlength="6"
+          placeholder="6-digit Passcode"
+        />
+      </div>
+
+      <input
+        type="number"
+        name="max_players"
+        placeholder="Max Players"
+        min="3"
+        max="8"
+        required
+      />
+
+      <button type="submit">Create</button>
+      <a href="/" class="button-link">Back to Home</a>
+    </form>
+  </body>
+</html>
