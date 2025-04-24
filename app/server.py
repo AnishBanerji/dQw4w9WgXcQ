@@ -41,12 +41,12 @@ def load_register():
     filepath = "public/html/register.html"
     return send_file(filepath,mimetype='text/html')
 
-@app.route('/create-lobby',methods=['GET'])
-def load_createLobby():
-    filepath = "public/html/create-lobby.html"
+@app.route('/create-room',methods=['GET'])
+def load_createRoom():
+    filepath = "public/html/create_room.html"
     return send_file(filepath,mimetype='text/html')
 
-@app.route('/create-lobby', methods=['POST'])
+@app.route('/create-room', methods=['POST'])
 def make_room():
     a=create_room(request)
     return jsonify(a),200
