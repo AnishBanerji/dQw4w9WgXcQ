@@ -1,33 +1,35 @@
 import uuid
+from player import *
+rooms={}
 
-public_lobbies={}
-private_lobbies={}
-
-class Lobby:
+class Room:
     def __init__(self):
-        self.lobbyName = ""
-        self.lobbyType = ""
+        self.roomName = ""
+        self.roomType = ""
         self.passcode = ""
         self.maxPlayers = 0
-        self.LobbyId=''
+        self.roomId=''
+        self.players=[]
+        self.currPlayers=0
+        self.host=None
 
-    def setLobbyId(self,LobbyId:str):
-        self.LobbyId = LobbyId
+    def setRoomId(self,roomId:str):
+        self.roomId = roomId
 
-    def getLobbyId(self):
-        return self.LobbyId
+    def getRoomId(self):
+        return self.roomId
     
-    def setLobbyName(self, lobbyName: str):
-        self.lobbyName = lobbyName
+    def setRoomName(self, roomName: str):
+        self.roomName = roomName
 
-    def getLobbyName(self):
-        return self.lobbyName
+    def getRoomName(self):
+        return self.roomName
 
-    def setLobbyType(self, lobbyType: str):
-        self.lobbyType = lobbyType
+    def setRoomType(self, roomType: str):
+        self.roomType = roomType
 
-    def getLobbyType(self):
-        return self.lobbyType
+    def getRoomType(self):
+        return self.roomType
 
     def setPasscode(self, passcode: str):
         self.passcode = passcode
@@ -40,26 +42,65 @@ class Lobby:
 
     def getMaxPlayers(self):
         return self.maxPlayers
+    
+    def addNewPlayer(self, player:Player):
+        self.players.append(player)
+        self.currPlayers += 1
+    
+    def getPlayers(self):
+        return self.players
+    
+    def getCurrentNumberPlayers(self):
+        return self.currPlayers
+    
+    def getHost(self):
+        return self.host
+    
+    def setHost(self, player:Player):
+        self.host = player
 
 def create_room(request):
-    lobby = Lobby()
-    lobbyId = str(uuid.uuid4())
-    lobbyName = request.form.get('lobby_name')
-    lobbyType = request.form.get('lobby_type')
+    room = Room()
+    roomId = str(uuid.uuid4())
+
+    auth_token = request.headers.get('auth_token')
+    user = find_auth(auth_token) #Assuming find_auth is a helper method which returns the user from the database who has the specified auth_token
+    player = Player()
+    player.id = user.get('id')
+    player.name = user.get('name')
+
+    roomName = request.form.get('room_name')
+    roomType = request.form.get('room_type')
     maxPlayers = request.form.get('max_players')
     maxPlayers = int(maxPlayers)
-    lobby.setLobbyId(lobbyId)
-    lobby.setLobbyName(lobbyName)
-    lobby.setLobbyType(lobbyType)
-    lobby.setMaxPlayers(maxPlayers)
-    if lobbyType == 'private':
+
+    room.setRoomId(roomId)
+    room.setRoomName(roomName)
+    room.setRoomType(roomType)
+    room.setMaxPlayers(maxPlayers)
+    room.addNewPlayer(player)
+    room.setHost(player)
+
+    if roomType == 'private':
         passcode = request.form.get('passcode')
-        lobby.setPasscode(passcode)
-        private_lobbies[lobbyId]=lobby
+        room.setPasscode(passcode)
     else:
-        lobby.setPasscode(None)
-        public_lobbies[lobbyId]=lobby
-    ret = {'lobbyId':lobbyId}
+        room.setPasscode(None)
+    rooms[roomId]=room
+    ret = {'roomId':roomId}
 
     return ret
+
+def find_rooms():
+    roomIds = []
+    for j in rooms.keys():
+        roomIds.append(j)
+    ret = {'allLobbies':roomIds}
+    return ret
+
+def getRoomInfo(roomId:str):
+    room = rooms[roomId]
+    return room.__dict__
+
+
 

@@ -15,5 +15,6 @@ else:
 
 db = mongo_client["amogus"]
 
+users = db['users']
 # add collections below in the format
 # <collection name> = db["<key>"]

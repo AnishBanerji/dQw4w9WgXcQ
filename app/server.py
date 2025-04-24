@@ -51,5 +51,22 @@ def make_room():
     a=create_room(request)
     return jsonify(a),200
 
+@app.route('/all_rooms',methods=['GET'])
+def get_all_rooms():
+    a = find_rooms()
+    return jsonify(a),200
+
+@app.route('/find-room',methods=['GET'])
+def load_findRoom():
+    filepath = "public/html/find_room.html"
+    return send_file(filepath,mimetype='text/html')
+
+@app.route('/room-info',methods=['GET'])
+def getRoomInfo():
+    roomId = request.args.get('roomId')
+    a = getRoomInfo(roomId)
+    return jsonify(a),200
+
+
 if __name__ == "__main__":
     app.run()
