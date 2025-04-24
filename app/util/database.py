@@ -14,6 +14,7 @@ else:
     mongo_client = MongoClient("localhost")
 
 db = mongo_client["amogus"]
+userDB = db["user"]
 
 # add collections below in the format
 # <collection name> = db["<key>"]
