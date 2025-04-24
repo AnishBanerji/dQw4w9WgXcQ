@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file, abort, jsonify
 import datetime
 from util.room import *
+from util.authentication import *
 
 app = Flask(__name__)
 
@@ -67,6 +68,11 @@ def getRoomInfo():
     a = getRoomInfo(roomId)
     return jsonify(a),200
 
+
+#Make routes for backend functions
+
+app.add_url_rule('/register','register',register,methods=['POST'])
+app.add_url_rule('/login','login',login,methods=['POST'])
 
 if __name__ == "__main__":
     app.run()

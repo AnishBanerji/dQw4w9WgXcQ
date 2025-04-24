@@ -1,5 +1,6 @@
 import uuid
 from player import *
+from authentication import *
 rooms={}
 
 class Room:
@@ -64,7 +65,7 @@ def create_room(request):
     roomId = str(uuid.uuid4())
 
     auth_token = request.headers.get('auth_token')
-    user = find_auth(auth_token) #Assuming find_auth is a helper method which returns the user from the database who has the specified auth_token
+    user = find_auth(auth_token) 
     player = Player()
     player.id = user.get('id')
     player.name = user.get('name')
