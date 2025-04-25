@@ -1,7 +1,7 @@
 FROM python:3.8
 
-ENV HOME /root
-WORKDIR /root
+ENV HOME /root/app
+WORKDIR /root/app
 
 COPY ./requirements.txt ./requirements.txt
 COPY ./server.py ./server.py
