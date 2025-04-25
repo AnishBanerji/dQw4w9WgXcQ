@@ -1,0 +1,7 @@
+Flask
+pymongo
+datetime
+uuid
+bcrypt
+hashlib
+secrets
