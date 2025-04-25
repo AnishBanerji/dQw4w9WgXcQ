@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game UI Overlay</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      font-family: 'Arial', sans-serif;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: url('/static/img/map_placeholder.jpg') no-repeat center center;
+      background-size: cover;
+    }
+
+    .tasks-overlay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 12px 20px;
+      background: rgba(20, 20, 20, 0.8);
+      border: 3px solid #aaa;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .action-buttons {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .action-button {
+      position: relative;
+      width: 120px;
+      height: 60px;
+      background-color: #aa2222;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: 4px solid #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0.6;
+      cursor: not-allowed;
+      transition: opacity 0.2s ease;
+    }
+
+    .action-button.enabled {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    .action-button .fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      background-color: rgba(255, 255, 255, 0.3);
+      pointer-events: none;
+      transition: height 0.1s ease, opacity 0.1s ease;
+    }
+
+    .action-button.report {
+      background-color: #5555ff;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div class="tasks-overlay">
+      Tasks Remaining: <span id="tasks-count">3</span>
+    </div>
+
+    <div class="action-buttons">
+      <button id="taskkill-btn" class="action-button">
+        <span id="taskkill-label">Kill</span>
+        <div class="fill" id="taskkill-fill"></div>
+      </button>
+      <button id="report-btn" class="action-button report">Report</button>
+    </div>
+  </div>
+
+  <script>
+    let isImposter = false;
+    let killCooldown = false;
+    let taskInProgress = false;
+
+    function enableButton(id, enable) {
+      const btn = document.getElementById(id);
+      if (enable) {
+        btn.classList.add('enabled');
+        btn.disabled = false;
+        btn.style.cursor = 'pointer';
+      } else {
+        btn.classList.remove('enabled');
+        btn.disabled = true;
+        btn.style.cursor = 'not-allowed';
+      }
+    }
+
+    function updateButtonState() {
+      const label = document.getElementById("taskkill-label");
+      if (isImposter) {
+        label.textContent = "Kill";
+        enableButton("taskkill-btn", !killCooldown);
+      } else {
+        label.textContent = "Do Task";
+        enableButton("taskkill-btn", !taskInProgress);
+      }
+    }
+
+    function startCooldown(duration, callback) {
+      const fill = document.getElementById("taskkill-fill");
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 100 / (duration * 10);
+        fill.style.height = progress + "%";
+        fill.style.opacity = progress / 100;
+        if (progress >= 100) {
+          clearInterval(interval);
+          fill.style.height = "0%";
+          fill.style.opacity = 0;
+          callback();
+        }
+      }, 100);
+    }
+
+    document.getElementById("taskkill-btn").addEventListener("click", () => {
+      if (isImposter) {
+        if (!killCooldown) {
+          killCooldown = true;
+          updateButtonState();
+          startCooldown(10, () => {
+            killCooldown = false;
+            updateButtonState();
+          });
+        }
+      } else {
+        if (!taskInProgress) {
+          taskInProgress = true;
+          updateButtonState();
+          startCooldown(4, () => {
+            let count = parseInt(document.getElementById("tasks-count").textContent);
+            if (count > 0) {
+              document.getElementById("tasks-count").textContent = count - 1;
+            }
+            taskInProgress = false;
+            updateButtonState();
+          });
+        }
+      }
+    });
+
+    updateButtonState();
+  </script>
+</body>
+</html>

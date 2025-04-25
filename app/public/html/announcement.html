@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Game Status</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .status-text {
+      font-size: 64px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .subtext {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+
+    .blue {
+      color: #55aaff;
+    }
+
+    .red {
+      color: #ff5555;
+    }
+
+    .white {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="status" class="status-text"></div>
+  <div id="subtext" class="subtext"></div>
+
+  <script>
+    const mode = "bodyFound"
+    const role = "killer"
+    const killerName = "RedBean"
+    const votedOut = "GreenTea"
+    const bodyFound = "BlueBerry"
+    const meetingCalledBy = "YellowJacket"
+
+    const status = document.getElementById("status")
+    const subtext = document.getElementById("subtext")
+
+    if (mode === "role") {
+      status.textContent = role === "killer" ? "You are the Killer" : "You are a Crewmate"
+      status.classList.add(role === "killer" ? "red" : "blue")
+    } else if (mode === "win") {
+      const killerWon = role === "killer"
+      status.textContent = killerWon ? "Killers Win" : "Crewmates Win"
+      status.classList.add(killerWon ? "red" : "blue")
+      subtext.textContent = `The killer was ${killerName}`
+    } else if (mode === "eject") {
+      status.textContent = `${votedOut} was voted out`
+      status.classList.add("white")
+    } else if (mode === "tie") {
+      status.textContent = `No one was voted out`
+      status.classList.add("white")
+    } else if (mode === "meetingCalled") {
+      status.textContent = `${meetingCalledBy} called a meeting`
+      status.classList.add("white")
+    } else if (mode === "bodyFound") {
+      status.textContent = `A body was found by ${bodyFound}`
+      status.classList.add("red")
+    }
+  </script>
+
+</body>
+</html>

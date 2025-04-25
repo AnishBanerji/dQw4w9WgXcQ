@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meeting</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 200px;
+      gap: 20px;
+      padding: 40px;
+      flex: 3;
+    }
+
+    .player-button {
+      background-color: #222;
+      border: 2px solid #444;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .player-button:hover {
+      background-color: #333;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: gray;
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 10px;
+      border: 2px solid white;
+      position: relative;
+    }
+
+    .sound-indicator {
+      position: absolute;
+      bottom: -8px;
+      right: -8px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: lime;
+      display: none;
+    }
+
+    .nickname {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .vote-count {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid #444;
+      padding: 20px;
+    }
+
+    .chat-box {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid #444;
+      padding: 10px;
+      background-color: #111;
+      margin-bottom: 10px;
+    }
+
+    .chat-input {
+      display: flex;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 8px;
+      background-color: #222;
+      border: 1px solid #444;
+      color: white;
+    }
+
+    .chat-input button {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    #alert-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+      max-width: 90vw;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="alert-container"></div>
+
+  <div class="grid-container" id="players"></div>
+
+  <div class="chat-container">
+    <div class="chat-box" id="chatBox"></div>
+    <div class="chat-input">
+      <input type="text" id="chatInput">
+      <button onclick="sendChat()">Send</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script type="module">
+    import { alertManager } from '/static/alerts.js'
+    window.showAlert = (...args) => alertManager.newAlert(...args)
+  </script>
+
+  <script>
+    const socket = new WebSocket("ws://localhost:8000/ws")
+    let players = []
+    let myId = ""
+    let myVote = null
+
+    socket.onopen = () => {
+      socket.send(JSON.stringify({ type: "join_meeting" }))
+    }
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      if (data.type === "init") {
+        players = data.players
+        myId = data.id
+        myVote = data.votedFor
+        renderPlayers()
+      } else if (data.type === "update_votes") {
+        players = data.players
+        renderPlayers()
+      } else if (data.type === "chat") {
+        const chat = document.getElementById("chatBox")
+        const msg = document.createElement("div")
+        msg.textContent = data.message
+        chat.appendChild(msg)
+        chat.scrollTop = chat.scrollHeight
+      }
+    }
+
+    function renderPlayers() {
+      const container = document.getElementById("players")
+      container.innerHTML = ""
+      for (let i = 0; i < 8; i++) {
+        if (i < players.length) {
+          const p = players[i]
+          const btn = document.createElement("button")
+          btn.className = "player-button"
+          btn.onclick = () => voteFor(p.id)
+
+          const avatar = document.createElement("div")
+          avatar.className = "avatar"
+          if (p.profilePic) avatar.style.backgroundImage = `url('${p.profilePic}')`
+          else avatar.style.backgroundColor = p.color
+
+          const sound = document.createElement("div")
+          sound.className = "sound-indicator"
+          if (p.talking) sound.style.display = "block"
+          avatar.appendChild(sound)
+
+          const name = document.createElement("div")
+          name.className = "nickname"
+          name.textContent = p.nickname
+
+          const vote = document.createElement("div")
+          vote.className = "vote-count"
+          vote.textContent = `Votes: ${p.votes}`
+
+          btn.appendChild(avatar)
+          btn.appendChild(name)
+          btn.appendChild(vote)
+
+          container.appendChild(btn)
+        } else {
+          const empty = document.createElement("div")
+          container.appendChild(empty)
+        }
+      }
+    }
+
+    function voteFor(targetId) {
+      if (targetId === myVote) return
+      myVote = targetId
+      socket.send(JSON.stringify({ type: "vote", target: targetId }))
+    }
+
+    function sendChat() {
+      const input = document.getElementById("chatInput")
+      if (input.value.trim()) {
+        socket.send(JSON.stringify({ type: "chat", message: input.value }))
+        input.value = ""
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -99,15 +99,33 @@
     .hidden {
       display: none;
     }
+
+    .alert {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      display: none;
+    }
+    .alert.success {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .alert.error {
+      background-color: #f44336;
+      color: white;
+    }
   </style>
 </head>
 <body>
+  <div id="alert-container"></div>
+
   <div class="top-left">
     <a href="/">Back to Main Menu</a>
   </div>
 
   <div class="form-wrapper">
-    <form class="form-box" method="POST" action="/create-room">
+    <form class="form-box" method="POST" action="/create-room" onsubmit="handleSubmit(event)">
       <h1>Create Room</h1>
 
       <label for="room_name">Room Name</label>
@@ -139,6 +157,41 @@
       document.getElementById("password-label").classList.toggle("hidden", !isPrivate);
     }
     window.onload = togglePasswordField;
+
+    function handleSubmit(event) {
+      event.preventDefault();
+      const roomName = document.getElementById("room_name").value;
+      const maxPlayers = document.getElementById("max_players").value;
+      const visibility = document.getElementById("visibility").value;
+      const roomPassword = document.getElementById("room_password").value;
+
+      if (!roomName || maxPlayers < 2 || (visibility === "private" && !roomPassword)) {
+        showAlert("Please fill out all fields correctly.", "error");
+        return;
+      }
+
+      // Simulate room creation logic
+      if (roomName && maxPlayers >= 2) {
+        showAlert("Room created successfully!", "success");
+      } else {
+        showAlert("Error creating the room. Please try again.", "error");
+      }
+    }
+
+    function showAlert(message, type) {
+      const alertContainer = document.getElementById("alert-container");
+      const alert = document.createElement("div");
+
+      alert.className = `alert ${type}`;
+      alert.textContent = message;
+
+      alertContainer.appendChild(alert);
+      alert.style.display = "block";
+
+      setTimeout(() => {
+        alert.style.display = "none";
+      }, 3000);
+    }
   </script>
 </body>
 </html>
