@@ -1,177 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Find Room</title>
-  <style>
-    body {
-      background-color: black;
-      color: white;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Find Room</title>
+    <style>
+      body {
+        background-color: black;
+        color: white;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+      }
 
-    .top-bar {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-    }
+      .top-bar {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
 
-    .back-btn {
-      padding: 8px 16px;
-      background-color: gray;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
+      .back-btn {
+        padding: 8px 16px;
+        background-color: gray;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+      }
 
-    .room-list {
-      position: absolute;
-      top: 60px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 500px;
-      overflow-y: auto;
-      background-color: rgba(50, 50, 50, 0.8);
-      border: 3px solid gray;
-      border-radius: 10px;
-      padding: 10px;
-    }
+      .room-list {
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 500px;
+        overflow-y: auto;
+        background-color: rgba(50, 50, 50, 0.8);
+        border: 3px solid gray;
+        border-radius: 10px;
+        padding: 10px;
+      }
 
-    .room {
-      background-color: #222;
-      border: 2px solid gray;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
+      .room {
+        background-color: #222;
+        border: 2px solid gray;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
 
-    .room:hover {
-      background-color: #333;
-    }
+      .room:hover {
+        background-color: #333;
+      }
 
-    .popup {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 300px;
-      transform: translate(-50%, -50%);
-      background-color: #111;
-      border: 2px solid gray;
-      border-radius: 10px;
-      padding: 20px;
-      display: none;
-    }
+      .popup {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300px;
+        transform: translate(-50%, -50%);
+        background-color: #111;
+        border: 2px solid gray;
+        border-radius: 10px;
+        padding: 20px;
+        display: none;
+      }
 
-    .popup input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
+      .popup input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
 
-    .popup button {
-      padding: 8px 16px;
-      background-color: gray;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-    }
+      .popup button {
+        padding: 8px 16px;
+        background-color: gray;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+      }
 
-    #alert-container {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 1000;
-      max-width: 90vw;
-    }
-  </style>
-</head>
-<body>
+      #alert-container {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 1000;
+        max-width: 90vw;
+      }
+    </style>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  </head>
+  <body>
+    <div id="alert-container"></div>
 
-  <div id="alert-container"></div>
+    <div class="top-bar">
+      <button class="back-btn" onclick="location.href='/'">Back to Menu</button>
+    </div>
 
-  <div class="top-bar">
-    <button class="back-btn" onclick="location.href='/'">Back to Menu</button>
-  </div>
+    <div class="room-list" id="roomList"></div>
 
-  <div class="room-list" id="roomList"></div>
+    <div class="popup" id="passwordPopup">
+      <div>Enter Room Password:</div>
+      <input type="password" id="roomPasswordInput" />
+      <button onclick="submitPassword()">Join</button>
+    </div>
 
-  <div class="popup" id="passwordPopup">
-    <div>Enter Room Password:</div>
-    <input type="password" id="roomPasswordInput" />
-    <button onclick="submitPassword()">Join</button>
-  </div>
+    <script>
+      const socket = io();
 
-  <script>
-    const roomListEl = document.getElementById("roomList");
-    const passwordPopup = document.getElementById("passwordPopup");
-    const roomPasswordInput = document.getElementById("roomPasswordInput");
+      const roomListEl = document.getElementById("roomList");
+      const passwordPopup = document.getElementById("passwordPopup");
+      const roomPasswordInput = document.getElementById("roomPasswordInput");
 
-    let selectedRoomId = null;
+      let selectedRoomId = null;
 
-    const socket = new WebSocket("ws://" + window.location.host + "/ws/rooms");
+      socket.emit("find_rooms");
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      roomListEl.innerHTML = "";
+      socket.on("rooms_list", (data) => {
+        roomListEl.innerHTML = "";
 
-      data.rooms.forEach(room => {
-        const div = document.createElement("div");
-        div.className = "room";
-        div.innerHTML = `
-          <div>
-            <div><strong>${room.name}</strong></div>
-            <div>${room.players} player(s)</div>
-          </div>
-          <div>${room.private ? "🔒 Private" : "Public"}</div>
-        `;
-        div.onclick = () => {
-          if (room.private) {
-            selectedRoomId = room.id;
-            passwordPopup.style.display = "block";
-            roomPasswordInput.value = "";
-            roomPasswordInput.focus();
+        data.rooms.forEach((room) => {
+          const div = document.createElement("div");
+          div.className = "room";
+          div.innerHTML = `
+                <div>
+                  <div><strong>${room.roomName}</strong></div>
+                  <div>${room.currPlayers} player(s)</div>
+                </div>
+                <div>${
+                  room.roomType === "private" ? "🔒 Private" : "Public"
+                }</div>
+                <div>
+                  Host: ${room.host.name} </div>
+              `;
+          div.onclick = () => {
+            if (room.roomType === "private") {
+              selectedRoomId = room.roomId;
+              passwordPopup.style.display = "block";
+              roomPasswordInput.value = "";
+              roomPasswordInput.focus();
+            } else {
+              joinRoom(room.roomId);
+            }
+          };
+          roomListEl.appendChild(div);
+        });
+      });
+
+      function submitPassword() {
+        const password = roomPasswordInput.value;
+        joinRoom(selectedRoomId, password);
+        passwordPopup.style.display = "none";
+      }
+
+      function joinRoom(id, password = null) {
+        fetch(`/join_room?id=${id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        }).then((res) => {
+          if (res.ok) {
+            window.location.href = `/room/${id}`;
           } else {
-            joinRoom(room.id);
+            alert("Failed to join room.");
           }
-        };
-        roomListEl.appendChild(div);
-      });
-    };
-
-    function submitPassword() {
-      const password = roomPasswordInput.value;
-      joinRoom(selectedRoomId, password);
-      passwordPopup.style.display = "none";
-    }
-
-    function joinRoom(id, password = null) {
-      fetch(`/join_room?id=${id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password })
-      }).then(res => {
-        if (res.ok) {
-          window.location.href = `/room/${id}`;
-        } else {
-          alertManager.newAlert("Failed to join room.", "error");
-        }
-      });
-    }
-  </script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="/static/alerts.js"></script>
-</body>
+        });
+      }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/public/js/alerts.js"></script>
+  </body>
 </html>

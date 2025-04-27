@@ -1,10 +1,12 @@
 services:
   mongo:
     image: mongo:4.2.5
+    ports:
+      - "27017:27017"
   myapp:
     build: .
     volumes:
-      - ./logs:/logs
+      - ./logs:/app/logs
     environment:
       WAIT_HOSTS: mongo:27017
       DOCKER_DB: true

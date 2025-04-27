@@ -1,177 +1,199 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Login</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(ellipse at bottom, #0d0d0d 0%, #000000 100%);
-      font-family: 'Arial', sans-serif;
-      color: white;
-      height: 100vh;
-    }
-
-    .top-left {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-    }
-
-    .top-left a {
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: bold;
-      background-color: #444;
-      color: white;
-      border: 3px solid #888;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: background-color 0.2s ease;
-    }
-
-    .top-left a:hover {
-      background-color: #666;
-    }
-
-    .form-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-    }
-
-    .form-box {
-      background-color: #1a1a1a;
-      border: 5px solid #888;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 20px #333;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 320px;
-    }
-
-    .form-box h1 {
-      text-align: center;
-      margin: 0;
-      font-size: 28px;
-    }
-
-    .form-box input {
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #888;
-      border-radius: 8px;
-      background-color: #2a2a2a;
-      color: white;
-    }
-
-    .form-box label {
-      font-size: 16px;
-    }
-
-    .form-box button {
-      padding: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      background-color: #444;
-      color: white;
-      border: 3px solid #888;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    .form-box button:hover {
-      background-color: #666;
-    }
-
-    .form-box .small-link {
-      font-size: 13px;
-      text-align: center;
-    }
-
-    .form-box .small-link a {
-      color: #66aaff;
-      text-decoration: none;
-    }
-
-    .form-box .small-link a:hover {
-      text-decoration: underline;
-    }
-
-    .alert {
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-      font-size: 14px;
-      display: none;
-    }
-    .alert.success {
-      background-color: #4CAF50;
-      color: white;
-    }
-    .alert.error {
-      background-color: #f44336;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-  <div id="alert-container"></div>
-
-  <div class="top-left">
-    <a href="/">Back to Main Menu</a>
-  </div>
-
-  <div class="form-wrapper">
-    <form class="form-box" method="POST" action="/login" onsubmit="handleSubmit(event)">
-      <h1>Login</h1>
-
-      <label for="username">Username</label>
-      <input type="text" name="username" id="username" required>
-
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" required>
-
-      <button type="submit">Log In</button>
-
-      <div class="small-link">
-        No account? <a href="/register">Sign up here</a>
-      </div>
-    </form>
-  </div>
-
-  <script>
-    function handleSubmit(event) {
-      event.preventDefault();
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-
-      // Simulate a login attempt
-      if (username === "admin" && password === "password") {
-        showAlert("Login successful!", "success");
-      } else {
-        showAlert("Invalid username or password.", "error");
+  <head>
+    <title>Login</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(
+          ellipse at bottom,
+          #0d0d0d 0%,
+          #000000 100%
+        );
+        font-family: "Arial", sans-serif;
+        color: white;
+        height: 100vh;
       }
-    }
 
-    function showAlert(message, type) {
-      const alertContainer = document.getElementById("alert-container");
-      const alert = document.createElement("div");
+      .top-left {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
 
-      alert.className = `alert ${type}`;
-      alert.textContent = message;
+      .top-left a {
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: #444;
+        color: white;
+        border: 3px solid #888;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+      }
 
-      alertContainer.appendChild(alert);
-      alert.style.display = "block";
+      .top-left a:hover {
+        background-color: #666;
+      }
 
-      setTimeout(() => {
-        alert.style.display = "none";
-      }, 3000);
-    }
-  </script>
-</body>
+      .form-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+
+      .form-box {
+        background-color: #1a1a1a;
+        border: 5px solid #888;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px #333;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 320px;
+      }
+
+      .form-box h1 {
+        text-align: center;
+        margin: 0;
+        font-size: 28px;
+      }
+
+      .form-box input {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #888;
+        border-radius: 8px;
+        background-color: #2a2a2a;
+        color: white;
+      }
+
+      .form-box label {
+        font-size: 16px;
+      }
+
+      .form-box button {
+        padding: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #444;
+        color: white;
+        border: 3px solid #888;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .form-box button:hover {
+        background-color: #666;
+      }
+
+      .form-box .small-link {
+        font-size: 13px;
+        text-align: center;
+      }
+
+      .form-box .small-link a {
+        color: #66aaff;
+        text-decoration: none;
+      }
+
+      .form-box .small-link a:hover {
+        text-decoration: underline;
+      }
+
+      .alert {
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        display: none;
+      }
+      .alert.success {
+        background-color: #4caf50;
+        color: white;
+      }
+      .alert.error {
+        background-color: #f44336;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="alert-container"></div>
+
+    <div class="top-left">
+      <a href="/">Back to Main Menu</a>
+    </div>
+
+    <div class="form-wrapper">
+      <form class="form-box" id="loginForm">
+        <h1>Login</h1>
+
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" required />
+
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required />
+
+        <button type="submit">Log In</button>
+
+        <div class="small-link">
+          No account? <a href="/register">Sign up here</a>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const loginForm = document.getElementById("loginForm");
+
+      loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+
+          if (response.ok) {
+            // Login success
+            showAlert("Login successful!", "success");
+            setTimeout(() => {
+              window.location.href = "/"; // or wherever you want after login
+            }, 1000);
+          } else {
+            const errorData = await response.json();
+            showAlert(errorData.message || "Login failed.", "error");
+          }
+        } catch (error) {
+          showAlert("Error connecting to server.", "error");
+        }
+      });
+
+      function showAlert(message, type) {
+        const alertContainer = document.getElementById("alert-container");
+        const alert = document.createElement("div");
+
+        alert.className = `alert ${type}`;
+        alert.textContent = message;
+
+        alertContainer.appendChild(alert);
+        alert.style.display = "block";
+
+        setTimeout(() => {
+          alert.style.display = "none";
+          alertContainer.innerHTML = ""; // Clear old alerts
+        }, 3000);
+      }
+    </script>
+  </body>
 </html>

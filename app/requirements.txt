@@ -1,7 +1,5 @@
 Flask
 pymongo
-datetime
-uuid
 bcrypt
-hashlib
-secrets
+flask-socketio
+eventlet

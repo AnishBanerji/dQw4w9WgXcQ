@@ -1,108 +1,134 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Among Us - Home</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(ellipse at bottom, #0d0d0d 0%, #000000 100%);
-      font-family: 'Arial', sans-serif;
-      color: white;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  <head>
+    <title>Among Us - Home</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(
+          ellipse at bottom,
+          #0d0d0d 0%,
+          #000000 100%
+        );
+        font-family: "Arial", sans-serif;
+        color: white;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-    .top-right-buttons {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      gap: 10px;
-    }
+      .top-right-buttons {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+      }
 
-    .small-button {
-      padding: 6px 14px;
-      font-size: 14px;
-      background-color: #444;
-      color: white;
-      border: 2px solid #888;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+      .small-button {
+        padding: 6px 14px;
+        font-size: 14px;
+        background-color: #444;
+        color: white;
+        border: 2px solid #888;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
 
-    .small-button:hover {
-      background-color: #666;
-    }
+      .small-button:hover {
+        background-color: #666;
+      }
 
-    .menu-box {
-      background-color: #1a1a1a;
-      border: 5px solid #888;
-      padding: 40px;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      box-shadow: 0 0 20px #333;
-    }
+      .menu-box {
+        background-color: #1a1a1a;
+        border: 5px solid #888;
+        padding: 40px;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 0 20px #333;
+      }
 
-    .menu-box h1 {
-      margin: 0;
-      font-size: 36px;
-    }
+      .menu-box h1 {
+        margin: 0;
+        font-size: 36px;
+      }
 
-    .menu-button {
-      padding: 12px 30px;
-      font-size: 18px;
-      font-weight: bold;
-      background-color: #444;
-      color: white;
-      border: 3px solid #888;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+      .menu-button {
+        padding: 12px 30px;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #444;
+        color: white;
+        border: 3px solid #888;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
 
-    .menu-button:hover {
-      background-color: #666;
-    }
+      .menu-button:hover {
+        background-color: #666;
+      }
 
-    #alert-container {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 1000;
-      max-width: 90vw;
-    }
-  </style>
-</head>
-<body>
-  <div id="alert-container"></div>
+      #alert-container {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 1000;
+        max-width: 90vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="alert-container"></div>
 
-  <div class="top-right-buttons">
-    <button class="small-button" onclick="window.location.href='/login'">Login</button>
-    <button class="small-button" onclick="window.location.href='/register'">Register</button>
-  </div>
+    <div class="top-right-buttons">
+      <button class="small-button" onclick="window.location.href='/login'">
+        Login
+      </button>
+      <button class="small-button" onclick="window.location.href='/register'">
+        Register
+      </button>
+    </div>
 
-  <div class="menu-box">
-    <h1>Among Us</h1>
-    <button class="menu-button" onclick="showAlert('Joining feature coming soon!', 'info')">Find Room</button>
-    <button class="menu-button" onclick="showAlert('Lobby creation is under development!', 'warning')">Create Lobby</button>
-    <button class="menu-button" onclick="showAlert('Settings are not yet available.', 'error')">Settings</button>
-  </div>
+    <div class="menu-box">
+      <h1>Among Us</h1>
+      <button
+        class="menu-button"
+        onclick="window.location.href='/find-room'"
+        onclick="showAlert('Joining feature coming soon!', 'info')"
+      >
+        Find Room
+      </button>
+      <button
+        class="menu-button"
+        onclick="window.location.href='/create-room'"
+        onclick="showAlert('Lobby creation is under development!', 'warning')"
+      >
+        Create Room
+      </button>
+      <button
+        class="menu-button"
+        onclick="window.location.href='/settings'"
+        onclick="showAlert('Settings are not yet available.', 'error')"
+      >
+        Settings
+      </button>
+    </div>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script type="module">
-    import { alertManager } from '/static/alerts.js'
-    window.showAlert = (...args) => alertManager.newAlert(...args)
-  </script>
-</body>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="module">
+      import { alertManager } from "./public/js/alerts.js";
+      window.showAlert = (...args) => alertManager.newAlert(...args);
+    </script>
+  </body>
 </html>

@@ -29,19 +29,16 @@ def validate_password(password: str):
     return True
 
 def register():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    confirm_password = request.form.get("confirm_password")
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
     
     if userDB.find_one({"username": username}):
         res = make_response(jsonify({"message": "Username already exists"}))
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 400
     
-    if confirm_password != password:
-        res = make_response(jsonify({"message": "Passwords do not match"}))
-        res.headers['X-Content-Type-Options'] = "nosniff"
-        return res, 400
     
     if validate_password(password) == False:
         res = make_response(jsonify({"message": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character"}))
@@ -63,12 +60,13 @@ def register():
     return res, 200
 
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
 
     user_data = userDB.find_one({"username": username}) 
 
-    if user_data != None:
+    if user_data == None:
         res = make_response(jsonify({"message": "Invalid credentials"}))
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 400

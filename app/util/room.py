@@ -1,6 +1,6 @@
 import uuid
-from player import *
-from authentication import *
+from util.player import *
+from util.authentication import *
 rooms={}
 
 class Room:
@@ -45,6 +45,7 @@ class Room:
         return self.maxPlayers
     
     def addNewPlayer(self, player:Player):
+        player = player.__dict__
         self.players.append(player)
         self.currPlayers += 1
     
@@ -58,14 +59,19 @@ class Room:
         return self.host
     
     def setHost(self, player:Player):
+        player = player.__dict__
         self.host = player
 
 def create_room(request):
+    global rooms
     room = Room()
     roomId = str(uuid.uuid4())
 
-    auth_token = request.headers.get('auth_token')
-    user = find_auth(auth_token) 
+    auth_token = request.cookies.get('auth_token')
+    if auth_token != None:
+        user = find_auth(auth_token) 
+    else:
+        return "Not Logged In"
     player = Player()
     player.id = user.get('id')
     player.name = user.get('name')
@@ -88,18 +94,19 @@ def create_room(request):
     else:
         room.setPasscode(None)
     rooms[roomId]=room
-    ret = {'roomId':roomId}
-
-    return ret
+    return "Ok"
 
 def find_rooms():
+    global rooms
     roomIds = []
+    print("rooms: ",rooms)
     for j in rooms.keys():
         roomIds.append(j)
-    ret = {'allLobbies':roomIds}
-    return ret
+    print("RoomIds: ", roomIds)
+    return roomIds
 
 def getRoomInfo(roomId:str):
+    global rooms
     room = rooms[roomId]
     return room.__dict__
 
