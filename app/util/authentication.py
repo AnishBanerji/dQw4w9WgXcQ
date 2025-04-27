@@ -53,6 +53,7 @@ def register():
     user_info = {
         "username": username,
         "password": hashed_password.decode(),
+        "imageURL": "./public/img/default_avatar.webp",
         "id": secrets.token_hex(10)
     }
     
@@ -89,3 +90,22 @@ def login():
         res = make_response(jsonify({"message": "Invalid password"}))
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 400
+
+def logout():
+    auth_token = request.cookies.get('auth_token')
+    if auth_token == None:
+        res = make_response(jsonify({"message": "You are not logged in"}))
+        res.headers['X-Content-Type-Options'] = "nosniff"
+        return res, 400
+
+    user = find_auth(auth_token)
+    if user == None:
+        res = make_response(jsonify({"message": "Invalid credentials"}))
+        res.headers['X-Content-Type-Options'] = "nosniff"
+        return res, 404
+
+    userDB.update_one({"hashed_token": user["hashed_token"]}, {"$unset": {"hashed_token": ""}})
+    res = make_response(jsonify({"message": "Logout successful"}))
+    res.set_cookie("auth_token", "", expires=0)
+    res.headers['X-Content-Type-Options'] = "nosniff"
+    return res, 200
