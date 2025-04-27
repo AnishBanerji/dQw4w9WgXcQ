@@ -4,10 +4,12 @@ import bcrypt
 import hashlib
 import secrets
 
-def find_auth(auth_token): #find_auth is a helper method which returns the user from the database who has the specified auth_token
-    user_data = userDB.find_one({"hashed_token": auth_token})
-    if user_data != None:
-        return user_data["username"]
+def find_auth(auth_token:str):
+    auth_token = auth_token.encode('UTF-8')
+    hash = hashlib.sha256(auth_token)
+    user = userDB.find_one({"hashed_token":hash.hexdigest()})
+    if user != None:
+        return user
     else:
         return None
 

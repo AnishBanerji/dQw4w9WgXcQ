@@ -123,6 +123,7 @@
         color: white;
       }
     </style>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   </head>
   <body>
     <div id="alert-container"></div>
@@ -233,8 +234,17 @@
           });
 
           if (response.ok) {
-            id = response.json().getElementById("id");
-            window.location.href = `/room/${id}`;
+            const result = await response.json();
+            const id = result.id;
+
+            // Now connect to socket and join room
+            const socket = io();
+            socket.emit("join_room", { room_id: id });
+
+            // After joining room, redirect
+            socket.on("room_update", () => {
+              window.location.href = `/room/${id}`;
+            });
           } else {
             const result = await response.json();
             showAlert(result.message || "Failed to create room.", "error");
@@ -244,6 +254,7 @@
           showAlert("Something went wrong. Please try again.", "error");
         }
       }
+
       function showAlert(message, type) {
         const alertContainer = document.getElementById("alert-container");
         const alert = document.createElement("div");
