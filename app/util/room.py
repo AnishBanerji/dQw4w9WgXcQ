@@ -12,7 +12,6 @@ class Room:
         self.roomId=''
         self.players=[]
         self.currPlayers=0
-        self.host=None
 
     def setRoomId(self,roomId:str):
         self.roomId = roomId
@@ -54,13 +53,8 @@ class Room:
     
     def getCurrentNumberPlayers(self):
         return self.currPlayers
+
     
-    def getHost(self):
-        return self.host
-    
-    def setHost(self, player:Player):
-        player = player.__dict__
-        self.host = player
 
 def create_room(request):
     global rooms
@@ -75,6 +69,7 @@ def create_room(request):
     player = Player()
     player.id = user.get('id')
     player.name = user.get('name')
+    player.isHost = True
 
     roomName = request.form.get('room_name')
     roomType = request.form.get('room_type')
@@ -86,15 +81,15 @@ def create_room(request):
     room.setRoomType(roomType)
     room.setMaxPlayers(maxPlayers)
     room.addNewPlayer(player)
-    room.setHost(player)
 
     if roomType == 'private':
         passcode = request.form.get('passcode')
         room.setPasscode(passcode)
     else:
         room.setPasscode(None)
+    ret = {'id':roomId}
     rooms[roomId]=room
-    return "Ok"
+    return ret
 
 def find_rooms():
     global rooms

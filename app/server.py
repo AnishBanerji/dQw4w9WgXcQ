@@ -56,13 +56,17 @@ def make_room():
     a=create_room(request)
     if a == "Not Logged In":
         return "Unauthorized",401
-    return "Ok",200
+    return jsonify(a)
 
 @app.route('/find-room',methods=['GET'])
 def load_findRoom():
     filepath = "public/html/find_room.html"
     return send_file(filepath,mimetype='text/html')
 
+@app.route('/lobby/<roomId>',methods=['GET'])
+def load_room(roomId):
+    filepath = "public/html/room.html"
+    return send_file(filepath,mimetype='text/html')
 
 @app.route('/settings', methods=['GET'])
 def getSettings():

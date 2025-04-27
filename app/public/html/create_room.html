@@ -194,7 +194,9 @@
       }
       window.onload = togglePasswordField;
 
-      function handleSubmit(event) {
+      async function handleSubmit(event) {
+        event.preventDefault();
+
         const roomName = document.getElementById("room_name").value.trim();
         const maxPlayers = document.getElementById("max_players").value.trim();
         const visibility = document.getElementById("visibility").value;
@@ -207,20 +209,40 @@
           maxPlayers < 2 ||
           (visibility === "private" && !roomPassword)
         ) {
-          event.preventDefault();
           showAlert("Please fill out all fields correctly.", "error");
           return;
         }
 
+        const body = {
+          room_name: roomName,
+          max_players: maxPlayers,
+          room_type: visibility,
+        };
+
         if (visibility === "private") {
-          document
-            .getElementById("room_password")
-            .setAttribute("name", "passcode");
-        } else {
-          document.getElementById("room_password").removeAttribute("name"); // no password field in public
+          body.passcode = roomPassword;
         }
 
-        document.getElementById("visibility").setAttribute("name", "room_type");
+        try {
+          const response = await fetch("/create-room", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          });
+
+          if (response.ok) {
+            id = response.json().getElementById("id");
+            window.location.href = `/room/${id}`;
+          } else {
+            const result = await response.json();
+            showAlert(result.message || "Failed to create room.", "error");
+          }
+        } catch (error) {
+          console.error(error);
+          showAlert("Something went wrong. Please try again.", "error");
+        }
       }
       function showAlert(message, type) {
         const alertContainer = document.getElementById("alert-container");
