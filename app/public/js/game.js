@@ -874,23 +874,30 @@ function setupSocketListeners(roomId) {
 window.lastGameOverMessage = 'Game Over!';
 
 async function initGame() {
-    // --- Canvas Resizing --- 
+    console.log("Initializing game...");
+    createUI(); // Create UI elements first
+    const roomId = getRoomIdFromUrl();
+    document.getElementById('room-code-display').innerText = `Room Code: ${roomId}`; // Show Room ID
+
     function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        // We might need to redraw the current frame after resize
-        // but gameLoop handles drawing continuously anyway.
+        const gameContainer = document.getElementById('gameContainer');
+        canvas.width = gameContainer.clientWidth;
+        canvas.height = gameContainer.clientHeight;
+        console.log(`Canvas resized to: ${canvas.width}x${canvas.height}`);
     }
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); // Initial size set
-    // --- End Canvas Resizing ---
+    resizeCanvas(); // Initial resize
 
-    createUI();
     setupInputListeners();
-    setupSocketListeners(getRoomIdFromUrl());
+    setupSocketListeners(roomId);
+
+    // Re-emit join_room when the game page loads to sync this connection
+    console.log(`Emitting join_room for room ${roomId} on game page load.`);
+    socket.emit('join_room', { room_id: roomId });
 
     try {
         await loadAssets();
+        assetsLoaded = true;
         // console.log("Assets loaded!");
     } catch (error) {
         console.error("Failed to load assets:", error);
