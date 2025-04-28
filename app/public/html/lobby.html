@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lobby</title>
+    <style>
+      body {
+        background-color: black;
+        color: white;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+      }
+
+      .top-bar {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .back-btn, .start-btn {
+        padding: 8px 16px;
+        background-color: gray;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .start-btn.disabled {
+        background-color: #555;
+        cursor: not-allowed;
+      }
+
+      .lobby-info {
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        background-color: rgba(50, 50, 50, 0.8);
+        border: 3px solid gray;
+        border-radius: 10px;
+        padding: 10px;
+      }
+
+      .player {
+        background-color: #222;
+        border: 2px solid gray;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .player-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .player img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .kick-btn {
+        padding: 4px 8px;
+        background-color: red;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      #roomCode {
+        margin-top: 10px;
+        text-align: center;
+      }
+    </style>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  </head>
+  <body>
+    <div id="alert-container"></div>
+
+    <div class="top-bar">
+      <button class="back-btn" onclick="location.href='/'">Back</button>
+      <button id="startBtn" class="start-btn disabled" disabled>Start Game</button>
+    </div>
+
+    <div class="lobby-info" id="lobbyInfo">
+      <div id="playersList"></div>
+      <div id="roomCode">Room Code: [Loading...]</div>
+    </div>
+
+    <script src="/public/js/lobby.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/public/js/alerts.js"></script>
+  </body>
+</html>

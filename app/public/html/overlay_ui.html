@@ -93,10 +93,24 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { websocketUrl } from "./utils.js";
+
     let isImposter = false;
     let killCooldown = false;
     let taskInProgress = false;
+
+    const ws = new WebSocket(websocketUrl);
+
+    ws.onopen = () => {
+      console.log("Game WebSocket connected");
+    };
+
+    function sendGameEvent(type, payload = {}) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type, ...payload }));
+      }
+    }
 
     function enableButton(id, enable) {
       const btn = document.getElementById(id);
@@ -142,6 +156,7 @@
       if (isImposter) {
         if (!killCooldown) {
           killCooldown = true;
+          sendGameEvent("kill", { victimId: "placeholder" });
           updateButtonState();
           startCooldown(10, () => {
             killCooldown = false;
@@ -156,12 +171,17 @@
             let count = parseInt(document.getElementById("tasks-count").textContent);
             if (count > 0) {
               document.getElementById("tasks-count").textContent = count - 1;
+              sendGameEvent("task_done", { taskId: "placeholder" });
             }
             taskInProgress = false;
             updateButtonState();
           });
         }
       }
+    });
+
+    document.getElementById("report-btn").addEventListener("click", () => {
+      sendGameEvent("body_reported", { bodyId: "placeholder" });
     });
 
     updateButtonState();
