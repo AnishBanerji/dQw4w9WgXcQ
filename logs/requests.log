@@ -1460,3 +1460,8 @@
 [04-28-2025 06:50:00]: 192.168.65.1 GET /public/img/Dead Character.png
 [04-28-2025 06:50:00]: 192.168.65.1 GET /public/img/Unfinished Task.png
 [04-28-2025 06:50:00]: 192.168.65.1 GET /public/img/Finished Task.png
+[04-28-2025 07:04:11]: 192.168.65.1 GET /
+[04-28-2025 07:04:11]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 07:04:11]: 192.168.65.1 GET /public/js/auto.js
+[04-28-2025 07:04:11]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 07:04:12]: 192.168.65.1 GET /api/users/@me
