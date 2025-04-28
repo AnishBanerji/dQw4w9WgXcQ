@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Among Us - Home</title>
+    <meta charset="UTF-8" />
+    <title>Saboteur - Home</title>
     <style>
       body {
         margin: 0;
@@ -86,17 +87,44 @@
         z-index: 1000;
         max-width: 90vw;
       }
+
+      .bottom-left-stats {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        font-size: 14px;
+        color: #ccc;
+        line-height: 1.6;
+      }
     </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="module" src="/static/home.js"></script>
   </head>
   <body>
     <div id="alert-container"></div>
 
-    <div class="top-right-buttons">
-      <button class="small-button" onclick="window.location.href='/login'">
+    <div class="top-right-buttons" id="topButtons">
+      <button
+        class="small-button"
+        id="loginBtn"
+        onclick="window.location.href='/login'"
+      >
         Login
       </button>
-      <button class="small-button" onclick="window.location.href='/register'">
+      <button
+        class="small-button"
+        id="registerBtn"
+        onclick="window.location.href='/register'"
+      >
         Register
+      </button>
+      <button
+        class="small-button"
+        id="logoutBtn"
+        style="display: none"
+        onclick="logout()"
+      >
+        Logout
       </button>
     </div>
 
@@ -106,17 +134,17 @@
         Find Room
       </button>
       <button class="menu-button" onclick="window.location.href='/create-room'">
-        Create Room
+        Create Lobby
       </button>
       <button class="menu-button" onclick="window.location.href='/settings'">
         Settings
       </button>
     </div>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script type="module">
-      import { alertManager } from "./public/js/alerts.js";
-      window.showAlert = (...args) => alertManager.newAlert(...args);
-    </script>
+    <div class="bottom-left-stats">
+      Crewmate Wins: 12<br />
+      Killer Wins: 8<br />
+      Avg Kills (as Killer): 2.6
+    </div>
   </body>
 </html>

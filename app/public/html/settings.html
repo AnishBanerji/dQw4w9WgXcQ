@@ -1,69 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Settings</title>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="/public/js/settings.js"></script>
-  <link rel="stylesheet" href="/public/css/tailwind.css" />
-</head>
-<body class="bg-black text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Settings</title>
+    <style>
+      body {
+        background-color: black;
+        color: white;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+      }
 
-  <div id="alert-container"></div>
+      .top-bar {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
 
-  <div class="w-full max-w-2xl mx-auto mt-10 border border-gray-700 rounded-lg p-6 shadow-lg">
-    <h1 class="text-2xl font-bold mb-6">Edit Profile Settings</h1>
-    <form onsubmit="handleSubmit(event)" class="space-y-6">
-      
-      <div>
-        <label class="block text-sm font-medium mb-2">Profile Picture</label>
-        <div class="flex items-center gap-4">
-          <img id="avatar-preview" src="/public/imgs/user.webp" alt="User Avatar" class="w-20 h-20 rounded-full border border-gray-700 cursor-pointer" onclick="changeProfilePicture()" />
-        </div>
+      .back-btn {
+        padding: 8px 16px;
+        background-color: gray;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .settings-container {
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 500px;
+        background-color: rgba(50, 50, 50, 0.8);
+        border: 3px solid gray;
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .profile-pic {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid gray;
+      }
+
+      .input-field {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .input-field input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid gray;
+        background-color: #222;
+        color: white;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+
+      .confirm-btn {
+        padding: 10px 20px;
+        background-color: gray;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        width: 150px;
+      }
+    </style>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  </head>
+  <body>
+    <div id="alert-container"></div>
+
+    <div class="top-bar">
+      <button class="back-btn" onclick="location.href='/'">Back</button>
+    </div>
+
+    <div class="settings-container">
+      <img id="profilePic" class="profile-pic" src="/public/img/default-avatar.png" alt="Profile Picture" />
+
+      <div class="input-field">
+        <label for="username">Username</label>
+        <input id="username" type="text" />
       </div>
 
-      <div>
-        <label for="username" class="block text-sm font-medium mb-2">Username</label>
-        <input name="username" id="username" type="text" placeholder="Enter your username" class="w-full border border-gray-700 bg-black rounded-lg px-4 py-2 text-sm" required />
+      <div class="input-field">
+        <label for="password">Password</label>
+        <input id="password" type="password" />
       </div>
 
-      <div>
-        <label for="password" class="block text-sm font-medium mb-2">Change Password</label>
-        <input name="password" id="password" type="password" placeholder="Enter new password" class="w-full border border-gray-700 bg-black rounded-lg px-4 py-2 text-sm" />
-      </div>
+      <button class="confirm-btn" onclick="confirmSettings()">Confirm</button>
+    </div>
 
-      <button type="submit" class="w-full bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700">Save Changes</button>
-    </form>
-  </div>
-
-  <script>
-    function handleSubmit(event) {
-      event.preventDefault()
-      showAlert('Settings saved successfully!', 'success');
-    }
-
-    function changeProfilePicture() {
-      showAlert('Change profile picture functionality goes here!', 'info');
-    }
-
-    function showAlert(message, type) {
-      const alertContainer = document.getElementById("alert-container");
-
-      const alert = document.createElement("div");
-      alert.className = `p-4 mb-4 text-sm border rounded-lg ${
-        type === 'success' ? 'bg-green-500 text-white' : 
-        type === 'info' ? 'bg-blue-500 text-white' : 
-        'bg-red-500 text-white'
-      }`;
-
-      alert.textContent = message;
-      alertContainer.appendChild(alert);
-
-      setTimeout(() => {
-        alert.remove();
-      }, 3000);
-    }
-  </script>
-
-</body>
+    <script src="/public/js/settings.js"></script>
+  </body>
 </html>

@@ -189,5 +189,45 @@ def handle_join_room(data):
 
     emit('room_update', {'players': room.getPlayers(), 'room_id': room_id}, room=room_id)
 
+
+app.config['upload_folder'] = './public/imgs'
+
+def allowed_file(mimetype):
+    mime_dict = {"image/jpeg": "jpg", "image/png": "png", "image/gif": "gif"}
+    return mime_dict.get(mimetype, None)
+
+@app.route('/upload-avatar', methods=['POST'])
+def serve_avatar_change():
+    if 'file' not in request.files:
+        return make_response("No file part", 400)
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return make_response("No selected file", 400)
+
+    image_type = allowed_file(file.mimetype)
+    if not allowed_file(file.mimetype):
+        return make_response("Invalid content type.", 400)
+
+    file_name = "image" + secrets.token_hex(6) + '.' + image_type
+    save_path = os.path.join(app.config['upload_folder'], file_name)
+    file.save(save_path)
+
+    auth_token = request.cookies.get('auth_token')
+    if not auth_token:
+        return make_response("Access denied.", 403)
+
+    hashed_token = hashlib.sha256(auth_token.encode()).hexdigest()
+    current_user = userDB.find_one({"hash_token": hashed_token})
+
+    if current_user == None:
+        return make_response("Access denied.", 403)
+
+    public_path = save_path.lstrip('.')
+    userDB.update_one({"hash_token": hashed_token}, {"$set": {"imageURL": public_path}})
+
+    return make_response("Profile Change Successful!", 200)
+
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=8080)
