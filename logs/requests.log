@@ -1530,3 +1530,70 @@
 [04-28-2025 10:52:19]: 172.18.0.4 GET /public/img/Map.png
 [04-28-2025 10:52:19]: 172.18.0.4 GET /public/img/Unfinished Task.png
 [04-28-2025 10:52:19]: 172.18.0.4 GET /public/img/Finished Task.png
+[04-28-2025 11:34:47]: 192.168.65.1 GET /
+[04-28-2025 11:34:47]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:34:47]: 192.168.65.1 GET /public/js/auto.js
+[04-28-2025 11:34:47]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:34:48]: 192.168.65.1 GET /api/users/@me
+[04-28-2025 11:34:49]: 192.168.65.1 GET /register
+[04-28-2025 11:34:49]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:34:49]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:02]: 192.168.65.1 POST /register
+[04-28-2025 11:35:04]: 192.168.65.1 GET /
+[04-28-2025 11:35:04]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:04]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:04]: 192.168.65.1 GET /public/js/auto.js
+[04-28-2025 11:35:04]: 192.168.65.1 GET /api/users/@me
+[04-28-2025 11:35:09]: 192.168.65.1 GET /
+[04-28-2025 11:35:09]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:09]: 192.168.65.1 GET /public/js/auto.js
+[04-28-2025 11:35:09]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:09]: 192.168.65.1 GET /api/users/@me
+[04-28-2025 11:35:10]: 192.168.65.1 GET /register
+[04-28-2025 11:35:10]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:10]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:14]: 192.168.65.1 POST /register
+[04-28-2025 11:35:16]: 192.168.65.1 GET /
+[04-28-2025 11:35:16]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:16]: 192.168.65.1 GET /public/js/auto.js
+[04-28-2025 11:35:16]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:16]: 192.168.65.1 GET /api/users/@me
+[04-28-2025 11:35:19]: 192.168.65.1 GET /create-room
+[04-28-2025 11:35:19]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:19]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:21]: 192.168.65.1 POST /create-room
+[04-28-2025 11:35:22]: 192.168.65.1 GET /room/f6b85ca6-5e67-4140-9770-73193c73a106
+[04-28-2025 11:35:22]: 192.168.65.1 GET /public/js/game.js
+[04-28-2025 11:35:22]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:22]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:22]: 192.168.65.1 GET /public/img/Map.png
+[04-28-2025 11:35:22]: 192.168.65.1 GET /public/img/Dead Character.png
+[04-28-2025 11:35:22]: 192.168.65.1 GET /public/img/Character.png
+[04-28-2025 11:35:22]: 192.168.65.1 GET /public/img/Unfinished Task.png
+[04-28-2025 11:35:22]: 192.168.65.1 GET /public/img/Finished Task.png
+[04-28-2025 11:35:23]: 192.168.65.1 GET /find-room
+[04-28-2025 11:35:23]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:23]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:24]: 192.168.65.1 GET /room/f6b85ca6-5e67-4140-9770-73193c73a106
+[04-28-2025 11:35:24]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:24]: 192.168.65.1 GET /public/js/game.js
+[04-28-2025 11:35:24]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:24]: 192.168.65.1 GET /public/img/Map.png
+[04-28-2025 11:35:24]: 192.168.65.1 GET /public/img/Character.png
+[04-28-2025 11:35:24]: 192.168.65.1 GET /public/img/Dead Character.png
+[04-28-2025 11:35:24]: 192.168.65.1 GET /public/img/Unfinished Task.png
+[04-28-2025 11:35:24]: 192.168.65.1 GET /public/img/Finished Task.png
+[04-28-2025 11:35:36]: 192.168.65.1 GET /
+[04-28-2025 11:35:36]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:35:36]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:35:36]: 192.168.65.1 GET /public/js/auto.js
+[04-28-2025 11:35:36]: 192.168.65.1 GET /api/users/@me
+[04-28-2025 11:36:05]: 192.168.65.1 GET /
+[04-28-2025 11:36:05]: 192.168.65.1 GET /public/js/auto.js
+[04-28-2025 11:36:05]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:36:05]: 192.168.65.1 GET /public/js/home.js
+[04-28-2025 11:36:05]: 192.168.65.1 GET /api/users/@me
+[04-28-2025 11:36:08]: 192.168.65.1 GET /logout
+[04-28-2025 11:36:08]: 192.168.65.1 GET /login
+[04-28-2025 11:36:08]: 192.168.65.1 GET /public/js/alerts.js
+[04-28-2025 11:36:08]: 192.168.65.1 GET /public/js/home.js
