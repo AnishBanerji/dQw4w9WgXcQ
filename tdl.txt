@@ -1,7 +1,0 @@
-You have successfully implemented the core requirements for visuals, real-time movement using WebSockets, and displaying player names.
-However, the "Game" requirement is not fully met. You have a role assignment (the killer), but you need to define:
-The Killer's Goal/Action: What does the killer need to do to win? (e.g., eliminate other players by getting close to them? Sabotage something?)
-The Other Players' Goal/Action: What do the non-killers need to do? (e.g., avoid the killer for a certain time? Complete objectives on the map? Identify the killer?)
-Winning/Losing Conditions: How does the game officially end based on player actions? (e.g., Killer eliminates everyone, non-killers complete all tasks, time runs out).
-Winner Notification: How are all players notified of the outcome and who won?
-To meet the objective, you need to add logic (both server-side and client-side) to handle these game mechanics and determine/display a winner or winning status.
