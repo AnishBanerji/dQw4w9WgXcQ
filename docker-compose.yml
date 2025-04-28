@@ -20,8 +20,8 @@ services:
       - "80:80"   # For HTTP -> HTTPS redirect or standard HTTP
       - "443:443" # For HTTPS
     volumes:
-      # Mount the entire sites-available directory from the host to the container's conf.d
-      - /etc/nginx/sites-available:/etc/nginx/conf.d:ro
+      # Mount the specific host config file to a .conf file inside the container
+      - /etc/nginx/sites-available/unknown2.cse312.dev:/etc/nginx/conf.d/unknown2.cse312.dev.conf:ro
       # Mount Let's Encrypt directory for certificates (if using production)
       - /etc/letsencrypt:/etc/letsencrypt:ro
       # Mount dhparams file (if using production)
