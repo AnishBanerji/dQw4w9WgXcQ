@@ -165,18 +165,19 @@
       }
 
       function joinRoom(id, password = null) {
-        fetch(`/join_room?id=${id}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password }),
-        }).then((res) => {
-          if (res.ok) {
-            window.location.href = `/room/${id}`;
-          } else {
-            alert("Failed to join room.");
-          }
-        });
+        console.log(`Attempting to join room ${id} via Socket.IO`);
+        socket.emit('join_room', { room_id: id, password: password });
       }
+
+      socket.on('join_room_success', (data) => {
+        console.log('Successfully joined room:', data.roomId);
+        window.location.href = `/room/${data.roomId}`;
+      });
+
+      socket.on('join_room_error', (data) => {
+        console.error('Failed to join room:', data.message);
+        alert(`Failed to join room: ${data.message}`);
+      });
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/public/js/alerts.js" type="module"></script>
