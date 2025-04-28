@@ -3,7 +3,12 @@ def get_mimetype(filename):
         'jpg':'image/jpeg',
         'jpeg':'image/jpeg',
         'png':'image/png',
-        'webp':'image/webp'
+        'webp':'image/webp',
+        'gif': 'image/gif'
     }
-    ext = filename.split('.')[1]
-    return mimetypes[ext]
+    parts = filename.rsplit('.', 1)
+    if len(parts) > 1:
+        ext = parts[1].lower()
+        return mimetypes.get(ext, 'application/octet-stream')
+    else:
+        return 'application/octet-stream'
