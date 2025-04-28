@@ -83,7 +83,14 @@ def login():
         userDB.update_one({"username": username}, {"$set": {"hashed_token": hashed_token}})       
         
         res = make_response(jsonify({"message": "Login successful"}))
-        res.set_cookie("auth_token", auth_token, max_age=3600, httponly=True)
+        res.set_cookie(
+            "auth_token",
+            auth_token,
+            max_age=3600,
+            httponly=True,
+            secure=True,
+            samesite='Lax'
+        )
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res
     else:

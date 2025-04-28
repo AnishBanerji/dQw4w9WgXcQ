@@ -100,60 +100,111 @@
       display: none;
     }
 
-    .alert {
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-      font-size: 14px;
-      display: none;
-    }
-    .alert.success {
-      background-color: #4CAF50;
-      color: white;
-    }
-    .alert.error {
-      background-color: #f44336;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-  <div id="alert-container"></div>
-
-  <div class="top-left">
-    <a href="/">Back to Main Menu</a>
-  </div>
-
-  <div class="form-wrapper">
-    <form class="form-box" method="POST" action="/create-room" onsubmit="handleSubmit(event)">
+      .alert {
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        display: none;
+      }
+      .alert.success {
+        background-color: #4caf50;
+        color: white;
+      }
+      .alert.error {
+        background-color: #f44336;
+        color: white;
+      }
+    </style>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  </head>
+  <body>
+    <header>
       <h1>Create Room</h1>
+      <div id="user-status" class="user-status"></div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/find-room">Find Room</a>
+        <a href="/create-room">Create Room</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </header>
 
-      <label for="room_name">Room Name</label>
-      <input type="text" name="room_name" id="room_name" required>
+    <main>
+      <div id="alert-container"></div>
 
-      <label for="visibility">Visibility</label>
-      <select name="visibility" id="visibility" onchange="togglePasswordField()">
-        <option value="public">Public</option>
-        <option value="private">Private</option>
-      </select>
-
-      <label for="room_password" id="password-label" class="hidden">Room Password</label>
-      <input type="password" name="room_password" id="room_password" class="hidden">
-
-      <div class="button-group">
-        <button type="submit">Create</button>
-        <a href="/" class="button-link">Cancel</a>
+      <div class="top-left">
+        <a href="/">Back to Main Menu</a>
       </div>
-    </form>
-  </div>
 
-  <script>
-    function togglePasswordField() {
-      const isPrivate = document.getElementById("visibility").value === "private";
-      document.getElementById("room_password").classList.toggle("hidden", !isPrivate);
-      document.getElementById("password-label").classList.toggle("hidden", !isPrivate);
-    }
-    window.onload = togglePasswordField;
+      <div class="form-wrapper">
+        <form
+          class="form-box"
+          method="POST"
+          action="/create-room"
+          onsubmit="handleSubmit(event)"
+        >
+          <h1>Create Room</h1>
+
+          <label for="room_name">Room Name</label>
+          <input type="text" name="room_name" id="room_name" required />
+
+          <label for="max_players">Max Players</label>
+          <input
+            type="number"
+            name="max_players"
+            id="max_players"
+            value="10"
+            min="2"
+            max="15"
+            required
+          />
+
+          <label for="visibility">Visibility</label>
+          <select
+            name="visibility"
+            id="visibility"
+            onchange="togglePasswordField()"
+          >
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+
+          <label for="room_password" id="password-label" class="hidden"
+            >Room Password</label
+          >
+          <input
+            type="password"
+            name="room_password"
+            id="room_password"
+            class="hidden"
+          />
+
+          <div class="button-group">
+            <button type="submit">Create</button>
+            <a href="/" class="button-link">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <p>CSE 312 Spring 2025</p>
+    </footer>
+
+    <script src="/public/js/auto.js"></script>
+    <script>
+      function togglePasswordField() {
+        const isPrivate =
+          document.getElementById("visibility").value === "private";
+        document
+          .getElementById("room_password")
+          .classList.toggle("hidden", !isPrivate);
+        document
+          .getElementById("password-label")
+          .classList.toggle("hidden", !isPrivate);
+      }
+      window.onload = togglePasswordField;
 
     function handleSubmit(event) {
       event.preventDefault();

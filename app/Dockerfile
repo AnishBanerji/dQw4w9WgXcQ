@@ -1,18 +1,22 @@
-FROM python:3.8
+FROM python:3.11-slim
 
-ENV HOME /root/app
-WORKDIR /root/app
+# Set the working directory in the container
+WORKDIR /app
 
-COPY ./requirements.txt ./requirements.txt
-COPY ./server.py ./server.py
-COPY ./public ./public
-COPY ./util ./util
+# Copy the requirements file first to leverage Docker cache
+COPY requirements.txt requirements.txt
 
-RUN pip3 install -r requirements.txt
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8000
+# Copy the rest of the application code
+COPY . .
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
-RUN chmod +x /wait
+# Expose the port the app runs on
+EXPOSE 8080
 
-CMD /wait && python3 -u server.py
+# Command to run the application
+CMD ["python", "server.py"]
+
+# Optional: Add wait-for-it script if needed for dependencies
+# ADD https://github.com/vishnubob/wait-for-it/raw/master/wait-for-it.sh /wait-for-it.sh

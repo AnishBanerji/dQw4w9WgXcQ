@@ -1,0 +1,156 @@
+/* General Body and Canvas (from original HTML) */
+body {
+    background-color: #1e1e1e; /* Slightly lighter dark */
+    color: #e0e0e0; /* Off-white text */
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Nicer font stack */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#gameCanvas {
+    border: 1px solid #444; /* Darker border */
+    background-color: #2b2b2b; /* Dark canvas background */
+    display: none; /* Initially hidden, shown by JS */
+}
+
+/* Top Bar (from original HTML) */
+.top-bar {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10; /* Ensure it's above canvas */
+}
+
+.back-btn {
+    padding: 8px 16px;
+    background-color: #555;
+    border: none;
+    color: #eee;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.back-btn:hover {
+    background-color: #777;
+}
+
+/* --- Game UI Elements --- */
+
+/* Base styles for overlay elements */
+.overlay-element {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    display: none; /* Hidden by default, shown by JS */
+    color: #e0e0e0;
+}
+
+/* Waiting Room / Game Over Screen */
+#waiting-room {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px; /* Give it a max width */
+    max-width: 90%;
+}
+
+#status-message {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    min-height: 2em; /* Prevent layout shifts */
+    line-height: 1.4;
+}
+
+#player-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    max-height: 180px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    text-align: left;
+}
+
+#player-list li {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#player-list li:last-child {
+    border-bottom: none;
+}
+
+/* Buttons inside Waiting Room */
+#waiting-room button {
+    padding: 12px 25px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+#waiting-room button:hover {
+    background-color: #0056b3;
+}
+
+#waiting-room button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+/* Killer / Death Popups */
+#killer-info {
+    top: 80px; /* Move down slightly */
+    left: 10px;
+    background-color: rgba(200, 0, 0, 0.8);
+    padding: 8px 15px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+#you-died-popup {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #dc3545; /* Bootstrap danger red */
+    font-size: 48px;
+    font-weight: bold;
+    padding: 40px 60px;
+    z-index: 1000;
+}
+
+#you-died-popup span {
+    font-size: 20px;
+    color: #ccc;
+    display: block;
+    margin-top: 10px;
+}
+
+/* --- ADDED: Task Progress Styles --- */
+#task-progress {
+    top: 10px;
+    right: 10px;
+    padding: 8px 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #eee;
+    font-size: 0.9em;
+    font-weight: bold;
+    z-index: 10;
+} 

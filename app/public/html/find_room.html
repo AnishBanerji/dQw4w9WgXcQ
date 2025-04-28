@@ -100,19 +100,36 @@
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   </head>
   <body>
-    <div id="alert-container"></div>
+    <header>
+      <h1>Find Room</h1>
+      <div id="user-status" class="user-status"></div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/find-room">Find Room</a>
+        <a href="/create-room">Create Room</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </header>
 
-    <div class="top-bar">
-      <button class="back-btn" onclick="location.href='/'">Back to Menu</button>
-    </div>
+    <main>
+      <div id="alert-container"></div>
 
-    <div class="room-list" id="roomList"></div>
+      <div class="top-bar">
+        <button class="back-btn" onclick="location.href='/'">Back to Menu</button>
+      </div>
 
-    <div class="popup" id="passwordPopup">
-      <div>Enter Room Password:</div>
-      <input type="password" id="roomPasswordInput" />
-      <button onclick="submitPassword()">Join</button>
-    </div>
+      <div class="room-list" id="roomList"></div>
+
+      <div class="popup" id="passwordPopup">
+        <div>Enter Room Password:</div>
+        <input type="password" id="roomPasswordInput" />
+        <button onclick="submitPassword()">Join</button>
+      </div>
+    </main>
+
+    <footer>
+      <p>CSE 312 Spring 2025</p>
+    </footer>
 
     <script>
       const socket = io();
@@ -144,12 +161,12 @@
               `;
           div.onclick = () => {
             if (room.roomType === "private") {
-              selectedRoomId = room.roomId;
+              selectedRoomId = room._id;
               passwordPopup.style.display = "block";
               roomPasswordInput.value = "";
               roomPasswordInput.focus();
             } else {
-              joinRoom(room.roomId);
+              joinRoom(room._id);
             }
           };
           roomListEl.appendChild(div);
@@ -167,16 +184,25 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ password }),
-        }).then((res) => {
-          if (res.ok) {
-            window.location.href = `/room/${id}`;
-          } else {
-            alert("Failed to join room.");
-          }
-        });
+        })
+          .then(async (res) => {
+            if (res.ok) {
+              window.location.href = `/room/${id}`;
+            } else {
+              const result = await res.json();
+              alert(result.message || "Failed to join room.");
+              passwordPopup.style.display = "none";
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("Error connecting to server.");
+          });
       }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/public/js/alerts.js"></script>
+    <script src="/public/js/auto.js"></script>
+    <script src="/public/js/lobby.js"></script>
   </body>
 </html>

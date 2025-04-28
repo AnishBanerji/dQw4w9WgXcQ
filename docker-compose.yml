@@ -1,0 +1,20 @@
+services:
+  mongo:
+    image: mongo:4.2.5
+    # No ports exposed for security
+  myapp:
+    build:
+      context: ./app # Point build context to the app directory
+    env_file:
+      - .env # Load environment variables from .env file in the root
+    volumes:
+      # Map the host logs directory to the container logs directory
+      - ./logs:/app/logs
+    environment:
+      # WAIT_HOSTS: mongo:27017 # Keep or remove depending on if you use a wait script
+      DOCKER_DB: true # Example variable if needed
+      # MONGO_URI is now loaded from .env file via env_file
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongo # Ensure mongo starts before the app attempts to connect 
