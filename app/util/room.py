@@ -1,8 +1,8 @@
 import uuid
 from util.player import *
 from util.authentication import *
-
-rooms = {}
+from util.database import roomDB
+from flask import request
 
 class Room:
     def __init__(self):
@@ -13,6 +13,9 @@ class Room:
         self.roomId = ''
         self.players = []
         self.currPlayers = 0
+        self.status = 'waiting'
+        self.it_player_id = None
+        self.player_positions = {}
 
     def setRoomId(self, roomId: str):
         self.roomId = roomId
@@ -54,11 +57,20 @@ class Room:
     def getCurrentNumberPlayers(self):
         return self.currPlayers
 
+    def removePlayerByUsername(self, username: str):
+        initial_length = len(self.players)
+        self.players = [p for p in self.players if p.get('username') != username]
+        players_removed = initial_length - len(self.players)
+        if players_removed > 0:
+            self.currPlayers -= players_removed
+            # print(f"Removed {players_removed} player(s) with username {username}. Current players: {self.currPlayers}")
+            return True
+        else:
+            # print(f"Player with username {username} not found in room {self.roomId}.")
+            return False
+
 
 def create_room(request):
-    global rooms
-
-    room = Room()
     roomId = str(uuid.uuid4())
 
     auth_token = request.cookies.get('auth_token')
@@ -66,6 +78,8 @@ def create_room(request):
         return "Not Logged In"
 
     user = find_auth(auth_token)
+    if user is None:
+        return "Invalid Token", 401
 
     data = request.get_json()
     if not data:
@@ -80,43 +94,63 @@ def create_room(request):
 
     try:
         maxPlayers = int(maxPlayers)
+        if maxPlayers <= 0: raise ValueError()
     except ValueError:
         return "Invalid max players"
 
-    # Set room details
-    room.setRoomId(roomId)
-    room.setRoomName(roomName)
-    room.setRoomType(roomType)
-    room.setMaxPlayers(maxPlayers)
+    host_player = {
+        'username': user['username'],
+        'id': user['id'],
+        'isHost': True
+    }
+
+    room_doc = {
+        '_id': roomId,
+        'roomName': roomName,
+        'roomType': roomType,
+        'maxPlayers': maxPlayers,
+        'passcode': None,
+        'players': [host_player],
+        'currPlayers': 1,
+        'status': 'waiting',
+        'it_player_id': None,
+        'player_positions': {}
+    }
 
     if roomType == 'private':
         passcode = data.get('passcode')
         if not passcode:
             return "Passcode required for private rooms"
-        room.setPasscode(passcode)
-    else:
-        room.setPasscode(None)
+        room_doc['passcode'] = passcode
 
-    # Add host player
-    player = Player()
-    player.username = user['username']
-    player.id = user['id']
-    player.isHost = True
-
-    room.addNewPlayer(player)
-
-    rooms[roomId] = room
-    return {'id': roomId}
+    try:
+        result = roomDB.insert_one(room_doc)
+        print(f"[DB] Room {result.inserted_id} created.")
+        return {'id': result.inserted_id}
+    except Exception as e:
+        print(f"Error creating room in DB: {e}")
+        return "Database Error", 500
 
 
 def find_rooms():
-    global rooms
-    return list(rooms.keys())
+    """Finds all rooms currently in the 'waiting' state."""
+    try:
+        # Only find rooms where the status is 'waiting'
+        cursor = roomDB.find({'status': 'waiting'}, {'_id': 1})
+        room_ids = [doc['_id'] for doc in cursor]
+        print(f"[find_rooms] Found waiting room IDs: {room_ids}") # Add logging
+        return room_ids
+    except Exception as e:
+        print(f"Error finding waiting rooms in DB: {e}")
+        return []
 
 
 def getRoomInfo(roomId: str):
-    global rooms
-    room = rooms.get(roomId)
-    if room is None:
-        raise KeyError("Room not found")
-    return room.__dict__
+    try:
+        room_doc = roomDB.find_one({'_id': roomId})
+        if room_doc is None:
+            raise KeyError("Room not found in DB")
+        return room_doc
+    except Exception as e:
+        print(f"Error getting room info from DB for {roomId}: {e}")
+        raise KeyError("Room not found or DB error")

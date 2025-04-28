@@ -1,150 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Saboteur - Home</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background: radial-gradient(
-          ellipse at bottom,
-          #0d0d0d 0%,
-          #000000 100%
-        );
-        font-family: "Arial", sans-serif;
-        color: white;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+<head>
+  <meta charset="UTF-8">
+  <title>Saboteur - Home</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(ellipse at bottom, #0d0d0d 0%, #000000 100%);
+      font-family: 'Arial', sans-serif;
+      color: white;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-      .top-right-buttons {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        display: flex;
-        gap: 10px;
-      }
+    .top-right-buttons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+    }
 
-      .small-button {
-        padding: 6px 14px;
-        font-size: 14px;
-        background-color: #444;
-        color: white;
-        border: 2px solid #888;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
+    .small-button {
+      padding: 6px 14px;
+      font-size: 14px;
+      background-color: #444;
+      color: white;
+      border: 2px solid #888;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-      .small-button:hover {
-        background-color: #666;
-      }
+    .small-button:hover {
+      background-color: #666;
+    }
 
-      .menu-box {
-        background-color: #1a1a1a;
-        border: 5px solid #888;
-        padding: 40px;
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        box-shadow: 0 0 20px #333;
-      }
+    .menu-box {
+      background-color: #1a1a1a;
+      border: 5px solid #888;
+      padding: 40px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 0 20px #333;
+    }
 
-      .menu-box h1 {
-        margin: 0;
-        font-size: 36px;
-      }
+    .menu-box h1 {
+      margin: 0;
+      font-size: 36px;
+    }
 
-      .menu-button {
-        padding: 12px 30px;
-        font-size: 18px;
-        font-weight: bold;
-        background-color: #444;
-        color: white;
-        border: 3px solid #888;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
+    .menu-button {
+      padding: 12px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      background-color: #444;
+      color: white;
+      border: 3px solid #888;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-      .menu-button:hover {
-        background-color: #666;
-      }
+    .menu-button:hover {
+      background-color: #666;
+    }
 
-      #alert-container {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        z-index: 1000;
-        max-width: 90vw;
-      }
+    #alert-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+      max-width: 90vw;
+    }
 
-      .bottom-left-stats {
-        position: absolute;
-        bottom: 20px;
-        left: 20px;
-        font-size: 14px;
-        color: #ccc;
-        line-height: 1.6;
-      }
-    </style>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script type="module" src="/static/home.js"></script>
-  </head>
-  <body>
-    <div id="alert-container"></div>
+    .bottom-left-stats {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 14px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script type="module" src="/static/home.js"></script>
+</head>
+<body>
+  <div id="alert-container"></div>
 
-    <div class="top-right-buttons" id="topButtons">
-      <button
-        class="small-button"
-        id="loginBtn"
-        onclick="window.location.href='/login'"
-      >
-        Login
-      </button>
-      <button
-        class="small-button"
-        id="registerBtn"
-        onclick="window.location.href='/register'"
-      >
-        Register
-      </button>
-      <button
-        class="small-button"
-        id="logoutBtn"
-        style="display: none"
-        onclick="logout()"
-      >
-        Logout
-      </button>
-    </div>
+  <div class="top-right-buttons" id="topButtons">
+    <button class="small-button" id="loginBtn" onclick="window.location.href='/login'">Login</button>
+    <button class="small-button" id="registerBtn" onclick="window.location.href='/register'">Register</button>
+    <button class="small-button" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
+  </div>
 
-    <div class="menu-box">
-      <h1>Among Us</h1>
-      <button class="menu-button" onclick="window.location.href='/find-room'">
-        Find Room
-      </button>
-      <button class="menu-button" onclick="window.location.href='/create-room'">
-        Create Lobby
-      </button>
-      <button class="menu-button" onclick="window.location.href='/settings'">
-        Settings
-      </button>
-    </div>
+  <div class="menu-box">
+    <h1>Among Us</h1>
+    <button class="menu-button" onclick="showAlert('Joining feature coming soon!', 'info')">Find Room</button>
+    <button class="menu-button" onclick="showAlert('Lobby creation is under development!', 'warning')">Create Lobby</button>
+    <button class="menu-button" onclick="showAlert('Settings are not yet available.', 'error')">Settings</button>
+  </div>
 
-    <div class="bottom-left-stats">
-      Crewmate Wins: 12<br />
-      Killer Wins: 8<br />
-      Avg Kills (as Killer): 2.6
-    </div>
-  </body>
+  <div class="bottom-left-stats">
+    Crewmate Wins: 12<br>
+    Killer Wins: 8<br>
+    Avg Kills (as Killer): 2.6
+  </div>
+</body>
 </html>

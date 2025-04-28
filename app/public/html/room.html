@@ -2,106 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Lobby</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Within Us</title>
+    <link rel="stylesheet" href="/public/css/game.css">
     <style>
-      body {
-        background-color: black;
-        color: white;
-        margin: 0;
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-      }
-
-      .top-bar {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        gap: 10px;
-      }
-
-      .back-btn,
-      .start-btn {
-        padding: 8px 16px;
-        background-color: gray;
-        border: none;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      .start-btn.disabled {
-        background-color: #555;
-        cursor: not-allowed;
-      }
-
-      .lobby-info {
-        position: absolute;
-        top: 60px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 600px;
-        background-color: rgba(50, 50, 50, 0.8);
-        border: 3px solid gray;
-        border-radius: 10px;
-        padding: 10px;
-      }
-
-      .player {
-        background-color: #222;
-        border: 2px solid gray;
-        border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .player-info {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .player img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .kick-btn {
-        padding: 4px 8px;
-        background-color: red;
-        border: none;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      #roomCode {
-        margin-top: 10px;
-        text-align: center;
-      }
+      /* Body and Canvas styles are now in game.css */
+      /* Top bar styles are now in game.css */
     </style>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   </head>
   <body>
-    <div id="alert-container"></div>
+    <header>
+        <h1 id="room-name">Room</h1> <!-- Dynamic name? -->
+        <div id="user-status" class="user-status"></div> <!-- Added User Status Placeholder -->
+        <nav>
+            <a href="/">Home</a>
+            <a href="/find-room">Find Room</a>
+        </nav>
+    </header>
 
-    <div class="top-bar">
-      <button class="back-btn" onclick="location.href='/'">Back</button>
-      <button id="startBtn" class="start-btn disabled" disabled>
-        Start Game
-      </button>
-    </div>
+    <main class="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <!-- Add other game UI elements -->
+         <div id="task-progress-bar"></div>
+         <div id="controls-info">WASD to Move, Space to Kill/Task</div>
+         <button id="start-game-button" style="display: none;">Start Game</button>
+    </main>
 
-    <div class="lobby-info" id="lobbyInfo">
-      <div id="playersList"></div>
-      <div id="roomCode">Room Code: [Loading...]</div>
-    </div>
+    <footer>
+        <p>CSE 312 Spring 2025</p>
+    </footer>
 
-    <script src="/public/js/lobby.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/public/js/alerts.js"></script>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <script src="/public/js/auto.js"></script> <!-- Ensure auto.js is included -->
+    <script src="/public/js/game.js"></script>
   </body>
 </html>

@@ -1,20 +1,26 @@
 import json
 import sys
 import os
+import pymongo
+from dotenv import load_dotenv
 
-from pymongo import MongoClient
+# Load environment variables from .env file
+load_dotenv()
 
-docker_db = os.environ.get('DOCKER_DB', "false")
+# Get MongoDB URI from environment variable
+MONGO_URI = os.getenv('MONGO_URI')
 
-if docker_db == "true":
-    print("using docker compose db")
-    mongo_client = MongoClient("mongo")
-else:
-    print("using local db")
-    mongo_client = MongoClient("localhost")
+if not MONGO_URI:
+    raise ValueError("MongoDB connection string not found in .env file (MONGO_URI)")
 
-db = mongo_client["amogus"]
-userDB = db["user"]
+client = pymongo.MongoClient(MONGO_URI)
+
+# Select the database (replace 'your_database_name' if needed)
+db = client.get_database('within_us_db') # Using a default name, adjust if necessary
+
+# Make collections available
+userDB = db.users
+roomDB = db.rooms # Add room collection
 
 # add collections below in the format
 # <collection name> = db["<key>"]
