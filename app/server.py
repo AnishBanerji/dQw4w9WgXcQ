@@ -348,11 +348,18 @@ def handle_join_room(data):
     sid_map[sid] = {'player_id': user_id, 'room_id': room_id, 'username': username}
     current_room_players_positions = room_doc.get('player_positions', {})
     for pid, pdata in current_room_players_positions.items(): pdata.setdefault('angle', DEFAULT_ANGLE)
+
+    # Emit success back to the specific client that just joined, triggering redirect
+    emit('join_room_success', {'roomId': room_id}, room=sid)
+
+    # Emit the updated room state to the joining client
     emit('current_state', {
         'status': room_doc.get('status'), 'players_positions': current_room_players_positions,
         'all_players_list': room_doc.get('players', []), 'your_id': user_id,
         'it_player_id': room_doc.get('it_player_id') # Send killer ID if game started (None otherwise)
     }, room=sid)
+
+    # Emit update to everyone else in the room
     emit('room_update', {'status': room_doc.get('status'), 'all_players_list': room_doc.get('players', [])}, room=room_id)
 
 @socketio.on('start_game')

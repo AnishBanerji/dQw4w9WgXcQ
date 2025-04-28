@@ -86,10 +86,15 @@
     </style>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   </head>
-  <body class="bg-black h-screen w-screen overflow-hidden">
-    <div id="alert-container"></div>
+  <body class="bg-black h-screen w-screen overflow-hidden relative">
+    <!-- Add a container div that takes up the full screen -->
+    <div id="gameContainer" class="absolute inset-0 w-full h-full">
+        <!-- The canvas will be sized relative to this container by game.js -->
+        <canvas id="gameCanvas" class="absolute top-0 left-0"></canvas>
+    </div>
 
-    <canvas id="gameCanvas" class="absolute top-0 left-0"></canvas>
+    <!-- Alert container might need z-index adjustment if UI elements overlap -->
+    <div id="alert-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-50"></div>
 
     <!-- Scripts: Load dependencies first -->
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
