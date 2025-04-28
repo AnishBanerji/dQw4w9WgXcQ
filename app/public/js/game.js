@@ -647,24 +647,63 @@ function setupSocketListeners(roomId) {
 
     // This event provides the initial state when joining or reconnecting
     socket.on('current_state', (data) => {
-        console.log('[current_state] Received:', data);
-        // Update local game state based on the comprehensive data received
-        roomStatus = data.status; // 'waiting', 'playing', 'game_over'
-        players = data.players_positions || {}; // Use positions
-        allPlayersList = data.all_players_list || [];
-        myPlayerId = data.your_id;
-        isHost = allPlayersList.find(p => p.id === myPlayerId)?.isHost || false;
-        isKiller = (data.it_player_id === myPlayerId); // Check if I am the killer
-        amIDead = players[myPlayerId]?.is_dead || false; // Check my dead status from positions
+        console.log('[current_state] Received:', data); // Keep log
 
-        // Task related state
+        // --- Restore original logic --- 
+        myPlayerId = data.your_id;
+        roomStatus = data.status;
+        players = data.players_positions || {}; // Start with position data
+        allPlayersList = data.all_players_list || [];
+        amIDead = false; // Reset dead status on join/rejoin
+
+        // Merge is_dead status and username into local players object from the definitive list
+        allPlayersList.forEach(playerInfo => {
+            if (players[playerInfo.id]) {
+                players[playerInfo.id].is_dead = playerInfo.is_dead;
+                players[playerInfo.id].username = playerInfo.username; // Ensure username is up-to-date
+            } else {
+                 // If player from list isn't in positions (e.g., joined but server hasn't sent pos yet, or error)
+                 // Create a default entry, especially important for self if missing.
+                 console.warn(`[current_state] Player ${playerInfo.id} (${playerInfo.username}) in list but not in positions. Creating default entry.`);
+                 players[playerInfo.id] = {
+                    x: 1800, y: 1800, angle: -Math.PI/2, // Default spawn
+                    username: playerInfo.username,
+                    is_dead: playerInfo.is_dead,
+                    id: playerInfo.id
+                 };
+            }
+            // Update local dead status if it pertains to self
+            if (playerInfo.id === myPlayerId && playerInfo.is_dead) {
+                 amIDead = true;
+            }
+        });
+
+        // Determine if host based on the definitive list
+        const hostPlayer = allPlayersList.find(p => p.isHost);
+        isHost = hostPlayer ? hostPlayer.id === myPlayerId : false;
+
+        // Determine if killer (server now includes it_player_id in current_state)
+        isKiller = (data.it_player_id === myPlayerId);
+
+        // Task related state (keep this part)
         tasks = data.tasks || [];
         completedTasks = data.completedTasks || 0;
         totalTasks = data.totalTasks || 0;
+        // --- End Restore original logic ---
 
-        console.log(`[current_state] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}, isKiller=${isKiller}, myPlayerId=${myPlayerId}`);
+        console.log(`[current_state] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}, isKiller=${isKiller}, myPlayerId=${myPlayerId}, amIDead=${amIDead}`); // Keep log
 
         updateUI(); // Refresh the UI based on the new state
+
+        // If already playing when joined/reconnected (and not dead), start the game loop
+        if (roomStatus === 'playing' && assetsLoaded && !amIDead) {
+            console.log("[current_state] Game is playing and assets loaded, ensuring game loop starts.");
+            // Check if loop is already running? (Optional, requestAnimationFrame handles duplicates okay)
+            requestAnimationFrame(gameLoop); // Start drawing/updates
+        } else if (roomStatus === 'playing' && amIDead) {
+            console.log("[current_state] Game is playing, but local player is dead. Ensuring game loop starts for spectating.");
+            requestAnimationFrame(gameLoop); // Also start loop if dead to allow spectating
+        }
     });
 
     // This event provides incremental updates, like player list changes in the lobby
