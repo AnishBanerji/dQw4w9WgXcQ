@@ -253,7 +253,7 @@ function is_walkable_client(x, y) {
 
 // --- UI Update Function ---
 function updateUI() {
-    console.log(`[updateUI] Called. Current roomStatus: ${roomStatus}, isHost: ${isHost}, isKiller: ${isKiller}, amIDead: ${amIDead}`); // Log status at start
+    // console.log(`[updateUI] Called. Current roomStatus: ${roomStatus}, isHost: ${isHost}, isKiller: ${isKiller}, amIDead: ${amIDead}`); // Remove log
     // Get all potentially visible elements
     const waitingRoom = document.getElementById('waiting-room');
     const statusMessage = document.getElementById('status-message');
@@ -614,9 +614,9 @@ function setupSocketListeners(roomId) {
     socket.off('task_completed'); // Add new listener removal
 
     socket.on('connect', () => {
-        console.log('Socket connected:', socket.id);
+        // console.log('Socket connected:', socket.id); // Remove log
         // Re-join room on reconnection to ensure server has the right SID map
-        console.log(`Re-emitting join_room for room ${roomId} on connect event.`);
+        // console.log(`Re-emitting join_room for room ${roomId} on connect event.`); // Remove log
         socket.emit('join_room', { room_id: roomId });
         roomStatus = 'loading'; // Reset status on connect/reconnect
         isKiller = false; // Reset killer status
@@ -625,13 +625,13 @@ function setupSocketListeners(roomId) {
     });
 
     socket.on('disconnect', (reason) => {
-        console.log('Socket disconnected:', reason);
+        // console.log('Socket disconnected:', reason); // Remove log
         roomStatus = 'loading'; // Reset status on disconnect
         updateUI(); // Update UI to show disconnected state perhaps
     });
 
     socket.on('connect_error', (error) => {
-        console.error('Socket connection error:', error);
+        // console.error('Socket connection error:', error); // Remove log
         // Optionally show an error message to the user
         const statusMessage = document.getElementById('status-message');
         if (statusMessage) statusMessage.innerText = 'Connection Error!';
@@ -647,7 +647,7 @@ function setupSocketListeners(roomId) {
 
     // This event provides the initial state when joining or reconnecting
     socket.on('current_state', (data) => {
-        console.log('[current_state] Received:', data); // Keep log
+        // console.log('[current_state] Received:', data); // Remove log
 
         // --- Restore original logic --- 
         myPlayerId = data.your_id;
@@ -691,29 +691,29 @@ function setupSocketListeners(roomId) {
         totalTasks = data.totalTasks || 0;
         // --- End Restore original logic ---
 
-        console.log(`[current_state] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}, isKiller=${isKiller}, myPlayerId=${myPlayerId}, amIDead=${amIDead}`); // Keep log
+        // console.log(`[current_state] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}, isKiller=${isKiller}, myPlayerId=${myPlayerId}, amIDead=${amIDead}`); // Remove log
 
         updateUI(); // Refresh the UI based on the new state
 
         // If already playing when joined/reconnected (and not dead), start the game loop
         if (roomStatus === 'playing' && assetsLoaded && !amIDead) {
-            console.log("[current_state] Game is playing and assets loaded, ensuring game loop starts.");
+            // console.log("[current_state] Game is playing and assets loaded, ensuring game loop starts."); // Remove log
             // Check if loop is already running? (Optional, requestAnimationFrame handles duplicates okay)
             requestAnimationFrame(gameLoop); // Start drawing/updates
         } else if (roomStatus === 'playing' && amIDead) {
-            console.log("[current_state] Game is playing, but local player is dead. Ensuring game loop starts for spectating.");
+            // console.log("[current_state] Game is playing, but local player is dead. Ensuring game loop starts for spectating."); // Remove log
             requestAnimationFrame(gameLoop); // Also start loop if dead to allow spectating
         }
     });
 
     // This event provides incremental updates, like player list changes in the lobby
     socket.on('room_update', (data) => {
-        console.log('[room_update] Received:', data);
+        // console.log('[room_update] Received:', data); // Remove log
         allPlayersList = data.all_players_list || [];
         roomStatus = data.status; // Update status from room_update as well
         // Determine host status based on updated list
         isHost = allPlayersList.find(p => p.id === myPlayerId)?.isHost || false;
-        console.log(`[room_update] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}`);
+        // console.log(`[room_update] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}`); // Remove log
         updateUI(); // Refresh the UI (mainly the player list in the lobby)
     });
 
@@ -751,7 +751,7 @@ function setupSocketListeners(roomId) {
     });
 
     socket.on('game_started', (data) => {
-        console.log('[game_started] Received:', data);
+        // console.log('[game_started] Received:', data); // Remove log
         roomStatus = 'playing';
         players = data.players_positions || {};
         allPlayersList = data.all_players_list || [];
@@ -884,7 +884,7 @@ function setupSocketListeners(roomId) {
 window.lastGameOverMessage = 'Game Over!';
 
 async function initGame() {
-    console.log("Initializing game...");
+    // console.log("Initializing game..."); // Remove log
     createUI(); // Create UI elements first
     const roomId = getRoomIdFromUrl();
     document.getElementById('room-code-display').innerText = `Room Code: ${roomId}`; // Show Room ID
@@ -902,7 +902,7 @@ async function initGame() {
     setupSocketListeners(roomId);
 
     // Re-emit join_room when the game page loads to sync this connection
-    console.log(`Emitting join_room for room ${roomId} on game page load.`);
+    // console.log(`Emitting join_room for room ${roomId} on game page load.`); // Remove log
     socket.emit('join_room', { room_id: roomId });
 
     try {
