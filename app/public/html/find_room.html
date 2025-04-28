@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Find Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Room - Within Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       body {
         background-color: black;
@@ -100,36 +102,19 @@
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   </head>
   <body>
-    <header>
-      <h1>Find Room</h1>
-      <div id="user-status" class="user-status"></div>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/find-room">Find Room</a>
-        <a href="/create-room">Create Room</a>
-        <a href="/settings">Settings</a>
-      </nav>
-    </header>
+    <div id="alert-container"></div>
 
-    <main>
-      <div id="alert-container"></div>
+    <div class="top-bar">
+      <button class="back-btn" onclick="location.href='/'">Back to Menu</button>
+    </div>
 
-      <div class="top-bar">
-        <button class="back-btn" onclick="location.href='/'">Back to Menu</button>
-      </div>
+    <div class="room-list" id="roomList"></div>
 
-      <div class="room-list" id="roomList"></div>
-
-      <div class="popup" id="passwordPopup">
-        <div>Enter Room Password:</div>
-        <input type="password" id="roomPasswordInput" />
-        <button onclick="submitPassword()">Join</button>
-      </div>
-    </main>
-
-    <footer>
-      <p>CSE 312 Spring 2025</p>
-    </footer>
+    <div class="popup" id="passwordPopup">
+      <div>Enter Room Password:</div>
+      <input type="password" id="roomPasswordInput" />
+      <button onclick="submitPassword()">Join</button>
+    </div>
 
     <script>
       const socket = io();
@@ -161,12 +146,12 @@
               `;
           div.onclick = () => {
             if (room.roomType === "private") {
-              selectedRoomId = room._id;
+              selectedRoomId = room.roomId;
               passwordPopup.style.display = "block";
               roomPasswordInput.value = "";
               roomPasswordInput.focus();
             } else {
-              joinRoom(room._id);
+              joinRoom(room.roomId);
             }
           };
           roomListEl.appendChild(div);
@@ -184,25 +169,17 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ password }),
-        })
-          .then(async (res) => {
-            if (res.ok) {
-              window.location.href = `/room/${id}`;
-            } else {
-              const result = await res.json();
-              alert(result.message || "Failed to join room.");
-              passwordPopup.style.display = "none";
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-            alert("Error connecting to server.");
-          });
+        }).then((res) => {
+          if (res.ok) {
+            window.location.href = `/room/${id}`;
+          } else {
+            alert("Failed to join room.");
+          }
+        });
       }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/public/js/alerts.js"></script>
-    <script src="/public/js/auto.js"></script>
-    <script src="/public/js/lobby.js"></script>
+    <script src="/public/js/alerts.js" type="module"></script>
+    <script src="/public/js/home.js" type="module"></script>
   </body>
 </html>

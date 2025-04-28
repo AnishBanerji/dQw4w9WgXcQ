@@ -1,101 +1,139 @@
 // TODO: For deployment, conditionally use 'wss://' + window.location.host based on 'https://' protocol
 // Example: const socketUrl = window.location.protocol === 'https:' ? 'wss://' + window.location.host : 'ws://' + window.location.host;
 // const socket = io(socketUrl);
-const socket = io(); // Connect to the Socket.IO server
+const socketUrl = window.location.protocol === 'https:' ? 'wss://' + window.location.host : 'ws://' + window.location.host;
+const socket = io(socketUrl, { transports: ['websocket'] }); // Explicitly use WebSocket transport
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 // --- Dynamically Create UI Elements ---
 function createUI() {
-    // Waiting Room Container
+    // --- Back Button --- 
+    const backBtn = document.createElement('button');
+    backBtn.id = 'back-btn';
+    backBtn.innerText = 'Back';
+    backBtn.classList.add(
+        'overlay-element', 'absolute', 'top-4', 'left-4', 'z-50', // Positioning
+        'px-4', 'py-2', 'bg-gray-700/80', 'hover:bg-gray-600/90', // Styling
+        'text-white', 'font-semibold', 'rounded-md', 'backdrop-blur-sm'
+    );
+    backBtn.onclick = () => { window.location.href = '/'; };
+    backBtn.style.display = 'none'; // Hidden initially
+    document.body.appendChild(backBtn);
+
+    // --- Room Code Display ---
+    const roomCodeDiv = document.createElement('div');
+    roomCodeDiv.id = 'room-code-display';
+    roomCodeDiv.classList.add(
+        'overlay-element', 'absolute', 'top-4', 'left-1/2', '-translate-x-1/2', 'z-50', // Positioning
+        'px-4', 'py-2', 'bg-gray-800/70', 'rounded-md', 'backdrop-blur-sm', // Styling
+        'text-white', 'font-mono', 'text-sm'
+    );
+    roomCodeDiv.innerText = 'Room Code: Loading...';
+    roomCodeDiv.style.display = 'none'; // Hidden initially
+    document.body.appendChild(roomCodeDiv);
+
+    // --- Task Progress Indicator (Top Right) ---
+    const taskProgressDiv = document.createElement('div');
+    taskProgressDiv.id = 'task-progress';
+    taskProgressDiv.classList.add(
+        'overlay-element', 'absolute', 'top-4', 'right-4', 'z-50', // Positioning
+        'px-4', 'py-2', 'bg-gray-800/70', 'rounded-md', 'backdrop-blur-sm', // Styling
+        'text-white', 'font-semibold'
+    );
+    taskProgressDiv.style.display = 'none'; // Hidden initially
+    taskProgressDiv.innerText = 'Tasks: 0/0';
+    document.body.appendChild(taskProgressDiv);
+
+    // --- Killer Info Area (Bottom Left) ---
+    const killerInfoDiv = document.createElement('div');
+    killerInfoDiv.id = 'killer-info';
+    killerInfoDiv.classList.add(
+        'overlay-element', 'absolute', 'bottom-4', 'left-4', 'z-50', // Positioning
+        'px-4', 'py-2', 'bg-red-800/80', 'rounded-md', 'backdrop-blur-sm', // Styling
+        'text-white', 'font-bold', 'text-lg'
+    );
+    killerInfoDiv.style.display = 'none'; // Controlled dynamically
+    killerInfoDiv.innerText = 'YOU ARE THE KILLER';
+    document.body.appendChild(killerInfoDiv);
+
+    // --- Waiting Room Container (Centered Overlay) ---
     const waitingRoomDiv = document.createElement('div');
     waitingRoomDiv.id = 'waiting-room';
-    waitingRoomDiv.classList.add('overlay-element'); // Add base class
-    // Keep position/transform inline as they define placement
-    waitingRoomDiv.style.position = 'absolute'; 
-    waitingRoomDiv.style.top = '50%';
-    waitingRoomDiv.style.left = '50%';
-    waitingRoomDiv.style.transform = 'translate(-50%, -50%)';
-    // display is controlled dynamically
+    waitingRoomDiv.classList.add(
+        'overlay-element', 
+        'absolute', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2', 
+        'bg-gray-900/80', 'backdrop-blur-md', 
+        'p-8', 'rounded-lg', 'shadow-xl', 
+        'text-white', 'text-center', 
+        'flex', 'flex-col', 'items-center', 'gap-4', 
+        'min-w-[300px]', 'z-40' // Ensure it's above canvas but below top overlays
+    );
     waitingRoomDiv.style.display = 'none'; 
+    document.body.appendChild(waitingRoomDiv); // Add to body
 
-    // Status Message
+    // (Status Message, Player List, Instructions, Start Button, Game Over Controls are added INSIDE waitingRoomDiv)
     const statusMessage = document.createElement('p');
     statusMessage.id = 'status-message';
-    statusMessage.innerText = 'Connecting...'; // Styles handled by CSS
+    statusMessage.innerText = 'Connecting...'; 
+    statusMessage.classList.add('text-xl', 'font-semibold'); 
     waitingRoomDiv.appendChild(statusMessage);
 
-    // Player List
     const playerList = document.createElement('ul');
-    playerList.id = 'player-list'; // Styles handled by CSS
+    playerList.id = 'player-list';
+    playerList.classList.add('list-none', 'p-0', 'm-0', 'max-h-40', 'overflow-y-auto', 'w-full', 'text-left', 'mb-4'); 
     waitingRoomDiv.appendChild(playerList);
 
-    // Start Game Button
+    const instructionsDiv = document.createElement('div');
+    instructionsDiv.id = 'game-instructions';
+    instructionsDiv.classList.add('text-sm', 'text-gray-300', 'mt-4');
+    instructionsDiv.innerHTML = `
+        <h4 class="font-bold mb-1">How to Play:</h4>
+        <p>Crew: Complete tasks! Avoid the Killer.</p>
+        <p>Killer: Eliminate the crew! Don't get caught.</p>
+        <p>Controls: WASD to Move. Space to interact/kill.</p>
+    `; // Updated controls
+    waitingRoomDiv.appendChild(instructionsDiv);
+
     const startGameBtn = document.createElement('button');
     startGameBtn.id = 'start-game-btn';
-    startGameBtn.innerText = 'Start Game'; // Styles handled by CSS
-    startGameBtn.style.display = 'none'; // Controlled dynamically
+    startGameBtn.innerText = 'Start Game'; 
+    startGameBtn.classList.add(
+        'px-6', 'py-2', 'bg-blue-600', 'hover:bg-blue-700', 
+        'text-white', 'font-bold', 'rounded-md', 'cursor-pointer', 
+        'transition-colors', 'duration-200', 'disabled:opacity-50', 'disabled:cursor-not-allowed'
+    );
+    startGameBtn.style.display = 'none'; 
     startGameBtn.onclick = () => {
         const roomId = getRoomIdFromUrl();
         socket.emit('start_game', { room_id: roomId });
     };
     waitingRoomDiv.appendChild(startGameBtn);
 
-    // Game Over Button Container
     const gameOverControlsDiv = document.createElement('div');
     gameOverControlsDiv.id = 'game-over-controls';
-    gameOverControlsDiv.style.display = 'none'; // Controlled dynamically
+    gameOverControlsDiv.classList.add('mt-4'); // Add margin top
+    gameOverControlsDiv.style.display = 'none'; 
+    waitingRoomDiv.appendChild(gameOverControlsDiv);
 
     const backHomeBtn = document.createElement('button');
-    backHomeBtn.innerText = 'Back to Home'; // Styles handled by CSS
+    backHomeBtn.innerText = 'Back to Home'; 
+    backHomeBtn.classList.add('px-4', 'py-2', 'bg-gray-600', 'hover:bg-gray-500', 'text-white', 'rounded-md'); // Style it
     backHomeBtn.onclick = () => { window.location.href = '/'; };
     gameOverControlsDiv.appendChild(backHomeBtn);
 
-    waitingRoomDiv.appendChild(gameOverControlsDiv);
-
-    // Killer Info Area
-    const killerInfoDiv = document.createElement('div');
-    killerInfoDiv.id = 'killer-info';
-    killerInfoDiv.classList.add('overlay-element'); // Add base class
-    // Keep position inline
-    killerInfoDiv.style.position = 'absolute'; 
-    killerInfoDiv.style.top = '80px'; // Adjusted in CSS, keep consistency?
-    killerInfoDiv.style.left = '10px';
-    killerInfoDiv.style.display = 'none'; // Controlled dynamically
-    killerInfoDiv.innerText = 'YOU ARE THE KILLER'; // Text content
-    // Styles like background, color, padding, font-weight are in CSS
-
-    // You Died Popup
+    // --- You Died Popup (Centered Overlay) ---
     const youDiedDiv = document.createElement('div');
     youDiedDiv.id = 'you-died-popup';
-    youDiedDiv.classList.add('overlay-element'); // Add base class
-    // Keep position/transform inline
-    youDiedDiv.style.position = 'absolute'; 
-    youDiedDiv.style.top = '50%';
-    youDiedDiv.style.left = '50%';
-    youDiedDiv.style.transform = 'translate(-50%, -50%)';
-    youDiedDiv.style.display = 'none'; // Controlled dynamically
-    youDiedDiv.style.zIndex = '1000'; // Keep z-index inline
-    youDiedDiv.innerHTML = 'YOU DIED<br><span style="font-size: 20px; color: #ccc;">Spectating...</span>'; // Inner HTML, span styles kept inline for simplicity or move to CSS
-    // Base styles like background, color, font-size, padding are in CSS
-
-    // --- ADDED: Task Progress Indicator ---
-    const taskProgressDiv = document.createElement('div');
-    taskProgressDiv.id = 'task-progress';
-    taskProgressDiv.classList.add('overlay-element'); // Use base style
-    taskProgressDiv.style.position = 'absolute'; // Positioning
-    taskProgressDiv.style.top = '10px';
-    taskProgressDiv.style.right = '10px';
-    taskProgressDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'; // Keep some background
-    taskProgressDiv.style.padding = '8px 15px';
-    taskProgressDiv.style.display = 'none'; // Hidden initially
-    taskProgressDiv.innerText = 'Tasks: 0/0';
-
-    document.body.appendChild(waitingRoomDiv);
-    document.body.appendChild(killerInfoDiv);
+    youDiedDiv.classList.add(
+        'overlay-element', 'absolute', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2', 'z-50', // Positioning
+        'px-6', 'py-4', 'bg-black/80', 'rounded-lg', 'backdrop-blur-sm', // Styling
+        'text-red-500', 'text-4xl', 'font-bold', 'text-center'
+    );
+    youDiedDiv.style.display = 'none'; 
+    youDiedDiv.innerHTML = 'YOU DIED<br><span class="text-lg text-gray-300 font-normal">Spectating...</span>'; 
     document.body.appendChild(youDiedDiv);
-    document.body.appendChild(taskProgressDiv); // Add task progress to body
 }
 
 // --- Assets ---
@@ -215,78 +253,118 @@ function is_walkable_client(x, y) {
 
 // --- UI Update Function ---
 function updateUI() {
-    const waitingRoomDiv = document.getElementById('waiting-room');
-    const playerListUl = document.getElementById('player-list');
+    // Get all potentially visible elements
+    const waitingRoom = document.getElementById('waiting-room');
+    const statusMessage = document.getElementById('status-message');
+    const playerList = document.getElementById('player-list');
     const startGameBtn = document.getElementById('start-game-btn');
-    const statusMessageP = document.getElementById('status-message');
-    const killerInfoDiv = document.getElementById('killer-info');
-    const gameCanvas = document.getElementById('gameCanvas');
-    const taskProgressDiv = document.getElementById('task-progress'); // Get task progress element
+    const gameOverControls = document.getElementById('game-over-controls');
+    const killerInfo = document.getElementById('killer-info');
+    const youDiedPopup = document.getElementById('you-died-popup');
+    const taskProgress = document.getElementById('task-progress');
+    const backBtn = document.getElementById('back-btn');
+    const roomCodeDisplay = document.getElementById('room-code-display');
+    const gameInstructions = document.getElementById('game-instructions');
 
-    if (!waitingRoomDiv || !playerListUl || !startGameBtn || !statusMessageP || !killerInfoDiv || !gameCanvas || !taskProgressDiv) {
-        console.error("UI elements not found!");
-        return;
+    // Helper to safely set display style
+    const setDisplay = (el, displayStyle) => { if (el) el.style.display = displayStyle; };
+
+    // Hide most elements by default
+    setDisplay(waitingRoom, 'none');
+    setDisplay(gameOverControls, 'none');
+    setDisplay(killerInfo, 'none');
+    setDisplay(youDiedPopup, 'none');
+    setDisplay(taskProgress, 'none');
+    setDisplay(backBtn, 'none');
+    setDisplay(roomCodeDisplay, 'none');
+    // Instructions visibility controlled by waitingRoom visibility
+
+    // Update player list
+    if (playerList) {
+        playerList.innerHTML = ''; // Clear previous list
+        allPlayersList.forEach(player => {
+            const li = document.createElement('li');
+            li.classList.add('py-1', 'border-b', 'border-gray-700');
+            let text = player.username;
+            if (player.isHost) text += ' (Host)';
+            if (player.id === myPlayerId) text += ' (You)';
+            if (player.is_dead) text += ' [DEAD]';
+            li.textContent = text;
+            playerList.appendChild(li);
+        });
     }
 
-    // Killer Info visibility
-    killerInfoDiv.style.display = isKiller ? 'block' : 'none';
-
-    // Task Progress visibility
-    taskProgressDiv.style.display = (roomStatus === 'playing') ? 'block' : 'none';
-    if (roomStatus === 'playing') {
-        taskProgressDiv.innerText = `Tasks: ${completedTasks}/${totalTasks}`;
-    }
-
+    // Show elements based on roomStatus
     if (roomStatus === 'waiting') {
-        gameCanvas.style.display = 'none';
-        waitingRoomDiv.style.display = 'block';
-        statusMessageP.innerText = 'Waiting for players...';
-
-        // Update player list
-        playerListUl.innerHTML = ''; // Clear previous list
-        allPlayersList.forEach(p => {
-            const li = document.createElement('li');
-            li.textContent = `${p.username}${p.isHost ? ' (Host)' : ''}${p.id === myPlayerId ? ' (You)' : ''}`;
-            if (p.id === myPlayerId) li.style.fontWeight = 'bold';
-            playerListUl.appendChild(li);
-        });
-
-        // Show/hide start button
-        const canStart = isHost && allPlayersList.length >= 2;
-        startGameBtn.style.display = canStart ? 'block' : 'none';
-        startGameBtn.disabled = !canStart;
-        if (isHost && allPlayersList.length < 2) {
-            statusMessageP.innerText = 'Waiting for more players to join... (Need at least 2)';
-        } else if (isHost) {
-             statusMessageP.innerText = 'Waiting for you (Host) to start the game.';
-        } else {
-            statusMessageP.innerText = 'Waiting for the host to start the game...';
+        setDisplay(waitingRoom, 'flex'); // Show centered overlay
+        setDisplay(gameInstructions, 'block'); // Show instructions within overlay
+        const minPlayers = 2;
+        const currentPlayers = allPlayersList.length;
+        if (statusMessage) {
+            if (currentPlayers < minPlayers) {
+                statusMessage.textContent = `Waiting for more players to join... (Need at least ${minPlayers})`;
+            } else {
+                statusMessage.textContent = isHost ? 'Waiting for you (Host) to start the game.' : 'Waiting for the host to start the game.';
+            }
         }
-
+        if (startGameBtn) {
+            startGameBtn.style.display = isHost ? 'inline-block' : 'none';
+            startGameBtn.disabled = currentPlayers < minPlayers; // Disable if not enough players
+        }
     } else if (roomStatus === 'playing') {
-        waitingRoomDiv.style.display = 'none';
-        gameCanvas.style.display = 'block';
-        // No specific status message needed here, game is running
-    } else if (roomStatus === 'game_over') {
-        gameCanvas.style.display = 'none'; // Or keep showing final state?
-        waitingRoomDiv.style.display = 'block'; // Re-show waiting room elements for message
-        startGameBtn.style.display = 'none'; // Hide start button
-        // statusMessageP will be set by the game_over event handler
-        // Keep player list updated
-        playerListUl.innerHTML = ''; // Clear previous list
-        allPlayersList.forEach(p => {
-            const li = document.createElement('li');
-            li.textContent = `${p.username}${p.isHost ? ' (Host)' : ''}${p.id === myPlayerId ? ' (You)' : ''}`;
-            if (p.id === myPlayerId) li.style.fontWeight = 'bold';
-            playerListUl.appendChild(li);
-        });
+        setDisplay(backBtn, 'block');
+        setDisplay(roomCodeDisplay, 'block');
+        setDisplay(taskProgress, 'block');
+        taskProgress.innerText = `Tasks: ${completedTasks}/${totalTasks}`;
 
-    } else { // loading or error
-        gameCanvas.style.display = 'none';
-        waitingRoomDiv.style.display = 'block';
-        startGameBtn.style.display = 'none';
-        playerListUl.innerHTML = ''; // Clear list
-        // statusMessageP text set by specific events like connect/join_error
+        if (isKiller && !amIDead) {
+            setDisplay(killerInfo, 'block');
+        }
+        if (amIDead) {
+            setDisplay(youDiedPopup, 'flex'); // Show 'You Died' overlay
+        }
+        // Hide waiting room elements
+        setDisplay(waitingRoom, 'none'); 
+    } else if (roomStatus === 'game_over') {
+        // Hide game elements
+        setDisplay(killerInfo, 'none');
+        setDisplay(youDiedPopup, 'none');
+        setDisplay(taskProgress, 'none');
+        setDisplay(backBtn, 'none'); 
+        setDisplay(roomCodeDisplay, 'none'); 
+        const gameCanvas = document.getElementById('gameCanvas'); // Get canvas
+        setDisplay(gameCanvas, 'none'); // Hide the game canvas
+        
+        // Show centered overlay for results
+        setDisplay(waitingRoom, 'flex'); 
+        
+        // Configure elements INSIDE the waiting room overlay
+        setDisplay(gameOverControls, 'block'); // Show 'Back to Home' button
+        setDisplay(gameInstructions, 'none'); // Hide instructions
+        setDisplay(playerList, 'none'); // Hide player list
+        setDisplay(startGameBtn, 'none'); // Ensure start button is hidden
+
+        if (statusMessage) {
+            statusMessage.textContent = window.lastGameOverMessage || 'Game Over!'; 
+            if ((window.lastGameOverMessage || '').includes('YOU WON')) {
+                 statusMessage.style.color = 'lime';
+            } else if ((window.lastGameOverMessage || '').includes('Crew Wins')) {
+                 statusMessage.style.color = 'cyan';
+            } else if ((window.lastGameOverMessage || '').includes('Killer Wins')) {
+                 statusMessage.style.color = 'red'; // Example color for killer win
+            } else {
+                statusMessage.style.color = 'white'; // Default game over color
+            }
+        }
+    } else { // Loading or error
+        setDisplay(waitingRoom, 'flex');
+        if (statusMessage) statusMessage.textContent = 'Loading room...';
+    }
+
+    // Update Room Code display text
+    if (roomCodeDisplay) {
+        const roomId = getRoomIdFromUrl(); // Get current room ID
+        roomCodeDisplay.textContent = `Room Code: ${roomId || 'N/A'}`;
     }
 }
 
@@ -465,7 +543,7 @@ function handleKeyDown(event) {
 
     // --- Kill Attempt --- 
     if (event.code === 'Space' && isKiller && roomStatus === 'playing') {
-        console.log("Attempting kill...");
+        // console.log("Attempting kill...");
         const roomId = getRoomIdFromUrl();
         socket.emit('attempt_kill', { room_id: roomId });
         event.preventDefault(); 
@@ -491,12 +569,12 @@ function handleKeyDown(event) {
         });
         
         if (foundNearbyTask) {
-            console.log("Attempting task with Space bar...");
+            // console.log("Attempting task with Space bar...");
             const roomId = getRoomIdFromUrl();
             socket.emit('attempt_task', { room_id: roomId });
             event.preventDefault(); // Prevent default Space bar behavior (e.g., scrolling)
         } else {
-             console.log("Pressed Space, but no incomplete task nearby or is killer.");
+             // console.log("Pressed Space, but no incomplete task nearby or is killer.");
         }
     }
 }
@@ -516,7 +594,7 @@ function handleBlur() {
 
 // --- Socket IO Handlers ---
 function setupSocketListeners(roomId) {
-    console.log(`Setting up Socket listeners for room: ${roomId}`);
+    // console.log(`Setting up Socket listeners for room: ${roomId}`);
 
     // Remove existing listeners before adding new ones (important for hot reloading/reconnects)
     socket.off('connect');
@@ -568,7 +646,7 @@ function setupSocketListeners(roomId) {
 
     // Received when YOU successfully join/rejoin
     socket.on('current_state', (data) => {
-        console.log('Received current state:', data);
+        // console.log('Received current state:', data);
         myPlayerId = data.your_id;
         roomStatus = data.status;
         players = data.players_positions || {}; // Start with position data
@@ -663,7 +741,7 @@ function setupSocketListeners(roomId) {
     });
 
     socket.on('game_started', (data) => {
-        console.log('Game started:', data);
+        // console.log('Game started:', data);
         roomStatus = 'playing';
         players = data.players_positions || {}; 
         allPlayersList = data.all_players_list || [];
@@ -672,14 +750,14 @@ function setupSocketListeners(roomId) {
         tasks = data.tasks || [];
         totalTasks = data.totalTasks || 0;
         completedTasks = data.completedTasks || 0;
-        console.log(`Tasks Initialized: ${completedTasks}/${totalTasks}`, tasks);
+        // console.log(`Tasks Initialized: ${completedTasks}/${totalTasks}`, tasks);
 
         // Determine if host
         const hostPlayer = allPlayersList.find(p => p.isHost);
         isHost = hostPlayer ? hostPlayer.id === myPlayerId : false;
 
-        console.log(`My ID: ${myPlayerId}, Host: ${isHost}, Status: ${roomStatus}`);
-        console.log("Initial players positions:", players); 
+        // console.log(`My ID: ${myPlayerId}, Host: ${isHost}, Status: ${roomStatus}`);
+        // console.log("Initial players positions:", players); 
 
         updateUI(); // Update UI including task progress
 
@@ -690,16 +768,16 @@ function setupSocketListeners(roomId) {
     });
 
     socket.on('you_are_killer', () => {
-        console.log("You are the killer!");
+        // console.log("You are the killer!");
         isKiller = true;
         updateUI(); // Show killer info
     });
 
     socket.on('player_died', (data) => {
-        console.log("Player died event received: Victim ID", data.victim_id);
+        // console.log("Player died event received: Victim ID", data.victim_id);
         if (players[data.victim_id]) {
             players[data.victim_id].is_dead = true;
-            console.log(`Marked player ${data.victim_id} as dead locally.`);
+            // console.log(`Marked player ${data.victim_id} as dead locally.`);
         } else {
              console.warn(`Received player_died for unknown ID: ${data.victim_id}`);
         }
@@ -708,7 +786,7 @@ function setupSocketListeners(roomId) {
 
     // --- ADDED: You Died Handler ---
     socket.on('you_died', () => {
-        console.log("Received 'you_died' event!");
+        // console.log("Received 'you_died' event!");
         amIDead = true;
         const popup = document.getElementById('you-died-popup');
         if (popup) {
@@ -724,26 +802,30 @@ function setupSocketListeners(roomId) {
                 keysPressed[key] = false;
             }
         }
-        console.log("Input disabled due to death.");
+        // console.log("Input disabled due to death.");
     });
 
     // --- ADDED: Task Completed Handler ---
     socket.on('task_completed', (data) => {
-        console.log(`Task Completed event: ID=${data.task_id}, New Count=${data.completedTasks}/${data.totalTasks}`);
-        // Update local task state
-        const taskIndex = tasks.findIndex(t => t.id === data.task_id);
-        if (taskIndex !== -1) {
-            tasks[taskIndex].completed = true;
-        }
-        // Update overall counts
+        // console.log(`Task Completed event: ID=${data.task_id}, New Count=${data.completedTasks}/${data.totalTasks}`);
         completedTasks = data.completedTasks;
-        totalTasks = data.totalTasks; // Keep total in sync just in case
+        totalTasks = data.totalTasks;
+
+        // --- ADDED: Update the specific task's status in the local array ---
+        const completedTask = tasks.find(task => task.id === data.task_id);
+        if (completedTask) {
+            completedTask.completed = true;
+            // console.log(`Marked task ${data.task_id} as completed locally.`);
+        } else {
+            console.warn(`Received task_completed for unknown task ID: ${data.task_id}`);
+        }
+        // --- End Added Section ---
         
-        updateUI(); // Update the task progress display
+        updateUI(); // Update the task progress display text ("Tasks: X/Y")
     });
 
     socket.on('game_over', (data) => {
-        console.log('Game Over:', data);
+        // console.log('Game Over:', data);
         roomStatus = 'game_over';
         amIDead = true; 
 
@@ -765,8 +847,9 @@ function setupSocketListeners(roomId) {
         if (startGameBtn) startGameBtn.style.display = 'none'; // Hide start button
         if (gameOverControls) gameOverControls.style.display = 'block'; // Show back home button
 
+        let finalMessage = 'Game Over!'; // Declare outside the if block with a default
         if (statusMessageP) {
-            let finalMessage = data.message || 'Game Over!';
+            finalMessage = data.message || 'Game Over!'; // Assign inside, remove let
             if (data.outcome === 'killer_win' && data.winner_id === myPlayerId) {
                 finalMessage = 'YOU WON!'; 
                 statusMessageP.style.color = 'lime';
@@ -779,21 +862,36 @@ function setupSocketListeners(roomId) {
             statusMessageP.innerText = finalMessage;
         }
         
+        // Store the message for updateUI to use
+        window.lastGameOverMessage = finalMessage; 
+
         // No need to call updateUI() here as we manually set the state
         // Resetting local flags like isKiller isn't strictly necessary as the page will redirect
-        // isKiller = false;
-        // isHost = false;
     });
 }
 
+// Store the last game over message globally
+window.lastGameOverMessage = 'Game Over!';
+
 async function initGame() {
+    // --- Canvas Resizing --- 
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        // We might need to redraw the current frame after resize
+        // but gameLoop handles drawing continuously anyway.
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); // Initial size set
+    // --- End Canvas Resizing ---
+
     createUI();
     setupInputListeners();
     setupSocketListeners(getRoomIdFromUrl());
 
     try {
         await loadAssets();
-        console.log("Assets loaded!");
+        // console.log("Assets loaded!");
     } catch (error) {
         console.error("Failed to load assets:", error);
         assetsLoaded = false;

@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Room</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
       margin: 0;
@@ -100,140 +103,141 @@
       display: none;
     }
 
-      .alert {
-        padding: 10px;
-        margin: 10px;
-        border-radius: 5px;
-        font-size: 14px;
-        display: none;
-      }
-      .alert.success {
-        background-color: #4caf50;
-        color: white;
-      }
-      .alert.error {
-        background-color: #f44336;
-        color: white;
-      }
-    </style>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-  </head>
-  <body>
-    <header>
+    .alert {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      display: none;
+    }
+    .alert.success {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .alert.error {
+      background-color: #f44336;
+      color: white;
+    }
+
+    /* Basic alert container positioning */
+    #alert-container {
+        position: fixed;
+        top: 1rem; /* Adjust as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        width: auto;
+        max-width: 90%; /* Ensure it doesn't overflow on small screens */
+        display: flex; /* Needed for gap in AlertManager */
+        flex-direction: column;
+        gap: 0.5rem; /* Spacing between alerts */
+    }
+  </style>
+</head>
+<body>
+  <div id="alert-container"></div>
+
+  <div class="top-left">
+    <a href="/">Back to Main Menu</a>
+  </div>
+
+  <div class="form-wrapper">
+    <form class="form-box" method="POST" action="/create-room" onsubmit="handleSubmit(event)">
       <h1>Create Room</h1>
-      <div id="user-status" class="user-status"></div>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/find-room">Find Room</a>
-        <a href="/create-room">Create Room</a>
-        <a href="/settings">Settings</a>
-      </nav>
-    </header>
 
-    <main>
-      <div id="alert-container"></div>
+      <label for="room_name">Room Name</label>
+      <input type="text" name="room_name" id="room_name" required>
 
-      <div class="top-left">
-        <a href="/">Back to Main Menu</a>
+      <label for="visibility">Visibility</label>
+      <select name="visibility" id="visibility" onchange="togglePasswordField()">
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+
+      <label for="max_players">Max Players (e.g., 4-10)</label>
+      <input type="number" name="max_players" id="max_players" min="4" max="10" value="6" required>
+
+      <label for="room_password" id="password-label" class="hidden">Room Password</label>
+      <input type="password" name="room_password" id="room_password" class="hidden">
+
+      <div class="button-group">
+        <button type="submit">Create</button>
+        <a href="/" class="button-link">Cancel</a>
       </div>
+    </form>
+  </div>
 
-      <div class="form-wrapper">
-        <form
-          class="form-box"
-          method="POST"
-          action="/create-room"
-          onsubmit="handleSubmit(event)"
-        >
-          <h1>Create Room</h1>
+  <!-- Include AlertManager and Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/public/js/alerts.js" type="module"></script>
+  <script src="/public/js/home.js" type="module"></script> <!-- Initializes AlertManager -->
+  <script>
+    function togglePasswordField() {
+      const isPrivate = document.getElementById("visibility").value === "private";
+      document.getElementById("room_password").classList.toggle("hidden", !isPrivate);
+      document.getElementById("password-label").classList.toggle("hidden", !isPrivate);
+      // Make password required only if visible/private
+      document.getElementById("room_password").required = isPrivate;
+    }
+    // Run on load and when visibility changes
+    window.onload = togglePasswordField;
+    document.getElementById("visibility").addEventListener('change', togglePasswordField);
 
-          <label for="room_name">Room Name</label>
-          <input type="text" name="room_name" id="room_name" required />
-
-          <label for="max_players">Max Players</label>
-          <input
-            type="number"
-            name="max_players"
-            id="max_players"
-            value="10"
-            min="2"
-            max="15"
-            required
-          />
-
-          <label for="visibility">Visibility</label>
-          <select
-            name="visibility"
-            id="visibility"
-            onchange="togglePasswordField()"
-          >
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-          </select>
-
-          <label for="room_password" id="password-label" class="hidden"
-            >Room Password</label
-          >
-          <input
-            type="password"
-            name="room_password"
-            id="room_password"
-            class="hidden"
-          />
-
-          <div class="button-group">
-            <button type="submit">Create</button>
-            <a href="/" class="button-link">Cancel</a>
-          </div>
-        </form>
-      </div>
-    </main>
-
-    <footer>
-      <p>CSE 312 Spring 2025</p>
-    </footer>
-
-    <script src="/public/js/auto.js"></script>
-    <script>
-      function togglePasswordField() {
-        const isPrivate =
-          document.getElementById("visibility").value === "private";
-        document
-          .getElementById("room_password")
-          .classList.toggle("hidden", !isPrivate);
-        document
-          .getElementById("password-label")
-          .classList.toggle("hidden", !isPrivate);
-      }
-      window.onload = togglePasswordField;
-
-    function handleSubmit(event) {
-      event.preventDefault();
+    async function handleSubmit(event) {
+      event.preventDefault(); // Stop default form submit
       const roomName = document.getElementById("room_name").value;
       const visibility = document.getElementById("visibility").value;
       const roomPassword = document.getElementById("room_password").value;
 
+      // Basic validation (should match backend ideally)
       if (!roomName || (visibility === "private" && !roomPassword)) {
-        showAlert("Please fill out all fields correctly.", "error");
+        if(window.showAlert) window.showAlert("Please fill out all required fields.", "error");
+        else alert("Please fill out all required fields.");
         return;
       }
+      
+      const payload = {
+          room_name: roomName,
+          room_type: visibility, // Corrected key to match backend expectation
+          passcode: roomPassword, 
+          max_players: document.getElementById("max_players").value
+      };
 
-      showAlert("Room created successfully!", "success");
+      try {
+          const response = await fetch('/create-room', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.roomId) {
+              if(window.showAlert) window.showAlert('Room created! Joining...', 'success');
+              else alert('Room created! Joining...');
+              // Redirect to the new room page
+              setTimeout(() => {
+                window.location.href = `/room/${data.roomId}`;
+              }, 1000); // Short delay
+          } else {
+              // Show error from server or a generic one
+              const errorMessage = data.message || `Failed to create room (HTTP ${response.status})`;
+              if(window.showAlert) window.showAlert(errorMessage, 'error');
+              else alert(errorMessage);
+          }
+      } catch (error) {
+          console.error('Create room fetch error:', error);
+          if(window.showAlert) window.showAlert('An error occurred while creating the room.', 'error');
+          else alert('An error occurred while creating the room.');
+      }
     }
 
-    function showAlert(message, type) {
-      const alertContainer = document.getElementById("alert-container");
-      const alert = document.createElement("div");
-
-      alert.className = `alert ${type}`;
-      alert.textContent = message;
-
-      alertContainer.appendChild(alert);
-      alert.style.display = "block";
-
-      setTimeout(() => {
-        alert.style.display = "none";
-      }, 3000);
-    }
+    // Remove old showAlert as it's handled by alerts.js
+    /*
+    function showAlert(message, type) { ... }
+    */
   </script>
 </body>
 </html>

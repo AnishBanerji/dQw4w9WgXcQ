@@ -89,4 +89,5 @@ class AlertManager {
   }
 }
 
-const alertManager = new AlertManager();
+// Restore the export statement for use with modules
+export { AlertManager };
