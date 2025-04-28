@@ -1465,3 +1465,36 @@
 [04-28-2025 07:04:11]: 192.168.65.1 GET /public/js/auto.js
 [04-28-2025 07:04:11]: 192.168.65.1 GET /public/js/home.js
 [04-28-2025 07:04:12]: 192.168.65.1 GET /api/users/@me
+[04-28-2025 08:28:46]: 172.18.0.4 GET /
+[04-28-2025 08:28:46]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 08:28:46]: 172.18.0.4 GET /public/js/auto.js
+[04-28-2025 08:28:46]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 08:28:46]: 172.18.0.4 GET /api/users/@me
+[04-28-2025 08:28:46]: 172.18.0.4 GET /favicon.ico
+[04-28-2025 08:28:54]: 172.18.0.4 GET /register
+[04-28-2025 08:28:54]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 08:28:54]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 08:29:13]: 172.18.0.4 POST /register
+[04-28-2025 08:29:15]: 172.18.0.4 GET /
+[04-28-2025 08:29:15]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 08:29:15]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 08:29:15]: 172.18.0.4 GET /public/js/auto.js
+[04-28-2025 08:29:15]: 172.18.0.4 GET /api/users/@me
+[04-28-2025 08:29:16]: 172.18.0.4 GET /create-room
+[04-28-2025 08:29:16]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 08:29:16]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 08:29:18]: 172.18.0.4 POST /create-room
+[04-28-2025 08:29:19]: 172.18.0.4 GET /room/6cb86598-d7f9-4ad9-a53b-3987b9c48caf
+[04-28-2025 08:29:19]: 172.18.0.4 GET /public/js/game.js
+[04-28-2025 08:29:19]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 08:29:19]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 08:29:19]: 172.18.0.4 GET /public/img/Map.png
+[04-28-2025 08:29:19]: 172.18.0.4 GET /public/img/Character.png
+[04-28-2025 08:29:19]: 172.18.0.4 GET /public/img/Dead Character.png
+[04-28-2025 08:29:19]: 172.18.0.4 GET /public/img/Unfinished Task.png
+[04-28-2025 08:29:19]: 172.18.0.4 GET /public/img/Finished Task.png
+[04-28-2025 08:40:16]: 172.18.0.4 GET /
+[04-28-2025 08:40:16]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 08:40:16]: 172.18.0.4 GET /public/js/auto.js
+[04-28-2025 08:40:16]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 08:40:16]: 172.18.0.4 GET /api/users/@me

@@ -4,17 +4,28 @@ services:
     # No ports exposed for security
   myapp:
     build:
-      context: ./app # Point build context to the app directory
+      context: ./app
     env_file:
-      - .env # Load environment variables from .env file in the root
+      - .env
     volumes:
-      # Map the host logs directory to the container logs directory
       - ./logs:/app/logs
     environment:
-      # WAIT_HOSTS: mongo:27017 # Keep or remove depending on if you use a wait script
-      DOCKER_DB: true # Example variable if needed
-      # MONGO_URI is now loaded from .env file via env_file
-    ports:
-      - '8080:8080'
+      DOCKER_DB: true
+    # No ports exposed, Nginx handles it
     depends_on:
-      - mongo # Ensure mongo starts before the app attempts to connect 
+      - mongo
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"   # For HTTP -> HTTPS redirect
+      - "443:443" # For HTTPS
+    volumes:
+      # Mount the server's specific site config
+      - /etc/nginx/sites-available/unknown2.cse312.dev:/etc/nginx/conf.d/default.conf:ro
+      # Mount Let's Encrypt directory for certificates
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      # Mount dhparams file
+      - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
+    depends_on:
+      - myapp
+    restart: always

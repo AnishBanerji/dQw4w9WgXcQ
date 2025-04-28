@@ -94,12 +94,15 @@
   </div>
 
   <script type="module">
-    import { websocketUrl } from "./utils.js";
+    // Define WebSocket URL dynamically
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const websocketUrl = `${wsProtocol}://${window.location.host}/`; // Assumes WS endpoint is at root
 
     let isImposter = false;
     let killCooldown = false;
     let taskInProgress = false;
 
+    // Use the dynamically defined URL
     const ws = new WebSocket(websocketUrl);
 
     ws.onopen = () => {
