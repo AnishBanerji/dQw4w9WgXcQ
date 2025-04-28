@@ -23,8 +23,6 @@ def log_req():
     with open('/app/logs/requests.log','a') as f:
         f.write(log)
 
-
-
 @app.route('/',methods=['GET'])
 def load_home():
     filepath = "public/html/home.html"
