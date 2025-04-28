@@ -1,67 +1,31 @@
-# Original configuration (commented out):
-# services:
-#   mongo:
-#     image: mongo:4.2.5
-#     # No ports exposed for security
-#   myapp:
-#     build:
-#       context: ./app
-#     env_file:
-#       - .env
-#     volumes:
-#       - ./logs:/app/logs
-#     environment:
-#       DOCKER_DB: true
-#     # No ports exposed, Nginx handles it
-#     depends_on:
-#       - mongo
-#   nginx:
-#     image: nginx:latest
-#     ports:
-#       - "80:80"   # For HTTP -> HTTPS redirect or standard HTTP
-#       - "443:443" # For HTTPS
-#     volumes:
-#       # Mount the host's production nginx config instead of the local dev config
-#       - /etc/nginx/sites-available/unknown1.cse312.dev:/etc/nginx/conf.d/default.conf:ro # Adjusted for production
-#       # Mount Let's Encrypt directory for certificates (if using production)
-#       - /etc/letsencrypt:/etc/letsencrypt:ro
-#       # Mount dhparams file (if using production)
-#       - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
-#     depends_on:
-#       - myapp
-#     restart: always
-
-# New configuration for simple local testing:
-
 services:
   mongo:
     image: mongo:4.2.5
-    container_name: mongo_db # Give a specific container name
-    volumes:
-      - mongodb_data:/data/db # Persist data
-    restart: unless-stopped
-
+    # No ports exposed for security
   myapp:
-    container_name: my_app # Give a specific container name
     build:
       context: ./app
     env_file:
       - .env
-    ports:
-      - "8080:8080" # Expose port 8080 (host:container)
+    volumes:
+      - ./logs:/app/logs
     environment:
-      - DOCKER_DB=true
-      # Assuming the app connects to mongo service named 'mongo' on default port 27017
-      - DB_HOST=mongo
-      # Make sure your app inside the container listens on port 8080
-      - PORT=8080
+      DOCKER_DB: true
+    # No ports exposed, Nginx handles it
     depends_on:
       - mongo
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"   # For HTTP -> HTTPS redirect or standard HTTP
+      - "443:443" # For HTTPS
     volumes:
-      - ./logs:/app/logs # Mount logs directory
-      # Optional: Mount app code for development ease (uncomment if needed)
-      # - ./app:/app
-    restart: unless-stopped
-
-volumes:
-  mongodb_data: # Define the named volume
+      # Mount the host's production nginx config instead of the local dev config
+      - /etc/nginx/sites-available/unknown2.cse312.dev:/etc/nginx/conf.d/default.conf:ro # Adjusted for unknown2
+      # Mount Let's Encrypt directory for certificates (if using production)
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      # Mount dhparams file (if using production)
+      - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
+    depends_on:
+      - myapp
+    restart: always
