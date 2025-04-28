@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
       margin: 0;
@@ -117,6 +120,20 @@
       background-color: #f44336;
       color: white;
     }
+
+    /* Basic alert container positioning */
+    #alert-container {
+        position: fixed;
+        top: 1rem; /* Adjust as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        width: auto;
+        max-width: 90%; /* Ensure it doesn't overflow on small screens */
+        display: flex; /* Needed for gap in AlertManager */
+        flex-direction: column;
+        gap: 0.5rem; /* Spacing between alerts */
+    }
   </style>
 </head>
 <body>
@@ -147,40 +164,69 @@
     </form>
   </div>
 
+  <!-- Include the AlertManager script -->
+  <script src="/public/js/alerts.js" type="module"></script>
+  <script src="/public/js/home.js" type="module"></script> <!-- Initializes AlertManager -->
   <script>
-    function handleSubmit(event) {
-      event.preventDefault();
+    // Ensure showAlert is available (initialized by home.js)
+    async function handleSubmit(event) {
+      event.preventDefault(); // Keep preventing default form submission
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirm_password").value;
 
       if (password !== confirmPassword) {
-        showAlert("Passwords do not match.", "error");
+        if (window.showAlert) {
+          window.showAlert("Passwords do not match.", "error");
+        } else {
+          alert("Passwords do not match."); // Fallback
+        }
         return;
       }
 
-      // Simulate a registration attempt
-      if (username && password) {
-        showAlert("Registration successful!", "success");
-      } else {
-        showAlert("Please fill out all fields.", "error");
+      try {
+        const response = await fetch('/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json(); // Always try to parse JSON
+
+        if (response.ok) {
+          if (window.showAlert) {
+            window.showAlert(data.message || "Registration successful! Redirecting...", "success");
+          } else {
+            alert(data.message || "Registration successful! Redirecting...");
+          }
+          // Redirect to home page after successful registration and login
+          setTimeout(() => {
+            window.location.href = "/"; 
+          }, 1500); // Delay redirect slightly to show message
+        } else {
+          // Show error message from server
+          if (window.showAlert) {
+            window.showAlert(data.message || `Registration failed (HTTP ${response.status})`, "error");
+          } else {
+            alert(data.message || `Registration failed (HTTP ${response.status})`);
+          }
+        }
+      } catch (error) {
+        console.error('Registration fetch error:', error);
+        if (window.showAlert) {
+          window.showAlert("An error occurred during registration. Please try again.", "error");
+        } else {
+          alert("An error occurred during registration. Please try again.");
+        }
       }
     }
 
-    function showAlert(message, type) {
-      const alertContainer = document.getElementById("alert-container");
-      const alert = document.createElement("div");
-
-      alert.className = `alert ${type}`;
-      alert.textContent = message;
-
-      alertContainer.appendChild(alert);
-      alert.style.display = "block";
-
-      setTimeout(() => {
-        alert.style.display = "none";
-      }, 3000);
-    }
+    // Remove the old showAlert function as it's handled by alerts.js/home.js
+    /*
+    function showAlert(message, type) { ... old code ... }
+    */
   </script>
 </body>
 </html>

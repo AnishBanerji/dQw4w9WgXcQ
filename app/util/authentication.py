@@ -58,7 +58,21 @@ def register():
     }
     
     userDB.insert_one(user_info)
-    res = make_response(jsonify({"message": "User registered successfully"}))
+    
+    auth_token = secrets.token_hex(10)
+    hashed_token = hashlib.sha256(auth_token.encode()).hexdigest()
+    userDB.update_one({"username": username}, {"$set": {"hashed_token": hashed_token}})
+    
+    res = make_response(jsonify({"message": "User registered and logged in successfully"}))
+    res.set_cookie(
+        "auth_token",
+        auth_token,
+        max_age=3600,
+        httponly=True,
+        secure=True,
+        samesite='Lax'
+    )
+    
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
@@ -66,35 +80,60 @@ def login():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
+    # print(f"[DEBUG] Login attempt for user: {username}") # Debug
 
-    user_data = userDB.find_one({"username": username}) 
+    user_data = userDB.find_one({"username": username})
 
     if user_data == None:
+        # print(f"[DEBUG] Login failed: User '{username}' not found.") # Debug
         res = make_response(jsonify({"message": "Invalid credentials"}))
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 400
-    
-    salt = user_data["password"][:29]
-    hashed_password = bcrypt.hashpw(password.encode(), salt.encode())
 
-    if hashed_password.decode() == user_data["password"]:
+    # Use bcrypt.checkpw for comparison
+    stored_hashed_password_str = user_data.get("password") # Get stored hash string
+    if not stored_hashed_password_str:
+        # print(f"[DEBUG] Login failed: No password stored for user '{username}'.") # Debug
+        res = make_response(jsonify({"message": "Server error: User record incomplete"}))
+        res.headers['X-Content-Type-Options'] = "nosniff"
+        return res, 500 # Internal server error
+        
+    stored_hashed_password_bytes = stored_hashed_password_str.encode('utf-8') # Encode stored hash to bytes
+    provided_password_bytes = password.encode('utf-8') # Encode provided password to bytes
+
+    # print(f"[DEBUG] Stored hash (str) for {username}: {stored_hashed_password_str}") # Debug
+    # print(f"[DEBUG] Provided password (str): {password}") # Debug
+
+    try:
+        passwords_match = bcrypt.checkpw(provided_password_bytes, stored_hashed_password_bytes)
+    except Exception as e:
+        # print(f"[DEBUG] bcrypt.checkpw error for user '{username}': {e}") # Debug bcrypt errors
+        res = make_response(jsonify({"message": "Server error during authentication"}))
+        res.headers['X-Content-Type-Options'] = "nosniff"
+        return res, 500
+        
+    if passwords_match:
+        # print(f"[DEBUG] Password match successful for user: {username}") # Debug
+        # Passwords match - proceed with token generation and login
         auth_token = secrets.token_hex(10)
         hashed_token = hashlib.sha256(auth_token.encode()).hexdigest()
-        userDB.update_one({"username": username}, {"$set": {"hashed_token": hashed_token}})       
-        
+        userDB.update_one({"username": username}, {"$set": {"hashed_token": hashed_token}})
+
         res = make_response(jsonify({"message": "Login successful"}))
         res.set_cookie(
             "auth_token",
             auth_token,
             max_age=3600,
             httponly=True,
-            secure=True,
+            secure=True, # Should be True in production with HTTPS
             samesite='Lax'
         )
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res
     else:
-        res = make_response(jsonify({"message": "Invalid password"}))
+        # print(f"[DEBUG] Password mismatch for user: {username}") # Debug
+        # Passwords do not match
+        res = make_response(jsonify({"message": "Invalid credentials"})) # Changed message for security
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 400
 

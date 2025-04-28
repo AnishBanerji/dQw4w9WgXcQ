@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Lobby</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lobby - Within Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       body {
         background-color: black;
@@ -81,6 +83,20 @@
         margin-top: 10px;
         text-align: center;
       }
+
+      /* Basic alert container positioning */
+      #alert-container {
+          position: fixed;
+          top: 1rem; /* Adjust as needed */
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 9999;
+          width: auto;
+          max-width: 90%; /* Ensure it doesn't overflow on small screens */
+          display: flex; /* Needed for gap in AlertManager */
+          flex-direction: column;
+          gap: 0.5rem; /* Spacing between alerts */
+      }
     </style>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   </head>
@@ -97,8 +113,8 @@
       <div id="roomCode">Room Code: [Loading...]</div>
     </div>
 
-    <script src="/public/js/lobby.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/public/js/alerts.js"></script>
+    <script src="/public/js/alerts.js" type="module"></script>
+    <script src="/public/js/lobby.js"></script>
   </body>
 </html>

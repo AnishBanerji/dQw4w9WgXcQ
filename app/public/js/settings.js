@@ -69,6 +69,7 @@ async function handleSubmit(event) {
   }
 }
 
+/* 2FA Functionality - Commented out as HTML elements are missing
 const dialog = document.getElementById("twoFactorDialog");
 const enable2faBtn = document.getElementById("enable2fa");
 const closeDialogBtn = document.getElementById("closeDialog");
@@ -119,6 +120,7 @@ function closeDialog() {
 
 closeDialogBtn.addEventListener("click", closeDialog);
 doneButton.addEventListener("click", closeDialog);
+*/
 
 document.getElementById("avatar-preview").addEventListener("click", () => {
   document.getElementById("avatar").click();

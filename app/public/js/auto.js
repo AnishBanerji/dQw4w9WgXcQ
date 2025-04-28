@@ -15,14 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // User is logged in
                 userStatusDiv.innerHTML = `
                     <span>Logged in as: <strong>${escapeHTML(data.username)}</strong></span>
-                    <a href="/logout" class="auth-link">Logout</a>
+                    <a href="/logout" class="auth-button">Logout</a>
                 `;
             })
             .catch(error => {
                 // User is not logged in
                 userStatusDiv.innerHTML = `
-                    <a href="/login" class="auth-link">Login</a>
-                    <a href="/register" class="auth-link">Register</a>
+                    <a href="/login" class="auth-button">Login</a>
+                    <a href="/register" class="auth-button">Register</a>
                 `;
                 console.log('User not logged in or API error:', error.message);
             });

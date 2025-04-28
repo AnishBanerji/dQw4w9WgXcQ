@@ -167,9 +167,18 @@ def load_createRoom():
 @login_required_http
 def make_room_route():
     result = create_room(request)
-    if isinstance(result, tuple): return result[0], result[1]
-    elif result == "Not Logged In": return "Unauthorized", 401
-    return jsonify(result)
+    if isinstance(result, tuple): # Handles errors like ("msg", 400/500)
+         # Ensure we return JSON even for errors the frontend might parse
+         return jsonify({"message": result[0]}), result[1]
+    elif result == "Not Logged In": # Should be caught by decorator, but defensive check
+         return jsonify({"message": "Authentication required"}), 401
+    # If result is not a tuple, assume it's the success dict {'roomId': ...} OR an error string
+    if isinstance(result, str):
+         # Explicitly return validation error strings with a 400 status and JSON structure
+         print(f"[API Error] /create-room validation failed: {result}") # Log the specific error
+         return jsonify({"message": result}), 400
+    # Otherwise, assume success (result should be the {'roomId': ...} dict)
+    return jsonify(result), 200
 
 @app.route('/find-room',methods=['GET'])
 @login_required_http
@@ -263,7 +272,7 @@ def handle_find_rooms():
                 cur_room = getRoomInfo(ids)
                 host_player = next((p for p in cur_room.get('players', []) if p.get('isHost')), None)
                 ret.append({
-                    '_id': cur_room.get('_id'),
+                    'roomId': cur_room.get('_id'),
                     'roomName': cur_room.get('roomName'),
                     'roomType': cur_room.get('roomType'),
                     'currPlayers': cur_room.get('currPlayers'),
@@ -648,11 +657,13 @@ def handle_disconnect():
                 emit('room_update', {'status': current_status, 'all_players_list': new_player_list}, room=room_id)
             elif update_result.matched_count == 0:
                 print(f"Room {room_id} not found during disconnect update.")
-            else:
+            else: # Corresponds to modified_count == 0
                 print(f"Player {player_id} not found in room {room_id} list for removal or no change needed.")
-        except KeyError: print(f"Room {room_id} already deleted or not found during disconnect.")
-        except Exception as e: print(f"Error updating room {room_id} on disconnect for player {player_id}: {e}")
-    else:
+        except KeyError:
+            print(f"Room {room_id} already deleted or not found during disconnect.")
+        except Exception as e:
+            print(f"Error updating room {room_id} on disconnect for player {player_id}: {e}")
+    else: # Corresponds to `if sid in sid_map:`
         print(f"Disconnected SID {sid} not found in sid_map.")
 
 # === Collision Logic (Simplified) ===

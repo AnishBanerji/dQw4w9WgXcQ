@@ -126,7 +126,7 @@ def create_room(request):
     try:
         result = roomDB.insert_one(room_doc)
         print(f"[DB] Room {result.inserted_id} created.")
-        return {'id': result.inserted_id}
+        return {'roomId': result.inserted_id}
     except Exception as e:
         print(f"Error creating room in DB: {e}")
         return "Database Error", 500
