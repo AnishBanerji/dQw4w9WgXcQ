@@ -1498,3 +1498,35 @@
 [04-28-2025 08:40:16]: 172.18.0.4 GET /public/js/auto.js
 [04-28-2025 08:40:16]: 172.18.0.4 GET /public/js/home.js
 [04-28-2025 08:40:16]: 172.18.0.4 GET /api/users/@me
+[04-28-2025 10:44:58]: 172.18.0.4 GET /
+[04-28-2025 10:44:58]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 10:44:58]: 172.18.0.4 GET /public/js/auto.js
+[04-28-2025 10:44:58]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 10:44:58]: 172.18.0.4 GET /api/users/@me
+[04-28-2025 10:52:01]: 172.18.0.4 GET /
+[04-28-2025 10:52:01]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 10:52:01]: 172.18.0.4 GET /public/js/auto.js
+[04-28-2025 10:52:01]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 10:52:01]: 172.18.0.4 GET /api/users/@me
+[04-28-2025 10:52:02]: 172.18.0.4 GET /register
+[04-28-2025 10:52:02]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 10:52:02]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 10:52:13]: 172.18.0.4 POST /register
+[04-28-2025 10:52:15]: 172.18.0.4 GET /
+[04-28-2025 10:52:15]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 10:52:15]: 172.18.0.4 GET /public/js/auto.js
+[04-28-2025 10:52:15]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 10:52:15]: 172.18.0.4 GET /api/users/@me
+[04-28-2025 10:52:16]: 172.18.0.4 GET /create-room
+[04-28-2025 10:52:16]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 10:52:16]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 10:52:18]: 172.18.0.4 POST /create-room
+[04-28-2025 10:52:19]: 172.18.0.4 GET /room/5d0bb7df-bf18-487e-a558-4610140604f0
+[04-28-2025 10:52:19]: 172.18.0.4 GET /public/js/alerts.js
+[04-28-2025 10:52:19]: 172.18.0.4 GET /public/js/home.js
+[04-28-2025 10:52:19]: 172.18.0.4 GET /public/js/game.js
+[04-28-2025 10:52:19]: 172.18.0.4 GET /public/img/Character.png
+[04-28-2025 10:52:19]: 172.18.0.4 GET /public/img/Dead Character.png
+[04-28-2025 10:52:19]: 172.18.0.4 GET /public/img/Map.png
+[04-28-2025 10:52:19]: 172.18.0.4 GET /public/img/Unfinished Task.png
+[04-28-2025 10:52:19]: 172.18.0.4 GET /public/img/Finished Task.png

@@ -117,7 +117,7 @@ A real-time multiplayer game inspired by Among Us, built for CSE 312. Players jo
     ```
     *   The `-d` flag runs the containers in detached mode (in the background).
 6.  **Access the App:**
-    *   Open your web browser and navigate to `https://your_domain.com`.
+    *   Open your web browser and navigate to `https://unknown1.cse312.dev/`.
 
 ## Game Instructions
 
