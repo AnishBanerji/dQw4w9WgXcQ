@@ -231,6 +231,15 @@ def get_imgs(filename):
     filepath = os.path.join("public", "img", filename) # Use os.path.join
     return send_file(filepath, mimetype=mimetype)
 
+@app.route('/favicon.ico')
+@limiter.exempt # Favicon requests shouldn't be limited
+def favicon():
+    filepath = os.path.join(os.path.dirname(__file__), 'public', 'favicon.ico')
+    try:
+        return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+    except FileNotFoundError:
+        abort(404) # Return 404 if the file doesn't exist
+
 @app.route('/api/users/@me', methods=['GET'])
 def get_user_profile():
     # print("[DEBUG] /api/users/@me route handler called", flush=True) # <<< ADDED DEBUG
