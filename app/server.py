@@ -209,6 +209,7 @@ def get_room_info_api(roomId):
     return jsonify(roomInfo)
 
 @app.route('/public/js/<filename>', methods=['GET'])
+@limiter.exempt # <<< Exempt this route
 def getPublicJS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'js', filename)
@@ -216,38 +217,41 @@ def getPublicJS(filename):
     else: return "Not Found", 404
 
 @app.route('/public/css/<filename>', methods=['GET'])
+@limiter.exempt # <<< Exempt this route
 def getPublicCSS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'css', filename)
     if os.path.exists(file_path): return send_file(file_path, mimetype="text/css")
     else: return "Not Found", 404
 
-@app.route('/join_room', methods=['POST'])
-def join_room_api():
-    room_id = request.args.get('id')
-    data = request.get_json()
-    password = data.get('password', '')
-    if not room_id: return jsonify({"message": "Room ID is required"}), 400
-    try: room_doc = getRoomInfo(room_id)
-    except KeyError: return jsonify({"message": "Room not found"}), 404
-    except Exception as e: print(f"DB Error in join_room_api for {room_id}: {e}"); return jsonify({"message": "Server error checking room"}), 500
-    if room_doc.get('roomType') == 'private':
-        if room_doc.get('passcode') != password: return jsonify({"message": "Incorrect room password"}), 403
-    return jsonify({"message": "Successfully joined room"})
-
-@app.route('/api/users/@me', methods=['GET'])
-def get_user_profile():
-    auth_token = request.cookies.get('auth_token')
-    if not auth_token: return jsonify({"message": "Not authenticated"}), 401
-    user = find_auth(auth_token)
-    if user is None: return jsonify({"message": "Invalid token"}), 401
-    return jsonify({"username": user["username"], "avatar_url": "/public/imgs/user.webp"})
-
 @app.route('/public/img/<filename>', methods=['GET'])
+@limiter.exempt # <<< Exempt this route
 def get_imgs(filename):
     mimetype = get_mimetype(filename)
     filepath = os.path.join("public", "img", filename) # Use os.path.join
     return send_file(filepath, mimetype=mimetype)
+
+@app.route('/api/users/@me', methods=['GET'])
+def get_user_profile():
+    # print("[DEBUG] /api/users/@me route handler called", flush=True) # <<< ADDED DEBUG
+    auth_token = request.cookies.get('auth_token')
+    if not auth_token: 
+        # print("[DEBUG] /api/users/@me: No auth_token cookie found", flush=True)
+        return jsonify({"message": "Not authenticated"}), 401
+    
+    # print(f"[DEBUG] /api/users/@me: Found auth_token cookie: {auth_token[:5]}...", flush=True)
+    user = find_auth(auth_token)
+    
+    if user is None: 
+        # print("[DEBUG] /api/users/@me: find_auth returned None (Invalid token)", flush=True)
+        return jsonify({"message": "Invalid token"}), 401
+    
+    # print(f"[DEBUG] /api/users/@me: User found: {user.get('username')}", flush=True)
+    # Use .get() for safer access to dictionary keys
+    return jsonify({
+        "username": user.get("username", "Unknown"), 
+        "avatar_url": user.get("imageURL", "/public/img/default_avatar.webp") # Use imageURL field if exists
+    })
 
 # Add URL rules (Keep HEAD versions)
 app.add_url_rule('/api/users/settings', 'settingsChange', limiter.limit("10 per hour")(login_required_http(settingsChange)), methods=['POST'])
