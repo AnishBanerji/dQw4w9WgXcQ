@@ -30,4 +30,4 @@ services:
       - myapp
     restart: always
     # Custom command to copy config and start nginx
-    command: ["/bin/sh", "-c", "cp /tmp/nginx.conf /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+    command: ["/bin/sh", "-c", "rm -f /tmp/nginx.conf && cp /etc/nginx/sites-available/unknown2.cse312.dev /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
