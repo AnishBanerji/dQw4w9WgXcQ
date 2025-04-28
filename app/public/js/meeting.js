@@ -1,4 +1,6 @@
-import { websocketUrl } from "./utils.js";
+// Define WebSocket URL dynamically
+const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+const websocketUrl = `${wsProtocol}://${window.location.host}/`; // Assumes WS endpoint is at root
 
 // VC Stuff
 const localAudioElement = document.createElement("audio");
