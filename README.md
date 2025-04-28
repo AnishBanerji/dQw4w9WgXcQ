@@ -68,4 +68,4 @@ This application includes configuration for deployment:
 
 **Deployed Application URL:**
 
-[Deployment Link Placeholder - Add your link here when deployed]
+https://unknown2.cse312.dev
