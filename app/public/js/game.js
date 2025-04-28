@@ -253,6 +253,7 @@ function is_walkable_client(x, y) {
 
 // --- UI Update Function ---
 function updateUI() {
+    console.log(`[updateUI] Called. Current roomStatus: ${roomStatus}, isHost: ${isHost}, isKiller: ${isKiller}, amIDead: ${amIDead}`); // Log status at start
     // Get all potentially visible elements
     const waitingRoom = document.getElementById('waiting-room');
     const statusMessage = document.getElementById('status-message');
@@ -613,9 +614,9 @@ function setupSocketListeners(roomId) {
     socket.off('task_completed'); // Add new listener removal
 
     socket.on('connect', () => {
-        console.log('Connected to server!');
-        const statusMessageP = document.getElementById('status-message');
-        if (statusMessageP) statusMessageP.innerText = 'Joining room...';
+        console.log('Socket connected:', socket.id);
+        // Re-join room on reconnection to ensure server has the right SID map
+        console.log(`Re-emitting join_room for room ${roomId} on connect event.`);
         socket.emit('join_room', { room_id: roomId });
         roomStatus = 'loading'; // Reset status on connect/reconnect
         isKiller = false; // Reset killer status
@@ -624,16 +625,16 @@ function setupSocketListeners(roomId) {
     });
 
     socket.on('disconnect', (reason) => {
-        console.log(`Disconnected from server: ${reason}`);
-        players = {};
-        myPlayerId = null;
-        roomStatus = 'error';
-        isKiller = false;
-        isHost = false;
-        allPlayersList = [];
-        const statusMessageP = document.getElementById('status-message');
-        if (statusMessageP) statusMessageP.innerText = `Disconnected: ${reason}. Please refresh.`;
-        updateUI();
+        console.log('Socket disconnected:', reason);
+        roomStatus = 'loading'; // Reset status on disconnect
+        updateUI(); // Update UI to show disconnected state perhaps
+    });
+
+    socket.on('connect_error', (error) => {
+        console.error('Socket connection error:', error);
+        // Optionally show an error message to the user
+        const statusMessage = document.getElementById('status-message');
+        if (statusMessage) statusMessage.innerText = 'Connection Error!';
     });
 
     socket.on('join_error', (data) => {
@@ -644,67 +645,37 @@ function setupSocketListeners(roomId) {
         updateUI();
     });
 
-    // Received when YOU successfully join/rejoin
+    // This event provides the initial state when joining or reconnecting
     socket.on('current_state', (data) => {
-        // console.log('Received current state:', data);
-        myPlayerId = data.your_id;
-        roomStatus = data.status;
-        players = data.players_positions || {}; // Start with position data
+        console.log('[current_state] Received:', data);
+        // Update local game state based on the comprehensive data received
+        roomStatus = data.status; // 'waiting', 'playing', 'game_over'
+        players = data.players_positions || {}; // Use positions
         allPlayersList = data.all_players_list || [];
-        amIDead = false; // Reset dead status on join
+        myPlayerId = data.your_id;
+        isHost = allPlayersList.find(p => p.id === myPlayerId)?.isHost || false;
+        isKiller = (data.it_player_id === myPlayerId); // Check if I am the killer
+        amIDead = players[myPlayerId]?.is_dead || false; // Check my dead status from positions
 
-        // Merge is_dead status into local players object
-        allPlayersList.forEach(playerInfo => {
-            if (players[playerInfo.id]) {
-                players[playerInfo.id].is_dead = playerInfo.is_dead;
-                players[playerInfo.id].username = playerInfo.username; // Ensure username is updated
-            } else if (playerInfo.id === myPlayerId) { 
-                // If own position data wasn't in players_positions (unlikely), add self
-                // This might happen if DB state is inconsistent briefly
-                players[playerInfo.id] = { 
-                    x: 1800, y: 1800, angle: -Math.PI/2, // Use defaults
-                    username: playerInfo.username,
-                    is_dead: playerInfo.is_dead,
-                    id: playerInfo.id 
-                }; 
-            }
-            // Update local dead status if it pertains to self
-            if (playerInfo.id === myPlayerId && playerInfo.is_dead) {
-                 amIDead = true;
-            }
-        });
+        // Task related state
+        tasks = data.tasks || [];
+        completedTasks = data.completedTasks || 0;
+        totalTasks = data.totalTasks || 0;
 
-        // Determine if host
-        const hostPlayer = allPlayersList.find(p => p.isHost);
-        isHost = hostPlayer ? hostPlayer.id === myPlayerId : false;
+        console.log(`[current_state] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}, isKiller=${isKiller}, myPlayerId=${myPlayerId}`);
 
-        // console.log(`My ID: ${myPlayerId}, Host: ${isHost}, Status: ${roomStatus}, Dead: ${amIDead}`);
-        // console.log("Initial players state (with is_dead merged):", players); // Log initial positions
-
-        updateUI();
-
-        // If already playing when joined (and not dead), start the loop
-        if (roomStatus === 'playing' && assetsLoaded && !amIDead) {
-            requestAnimationFrame(gameLoop); // Start drawing/updates
-        }
+        updateUI(); // Refresh the UI based on the new state
     });
 
-    // Received when anyone joins or leaves (updates waiting room list)
+    // This event provides incremental updates, like player list changes in the lobby
     socket.on('room_update', (data) => {
-        // console.log('Received room update:', data);
-        roomStatus = data.status; // Keep status in sync
+        console.log('[room_update] Received:', data);
         allPlayersList = data.all_players_list || [];
-
-         // Update host status based on the new list
-        const hostPlayer = allPlayersList.find(p => p.isHost);
-        isHost = hostPlayer ? hostPlayer.id === myPlayerId : false;
-
-        // NOTE: This event currently only sends the player list, not positions.
-        // If a player joins *after* the game started (e.g., spectator mode later),
-        // we might need to handle adding their position info here or via another event.
-        // For now, relies on 'current_state' and 'game_started' for positions.
-
-        updateUI();
+        roomStatus = data.status; // Update status from room_update as well
+        // Determine host status based on updated list
+        isHost = allPlayersList.find(p => p.id === myPlayerId)?.isHost || false;
+        console.log(`[room_update] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}`);
+        updateUI(); // Refresh the UI (mainly the player list in the lobby)
     });
 
     socket.on('player_left', (data) => {
@@ -741,9 +712,9 @@ function setupSocketListeners(roomId) {
     });
 
     socket.on('game_started', (data) => {
-        // console.log('Game started:', data);
+        console.log('[game_started] Received:', data);
         roomStatus = 'playing';
-        players = data.players_positions || {}; 
+        players = data.players_positions || {};
         allPlayersList = data.all_players_list || [];
         
         // --- ADDED: Store Task Info --- 
