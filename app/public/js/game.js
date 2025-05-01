@@ -134,6 +134,91 @@ function createUI() {
     youDiedDiv.style.display = 'none'; 
     youDiedDiv.innerHTML = 'YOU DIED<br><span class="text-lg text-gray-300 font-normal">Spectating...</span>'; 
     document.body.appendChild(youDiedDiv);
+
+    // --- ADDED: Meeting Room UI Container (Similar to Waiting Room) ---
+    const meetingRoomDiv = document.createElement('div');
+    meetingRoomDiv.id = 'meeting-room';
+    meetingRoomDiv.classList.add(
+        'overlay-element',
+        'absolute', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
+        'bg-black/80', 'backdrop-blur-lg',
+        'p-6', 'rounded-lg', 'shadow-2xl',
+        'text-white', 'text-left',
+        'flex', 'flex-col', 'items-center', 'gap-4',
+        'w-[90%]', 'max-w-[600px]', 'z-50' // High z-index
+    );
+    meetingRoomDiv.style.display = 'none'; // Hidden initially
+    document.body.appendChild(meetingRoomDiv);
+
+    // Elements INSIDE Meeting Room Div
+    const meetingTitle = document.createElement('h3');
+    meetingTitle.id = 'meeting-title';
+    meetingTitle.classList.add('text-2xl', 'font-bold', 'mb-2');
+    meetingTitle.innerText = 'Emergency Meeting';
+    meetingRoomDiv.appendChild(meetingTitle);
+
+    const meetingTimerDisplay = document.createElement('p');
+    meetingTimerDisplay.id = 'meeting-timer';
+    meetingTimerDisplay.classList.add('text-lg', 'font-mono', 'mb-4');
+    meetingTimerDisplay.innerText = 'Time remaining: 30s';
+    meetingRoomDiv.appendChild(meetingTimerDisplay);
+
+    const meetingContentWrapper = document.createElement('div');
+    meetingContentWrapper.classList.add('flex', 'flex-row', 'gap-4', 'w-full');
+    meetingRoomDiv.appendChild(meetingContentWrapper);
+
+    // Left side: Player list for voting
+    const meetingPlayersDiv = document.createElement('div');
+    meetingPlayersDiv.id = 'meeting-players';
+    meetingPlayersDiv.classList.add('flex-1', 'bg-gray-800/50', 'p-3', 'rounded', 'max-h-[300px]', 'overflow-y-auto');
+    meetingContentWrapper.appendChild(meetingPlayersDiv);
+
+    const meetingPlayersTitle = document.createElement('h4');
+    meetingPlayersTitle.classList.add('text-md', 'font-semibold', 'mb-2', 'border-b', 'border-gray-600', 'pb-1');
+    meetingPlayersTitle.innerText = 'Players (Vote)';
+    meetingPlayersDiv.appendChild(meetingPlayersTitle);
+
+    const meetingPlayerListUl = document.createElement('ul');
+    meetingPlayerListUl.id = 'meeting-player-list';
+    meetingPlayerListUl.classList.add('list-none', 'p-0', 'm-0', 'space-y-1');
+    meetingPlayersDiv.appendChild(meetingPlayerListUl);
+    // Player list items will be added dynamically
+
+    // Right side: Chat
+    const meetingChatDiv = document.createElement('div');
+    meetingChatDiv.id = 'meeting-chat';
+    meetingChatDiv.classList.add('flex-1', 'flex', 'flex-col', 'bg-gray-800/50', 'p-3', 'rounded', 'max-h-[300px]');
+    meetingContentWrapper.appendChild(meetingChatDiv);
+
+    const meetingChatTitle = document.createElement('h4');
+    meetingChatTitle.classList.add('text-md', 'font-semibold', 'mb-2', 'border-b', 'border-gray-600', 'pb-1');
+    meetingChatTitle.innerText = 'Chat';
+    meetingChatDiv.appendChild(meetingChatTitle);
+
+    const meetingChatMessages = document.createElement('div');
+    meetingChatMessages.id = 'meeting-chat-messages';
+    meetingChatMessages.classList.add('flex-grow', 'overflow-y-auto', 'mb-2', 'text-sm', 'space-y-1');
+    meetingChatDiv.appendChild(meetingChatMessages);
+    // Messages will be added dynamically
+
+    const meetingChatInput = document.createElement('input');
+    meetingChatInput.id = 'meeting-chat-input';
+    meetingChatInput.type = 'text';
+    meetingChatInput.placeholder = 'Type message...';
+    meetingChatInput.classList.add('w-full', 'p-2', 'bg-gray-700', 'border', 'border-gray-600', 'rounded', 'text-white', 'text-sm');
+    meetingChatInput.maxLength = 100; // Limit message length
+    // --- ADDED: Handle Enter key for chat --- 
+    meetingChatInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && meetingChatInput.value.trim()) {
+            sendMeetingChat(meetingChatInput.value.trim());
+            meetingChatInput.value = ''; // Clear input
+            event.preventDefault(); // Prevent form submission/newline
+        }
+    });
+    meetingChatDiv.appendChild(meetingChatInput);
+
+    // TODO: Add send button or handle Enter key for chat -> DONE (Enter key)
+    // TODO: Add vote confirmation / skip vote button?
 }
 
 // --- Assets ---
@@ -166,6 +251,13 @@ let completedTasks = 0;
 let totalTasks = 0;
 const TASK_RADIUS_CLIENT = 40; // Same as server
 const TASK_RADIUS_CLIENT_SQ = TASK_RADIUS_CLIENT * TASK_RADIUS_CLIENT;
+// --- ADDED: Emergency Button State ---
+const EMERGENCY_BUTTON = { id: 'emergency_button', x: 1800, y: 1800, radius: 50 }; // Example position near center spawn
+const EMERGENCY_BUTTON_RADIUS_SQ = EMERGENCY_BUTTON.radius * EMERGENCY_BUTTON.radius;
+const EMERGENCY_BUTTON_DRAW_SIZE = 50; // Added: Size to draw the button image
+let buttonCooldownEndTime = null; // Added: Store Date object for cooldown end
+let meetingEndTime = null; // Timestamp when meeting ends
+let meetingTimerInterval = null; // Interval ID for updating timer display
 
 // --- Collision Detection (Client-side) ---
 // let mapCollisionCanvas = null; // No longer needed for pixel reading
@@ -266,6 +358,9 @@ function updateUI() {
     const backBtn = document.getElementById('back-btn');
     const roomCodeDisplay = document.getElementById('room-code-display');
     const gameInstructions = document.getElementById('game-instructions');
+    // --- ADDED: Get Meeting Room elements ---
+    const meetingRoom = document.getElementById('meeting-room');
+    const gameCanvas = document.getElementById('gameCanvas'); // Need canvas to hide/show
 
     // Helper to safely set display style
     const setDisplay = (el, displayStyle) => { if (el) el.style.display = displayStyle; };
@@ -278,7 +373,8 @@ function updateUI() {
     setDisplay(taskProgress, 'none');
     setDisplay(backBtn, 'none');
     setDisplay(roomCodeDisplay, 'none');
-    // Instructions visibility controlled by waitingRoom visibility
+    setDisplay(meetingRoom, 'none'); // Hide meeting room by default
+    setDisplay(gameCanvas, 'block'); // Show game canvas by default
 
     // Update player list
     if (playerList) {
@@ -297,6 +393,7 @@ function updateUI() {
 
     // Show elements based on roomStatus
     if (roomStatus === 'waiting') {
+        setDisplay(gameCanvas, 'none'); // Hide canvas in waiting room
         setDisplay(waitingRoom, 'flex'); // Show centered overlay
         setDisplay(gameInstructions, 'block'); // Show instructions within overlay
         const minPlayers = 2;
@@ -325,7 +422,8 @@ function updateUI() {
             setDisplay(youDiedPopup, 'flex'); // Show 'You Died' overlay
         }
         // Hide waiting room elements
-        setDisplay(waitingRoom, 'none'); 
+        setDisplay(waitingRoom, 'none');
+        setDisplay(meetingRoom, 'none'); // Ensure meeting room hidden
     } else if (roomStatus === 'game_over') {
         // Hide game elements
         setDisplay(killerInfo, 'none');
@@ -357,15 +455,30 @@ function updateUI() {
                 statusMessage.style.color = 'white'; // Default game over color
             }
         }
+        setDisplay(meetingRoom, 'none'); // Ensure meeting room hidden
+    } else if (roomStatus === 'meeting') {
+        setDisplay(gameCanvas, 'none'); // Hide game canvas
+        // Hide regular game UI elements
+        setDisplay(killerInfo, 'none');
+        setDisplay(youDiedPopup, 'none');
+        setDisplay(taskProgress, 'none');
+        setDisplay(backBtn, 'none');
+        setDisplay(roomCodeDisplay, 'none');
+        setDisplay(waitingRoom, 'none');
+        // Show meeting room UI
+        setDisplay(meetingRoom, 'flex');
+        // TODO: Populate meeting room player list & chat here or via socket handlers
     } else { // Loading or error
+        setDisplay(gameCanvas, 'none'); // Hide canvas
         setDisplay(waitingRoom, 'flex');
         if (statusMessage) statusMessage.textContent = 'Loading room...';
+        setDisplay(meetingRoom, 'none'); // Ensure meeting room hidden
     }
 
     // Update Room Code display text
     if (roomCodeDisplay) {
         const roomId = getRoomIdFromUrl(); // Get current room ID
-        roomCodeDisplay.textContent = `Room Code: ${roomId || 'N/A'}`;
+        if(roomCodeDisplay) roomCodeDisplay.textContent = `Room Code: ${roomId || 'N/A'}`;
     }
 }
 
@@ -374,9 +487,9 @@ async function loadAssets() {
         loadImage('map', '/public/img/Map.png'),
         loadImage('character', '/public/img/Character.png'),
         loadImage('deadCharacter', '/public/img/Dead Character.png'),
-        // --- ADDED: Load Task Images ---
         loadImage('task_unfinished', '/public/img/Unfinished Task.png'),
-        loadImage('task_finished', '/public/img/Finished Task.png')
+        loadImage('task_finished', '/public/img/Finished Task.png'),
+        loadImage('emergency_button', '/public/img/Emergency Button.png') // Load button image
     ]);
 
     const mapImg = images.map;
@@ -397,7 +510,15 @@ async function loadAssets() {
 }
 
 function gameLoop() {
-    if (!assetsLoaded || roomStatus !== 'playing') {
+    // --- PAUSE game loop if in meeting --- 
+    if (!assetsLoaded || (roomStatus !== 'playing' && roomStatus !== 'game_over')) { // Also allow loop for game_over for potential spectating?
+        // If meeting status, ensure movement keys are cleared
+        if (roomStatus === 'meeting') {
+            for (const key in keysPressed) {
+                 keysPressed[key] = false;
+            }
+        }
+        // Still request next frame to keep checking status, but don't run game logic
         requestAnimationFrame(gameLoop);
         return;
     }
@@ -413,17 +534,29 @@ function gameLoop() {
         if (keysPressed['ArrowLeft'] || keysPressed['KeyA']) dx -= playerSpeed;
         if (keysPressed['ArrowRight'] || keysPressed['KeyD']) dx += playerSpeed;
 
-        // --- Calculate Angle Based on Movement --- 
+        // --- Normalize Diagonal Movement ---
+        if (dx !== 0 && dy !== 0) {
+            const magnitude = Math.sqrt(dx * dx + dy * dy);
+            // Check if magnitude is zero before dividing
+            if (magnitude > 0) {
+                 // Re-scale dx and dy based on playerSpeed and the original magnitude
+                 // This ensures the total speed along the diagonal is `playerSpeed`
+                 dx = (dx / magnitude) * playerSpeed;
+                 dy = (dy / magnitude) * playerSpeed;
+            }
+        }
+
+        // --- Calculate Angle Based on Movement ---
         let targetAngle = currentPlayer.angle; // Keep current angle if no movement
         if (dx !== 0 || dy !== 0) {
             targetAngle = Math.atan2(dy, dx);
         }
 
-        // --- Calculate Potential New Position --- 
+        // --- Calculate Potential New Position ---
         const potentialX = currentPlayer.x + dx;
         const potentialY = currentPlayer.y + dy;
 
-        // --- Client-Side Collision Check --- 
+        // --- Client-Side Collision Check ---
         let moveAllowed = is_walkable_client(potentialX, potentialY);
 
         // --- Send Movement Update if Changed and Allowed ---
@@ -509,8 +642,43 @@ function gameLoop() {
                 ctx.stroke();
             }
         });
+        
+        // --- Draw Emergency Button --- 
+        const now = Date.now();
+        const cooldownActive = buttonCooldownEndTime && now < buttonCooldownEndTime.getTime();
+        let remainingCooldownSeconds = 0;
+        if (cooldownActive) {
+             remainingCooldownSeconds = Math.ceil((buttonCooldownEndTime.getTime() - now) / 1000);
+        }
+
+        if (images.emergency_button) {
+            const btnImg = images.emergency_button;
+            const btnDrawX = EMERGENCY_BUTTON.x - EMERGENCY_BUTTON_DRAW_SIZE / 2;
+            const btnDrawY = EMERGENCY_BUTTON.y - EMERGENCY_BUTTON_DRAW_SIZE / 2;
+            
+            ctx.save(); // Save context for applying opacity/overlay
+            if (cooldownActive) {
+                 ctx.globalAlpha = 0.5; // Make button semi-transparent during cooldown
+            }
+            ctx.drawImage(btnImg, btnDrawX, btnDrawY, EMERGENCY_BUTTON_DRAW_SIZE, EMERGENCY_BUTTON_DRAW_SIZE); // Draw scaled
+            ctx.restore(); // Restore full opacity
+
+            // Draw cooldown text overlay if active
+            if (cooldownActive) {
+                 ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Dark overlay box
+                 ctx.fillRect(btnDrawX, btnDrawY, EMERGENCY_BUTTON_DRAW_SIZE, EMERGENCY_BUTTON_DRAW_SIZE);
+                 ctx.fillStyle = 'white';
+                 ctx.font = 'bold 14px sans-serif';
+                 ctx.textAlign = 'center';
+                 ctx.textBaseline = 'middle';
+                 ctx.fillText(`${remainingCooldownSeconds}s`, EMERGENCY_BUTTON.x, EMERGENCY_BUTTON.y);
+            }
+        } else {
+             // Fallback drawing 
+             // ... (fallback circle drawing, maybe add cooldown text here too?) ...
+        }
     }
-    // --- End Draw Tasks --- 
+    // --- End Draw Tasks & Button --- 
 
     // Draw all players
     for (const playerId in players) {
@@ -538,23 +706,42 @@ function setupInputListeners() {
 
 function handleKeyDown(event) {
     // Ignore input if dead
-    if (amIDead) return; 
+    if (amIDead) return;
 
     keysPressed[event.code] = true;
 
-    // --- Kill Attempt --- 
-    if (event.code === 'Space' && isKiller && roomStatus === 'playing') {
-        // console.log("Attempting kill...");
-        const roomId = getRoomIdFromUrl();
-        socket.emit('attempt_kill', { room_id: roomId });
-        event.preventDefault(); 
-    }
-
-    // --- Task Attempt (Changed from E to Space for non-killers) --- 
-    if (event.code === 'Space' && !isKiller && roomStatus === 'playing') {
+    // --- Space Bar Actions (Prioritize Emergency Meeting) ---
+    if (event.code === 'Space' && roomStatus === 'playing') {
         const currentPlayer = players[myPlayerId];
-        if (!currentPlayer) return; // Should exist if playing
+        if (!currentPlayer) return;
 
+        // --- Check for Emergency Button Interaction ---
+        const distToButtonSq = (currentPlayer.x - EMERGENCY_BUTTON.x)**2 + (currentPlayer.y - EMERGENCY_BUTTON.y)**2;
+        // --- Check Cooldown using timestamp --- 
+        const now = Date.now();
+        const cooldownActive = buttonCooldownEndTime && now < buttonCooldownEndTime.getTime();
+        if (distToButtonSq < EMERGENCY_BUTTON_RADIUS_SQ && !cooldownActive) {
+            // console.log("Attempting to call meeting...");
+            const roomId = getRoomIdFromUrl();
+            socket.emit('call_meeting', { room_id: roomId });
+            event.preventDefault(); // Prevent other space actions
+            return; // Don't process kill or task if meeting called
+        } else if (distToButtonSq < EMERGENCY_BUTTON_RADIUS_SQ && cooldownActive) {
+             console.log("Tried to call meeting but button is on cooldown.");
+             // Optionally show feedback to user here
+             return; // Prevent other space actions if near button but on cooldown
+        }
+
+        // --- Kill Attempt (Only if Killer and NOT near button) ---
+        if (isKiller) {
+            // console.log("Attempting kill...");
+            const roomId = getRoomIdFromUrl();
+            socket.emit('attempt_kill', { room_id: roomId });
+            event.preventDefault();
+            return; // Don't process task
+        }
+
+        // --- Task Attempt (Only if NOT Killer and NOT near button) ---
         let nearestIncompleteTaskDistSq = Infinity;
         let foundNearbyTask = false;
 
@@ -562,22 +749,25 @@ function handleKeyDown(event) {
             if (!task.completed) {
                 const distSq = (currentPlayer.x - task.x)**2 + (currentPlayer.y - task.y)**2;
                 if (distSq < TASK_RADIUS_CLIENT_SQ) {
-                     nearestIncompleteTaskDistSq = distSq; 
-                     foundNearbyTask = true;
-                     return; 
+                    nearestIncompleteTaskDistSq = distSq;
+                    foundNearbyTask = true;
+                    // Note: forEach doesn't have a standard way to break early like a for loop's `break`.
+                    // This `return` only exits the current iteration of the callback, not the whole forEach.
+                    // However, finding *any* nearby task is sufficient here.
+                    return;
                 }
             }
         });
-        
+
         if (foundNearbyTask) {
             // console.log("Attempting task with Space bar...");
             const roomId = getRoomIdFromUrl();
             socket.emit('attempt_task', { room_id: roomId });
             event.preventDefault(); // Prevent default Space bar behavior (e.g., scrolling)
         } else {
-             // console.log("Pressed Space, but no incomplete task nearby or is killer.");
+            // console.log("Pressed Space, but no interaction target nearby (button on cooldown, task, or kill target).");
         }
-    }
+    } // End Space Bar Actions
 }
 
 function handleKeyUp(event) {
@@ -612,6 +802,12 @@ function setupSocketListeners(roomId) {
     socket.off('you_died');
     socket.off('game_over');
     socket.off('task_completed'); // Add new listener removal
+    // --- ADDED: Remove meeting listeners ---
+    socket.off('meeting_started');
+    socket.off('meeting_ended');
+    socket.off('new_meeting_message');
+    socket.off('vote_update');
+    socket.off('meeting_call_failed');
 
     socket.on('connect', () => {
         // console.log('Socket connected:', socket.id); // Remove log
@@ -690,6 +886,15 @@ function setupSocketListeners(roomId) {
         completedTasks = data.completedTasks || 0;
         totalTasks = data.totalTasks || 0;
         // --- End Restore original logic ---
+
+        // --- ADDED: Store Cooldown Time ---
+        if (data.emergency_button_cooldown_until) {
+            buttonCooldownEndTime = new Date(data.emergency_button_cooldown_until);
+             console.log("Received initial cooldown end time:", buttonCooldownEndTime);
+        } else {
+             buttonCooldownEndTime = null;
+        }
+        // --- End Cooldown Handling ---
 
         // console.log(`[current_state] Updated local state: roomStatus=${roomStatus}, isHost=${isHost}, isKiller=${isKiller}, myPlayerId=${myPlayerId}, amIDead=${amIDead}`); // Remove log
 
@@ -878,6 +1083,79 @@ function setupSocketListeners(roomId) {
         // No need to call updateUI() here as we manually set the state
         // Resetting local flags like isKiller isn't strictly necessary as the page will redirect
     });
+
+    // --- ADDED: Meeting Listeners ---
+    socket.on('meeting_started', (data) => {
+        console.log("[Meeting Started]", data);
+        roomStatus = 'meeting';
+        // TODO: Populate player list for voting based on data.players
+        // TODO: Start client-side timer display using data.duration
+        startMeetingTimer(data.duration);
+        populateMeetingPlayerList(data.players);
+        clearMeetingChat(); // Clear chat from previous meeting
+        // Display who called it?
+        addMeetingChatMessage(`Meeting called by ${data.caller_username || 'Someone'}.`, 'system');
+
+        updateUI();
+    });
+
+    socket.on('meeting_ended', (data) => {
+        console.log("[Meeting Ended]", data);
+        stopMeetingTimer(); // Stop the client timer interval
+        roomStatus = data.status; // Should be 'playing' or 'game_over'
+
+        // Display outcome message (e.g., in chat or a temporary popup)
+        let outcomeMsg = "Meeting ended.";
+        if (data.outcome === 'tie') {
+            outcomeMsg = "Vote tied! No one was ejected.";
+        } else if (data.outcome === 'ejected') {
+            const ejectedPlayer = data.players.find(p => p.id === data.ejected_player_id);
+            const ejectedName = ejectedPlayer?.username || 'Someone';
+            outcomeMsg = `${ejectedName} was ejected.`;
+            // Update local player list (allPlayersList) if needed, though current_state/room_update should handle it
+            const localPlayer = allPlayersList.find(p => p.id === data.ejected_player_id);
+            if(localPlayer) localPlayer.is_dead = true;
+            if(data.ejected_player_id === myPlayerId) amIDead = true;
+        }
+        // Add message to meeting chat? Or just update UI based on new status?
+        // Maybe add a temporary announcement overlay?
+        console.log("Meeting Outcome:", outcomeMsg);
+        // For now, just log it. `updateUI` handles switching back.
+
+        // Update local state if needed (e.g., `allPlayersList` from data.players)
+        allPlayersList = data.players || allPlayersList;
+        
+        // --- ADDED: Store Cooldown Time --- 
+        if (data.emergency_button_cooldown_until) {
+             buttonCooldownEndTime = new Date(data.emergency_button_cooldown_until);
+             console.log("Meeting ended, received cooldown end time:", buttonCooldownEndTime);
+        } else {
+             buttonCooldownEndTime = null;
+        }
+        // --- End Cooldown Handling ---
+        
+        updateUI();
+    });
+
+    socket.on('new_meeting_message', (data) => {
+        // TODO: Display the chat message in the meeting UI
+        console.log("[Meeting Chat]", data);
+        addMeetingChatMessage(data.message, 'player', data.sender_username);
+    });
+
+    socket.on('vote_update', (data) => {
+        // TODO: Update the display of vote counts next to player names
+        console.log("[Vote Update]", data);
+        updateMeetingVoteCounts(data.vote_counts); // Assuming server sends { player_id: count }
+    });
+
+    socket.on('meeting_call_failed', (data) => {
+        console.warn("[Meeting Call Failed]", data.reason);
+        // Optionally show a temporary message to the user
+        // e.g., display data.reason briefly on screen
+    });
+
+    // --- End Meeting Listeners ---
 }
 
 // Store the last game over message globally
@@ -918,5 +1196,187 @@ async function initGame() {
         }
     }
 }
+
+// --- ADDED: Helper functions for Meeting UI ---
+function startMeetingTimer(duration) {
+    stopMeetingTimer(); // Clear any existing timer
+    meetingEndTime = Date.now() + duration * 1000;
+    const timerDisplay = document.getElementById('meeting-timer');
+
+    const updateTimer = () => {
+        const now = Date.now();
+        const timeLeft = Math.max(0, Math.round((meetingEndTime - now) / 1000));
+        if (timerDisplay) {
+            timerDisplay.innerText = `Time remaining: ${timeLeft}s`;
+        }
+        if (timeLeft <= 0) {
+            stopMeetingTimer();
+            // Server's end_meeting should trigger the actual transition
+        }
+    };
+
+    updateTimer(); // Update immediately
+    meetingTimerInterval = setInterval(updateTimer, 1000);
+}
+
+function stopMeetingTimer() {
+    if (meetingTimerInterval) {
+        clearInterval(meetingTimerInterval);
+        meetingTimerInterval = null;
+    }
+    meetingEndTime = null;
+}
+
+function populateMeetingPlayerList(playersData) {
+    const listUl = document.getElementById('meeting-player-list');
+    if (!listUl) return;
+    listUl.innerHTML = ''; // Clear previous list
+    // Clear existing button styles
+    document.querySelectorAll('#meeting-player-list button').forEach(btn => btn.classList.remove('ring-2', 'ring-offset-2', 'ring-yellow-400'));
+
+    playersData.forEach(player => {
+        const li = document.createElement('li');
+        li.classList.add('flex', 'items-center', 'justify-between', 'p-1', 'hover:bg-gray-700', 'rounded');
+
+        const playerName = document.createElement('span');
+        playerName.textContent = player.username;
+        if (player.id === myPlayerId) {
+            playerName.textContent += ' (You)';
+            playerName.classList.add('font-bold');
+        }
+        if (player.is_dead) {
+            playerName.classList.add('text-red-500', 'line-through', 'opacity-60');
+        }
+        li.appendChild(playerName);
+
+        // Add vote count display (initially 0)
+        const voteCountSpan = document.createElement('span');
+        voteCountSpan.id = `vote-count-${player.id}`;
+        voteCountSpan.classList.add('text-xs', 'text-gray-400', 'ml-2');
+        voteCountSpan.textContent = '(0 votes)';
+        li.appendChild(voteCountSpan);
+
+        // Add Vote button (only if voter is not dead)
+        const localPlayerAlive = !amIDead; // Check if the local player is alive
+        if (!player.is_dead && localPlayerAlive) {
+            const voteButton = document.createElement('button');
+            voteButton.dataset.playerId = player.id; // Store player ID for handler
+            voteButton.textContent = 'Vote';
+            voteButton.classList.add(
+                'ml-auto', 'px-2', 'py-0.5', 'text-xs', 'bg-blue-600', 'hover:bg-blue-500',
+                'rounded', 'disabled:opacity-50', 'transition-all'
+            );
+            // --- ADDED: onclick handler to emit 'player_vote' --- 
+            voteButton.onclick = () => handleVote(player.id);
+            li.appendChild(voteButton);
+        } else if (player.is_dead) {
+             // Add placeholder for dead players (e.g., [DEAD])
+             const deadLabel = document.createElement('span');
+             deadLabel.textContent = '[DEAD]';
+             deadLabel.classList.add('ml-auto', 'text-xs', 'text-red-600');
+             li.appendChild(deadLabel);
+        } else if (!localPlayerAlive && !player.is_dead) {
+            // If local player is dead, show non-interactive state for other alive players
+             const aliveLabel = document.createElement('span');
+             aliveLabel.textContent = 'Alive';
+             aliveLabel.classList.add('ml-auto', 'text-xs', 'text-green-500');
+             li.appendChild(aliveLabel);
+        }
+
+        listUl.appendChild(li);
+    });
+}
+
+function handleVote(targetPlayerId) {
+    console.log(`Voting for: ${targetPlayerId}`);
+    const roomId = getRoomIdFromUrl();
+    socket.emit('player_vote', { room_id: roomId, target_player_id: targetPlayerId });
+
+    // --- ADDED: UI Feedback for voting ---
+    // Remove highlight from previously selected button
+    document.querySelectorAll('#meeting-player-list button.ring-2').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-offset-2', 'ring-yellow-400', 'bg-yellow-500');
+        btn.classList.add('bg-blue-600');
+        btn.disabled = false; // Re-enable other buttons
+    });
+
+    // Highlight the newly selected button
+    const votedButton = document.querySelector(`#meeting-player-list button[data-player-id="${targetPlayerId}"]`);
+    if (votedButton) {
+        votedButton.classList.add('ring-2', 'ring-offset-2', 'ring-yellow-400', 'bg-yellow-500');
+        votedButton.classList.remove('bg-blue-600');
+        // Optional: Disable the button just voted for? Or keep enabled to change vote?
+        // Let's keep enabled for now.
+    }
+
+    // Optional: Disable all vote buttons after voting once?
+    // document.querySelectorAll('#meeting-player-list button').forEach(btn => btn.disabled = true);
+}
+
+function updateMeetingVoteCounts(voteCounts) {
+     // voteCounts is expected to be { player_id: count }
+     for (const playerId in voteCounts) {
+         const countSpan = document.getElementById(`vote-count-${playerId}`);
+         if (countSpan) {
+             countSpan.textContent = `(${voteCounts[playerId]} votes)`;
+         }
+     }
+     // Reset counts for players not in the voteCounts object (if needed)?
+     // Or assume server sends counts for all players with votes > 0?
+}
+
+function clearMeetingChat() {
+    const chatMessages = document.getElementById('meeting-chat-messages');
+    if (chatMessages) {
+        chatMessages.innerHTML = '';
+    }
+}
+
+function addMeetingChatMessage(message, type = 'player', sender = null) {
+    const chatMessages = document.getElementById('meeting-chat-messages');
+    if (!chatMessages) return;
+
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('p-1', 'rounded');
+
+    let prefix = '';
+    if (type === 'system') {
+        msgDiv.classList.add('text-yellow-400', 'italic');
+    } else if (type === 'player') {
+        // --- ADDED: Check if sender is dead (using info from server) ---
+        // Assuming the `new_meeting_message` event payload now includes `is_dead` boolean
+        const senderIsDead = message.sender_is_dead; // Need to adjust based on actual payload structure
+        
+        msgDiv.classList.add('bg-gray-700/50');
+        // Update prefix to potentially show dead status
+        prefix = `<span class="font-semibold${senderIsDead ? ' text-red-500 line-through' : ''}">${sender || '??'}:</span> `;
+        // Ensure message content is treated as text, not HTML, unless intended.
+        // Using textContent after setting innerHTML for the prefix is safer.
+        const textContent = message.message || message; // Adjust based on payload
+        msgDiv.innerHTML = prefix;
+        msgDiv.appendChild(document.createTextNode(textContent)); 
+
+    } else { // Fallback for unknown type or if message is just a string
+         msgDiv.appendChild(document.createTextNode(message)); 
+    }
+
+    // Original code (use innerHTML for prefix, append text node for message)
+    // msgDiv.innerHTML = prefix; // Use innerHTML to parse sender span
+    // msgDiv.appendChild(document.createTextNode(message)); // Append actual message as text
+
+    chatMessages.appendChild(msgDiv);
+
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// --- ADDED: Function to send chat message ---
+function sendMeetingChat(message) {
+    console.log(`Sending chat: ${message}`);
+    const roomId = getRoomIdFromUrl();
+    socket.emit('meeting_chat', { room_id: roomId, message: message });
+}
+
+// --- End Helper functions for Meeting UI ---
 
 initGame();

@@ -2,178 +2,70 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings</title>
-    <style>
-      body {
-        background-color: black;
-        color: white;
-        margin: 0;
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-      }
-
-      .top-bar {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-      }
-
-      .back-btn {
-        padding: 8px 16px;
-        background-color: gray;
-        border: none;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      .settings-container {
-        position: absolute;
-        top: 60px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 500px;
-        background-color: rgba(50, 50, 50, 0.8);
-        border: 3px solid gray;
-        border-radius: 10px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        align-items: center;
-      }
-
-      .profile-pic {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-        cursor: pointer;
-        border: 2px solid gray;
-      }
-
-      .input-field {
-        width: 80%;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      .input-field input {
-        width: 100%;
-        padding: 10px;
-        border: 2px solid gray;
-        background-color: #222;
-        color: white;
-        font-size: 16px;
-        box-sizing: border-box;
-      }
-
-      .confirm-btn {
-        padding: 10px 20px;
-        background-color: gray;
-        border: none;
-        font-weight: bold;
-        cursor: pointer;
-        width: 150px;
-      }
-
-      #alert-container {
-        position: fixed;
-        top: 1rem;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 9999;
-        width: auto;
-        max-width: 90%;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-    </style>
+    <!-- Removed inline styles, using Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/public/js/alerts.js" type="module"></script>
   </head>
-  <body>
-    <div id="alert-container"></div>
+  <body class="bg-black text-white font-sans overflow-hidden">
+    <!-- Alert Container -->
+    <div id="alert-container"
+      class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[90%] flex flex-col gap-2"></div>
 
-    <div class="top-bar">
-      <button class="back-btn" onclick="location.href='/'">Back</button>
+    <!-- Top Bar with Back Button -->
+    <div class="absolute top-3 left-3">
+      <button onclick="location.href='/'"
+        class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded text-white font-bold cursor-pointer">
+        Back
+      </button>
     </div>
 
-    <div class="settings-container">
-      <img id="profilePic" class="profile-pic" src="/public/img/default_avatar.webp" alt="Profile Picture" />
-      <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;">
+    <!-- Settings Container -->
+    <div
+      class="absolute top-[60px] left-1/2 -translate-x-1/2 w-[500px] max-w-[95%] bg-gray-900 rounded-lg p-5 flex flex-col items-center gap-5 shadow-md shadow-neutral-600">
+      <!-- Profile Picture - ID matches JS -->
+      <img id="avatar-preview"
+        class="w-24 h-24 rounded-full object-cover cursor-pointer border-2 border-gray-600 hover:border-gray-500"
+        src="/public/img/default_avatar.webp" alt="User profile picture" title="Click to change profile picture" />
+      <input type="file" id="avatar" name="avatar" accept="image/*" class="hidden" />
 
-      <form id="settings-form" onsubmit="handleSubmit(event)">
-        <div class="input-field">
-          <label for="username">Username</label>
-          <input id="username" type="text" />
+      <!-- Settings Form -->
+      <form id="settings-form" onsubmit="handleSubmit(event)" class="w-full flex flex-col items-center gap-4">
+        <!-- Username Field -->
+        <div class="w-4/5">
+          <label for="username" class="block mb-1 text-sm font-medium text-gray-300">Username</label>
+          <input id="username" type="text" title="Enter your desired username"
+            class="w-full px-3 py-2 border-2 border-gray-700 bg-gray-800 text-white text-base rounded focus:outline-none focus:border-blue-600" />
         </div>
 
-        <div class="input-field">
-          <label for="password">Password (leave blank to keep unchanged)</label>
-          <input id="password" type="password" />
+        <!-- Password Field -->
+        <div class="w-4/5">
+          <label for="password" class="block mb-1 text-sm font-medium text-gray-300">Password (leave blank to keep
+            unchanged)</label>
+          <input id="password" type="password" title="Enter a new password or leave blank to keep current"
+            class="w-full px-3 py-2 border-2 border-gray-700 bg-gray-800 text-white text-base rounded focus:outline-none focus:border-blue-600" />
         </div>
 
-        <button type="submit" class="confirm-btn">Confirm Changes</button>
+        <!-- Confirm Button -->
+        <button type="submit"
+          class="px-5 py-2 bg-gray-600 hover:bg-gray-700 rounded text-white font-bold cursor-pointer w-[150px]">
+          Confirm Changes
+        </button>
       </form>
     </div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <div class="settings-container">
-      <img id="profilePic" class="profile-pic" src="/public/img/default_avatar.webp" alt="Profile Picture" />
-=======
-  <footer>
-    <p style="text-align: center; padding: 10px; color: #ccc;">CSE 312 Spring 2025</p>
-  </footer>
->>>>>>> d0f61a6 (Refactor Docker setup and enhance application structure)
-
-    <!-- Ensure auto.js runs for user status -->
+    <!-- Script Includes -->
     <script src="/public/js/auto.js"></script>
-
-  <script>
-    // Make sure AlertManager is initialized before use
-    let alertManager;
-    document.addEventListener('DOMContentLoaded', () => {
-        const container = document.getElementById("alert-container");
-        if (container) {
-            alertManager = new AlertManager(container);
-        } else {
-            console.error("Alert container not found for settings page!");
-        }
-    });
-
-    function handleSubmit(event) {
-      event.preventDefault()
-      // TODO: Add actual fetch request to save settings to backend API
-      if (alertManager) {
-          alertManager.newAlert('Settings saved successfully! (Placeholder)', 'success');
-      } else {
-          alert('Settings saved successfully! (Placeholder)'); // Fallback alert
-      }
-    }
-
-    function changeProfilePicture() {
-      // TODO: Add logic to handle profile picture change (e.g., open file input)
-      if (alertManager) {
-          alertManager.newAlert('Change profile picture functionality goes here!', 'info');
-      } else {
-          alert('Change profile picture functionality goes here!'); // Fallback alert
-      }
-    }
-
-    // showAlert function is no longer needed here as AlertManager should be used directly
-
-  </script>
-
-</body>
-=======
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/public/js/alerts.js" type="module"></script>
+    <!-- Removed duplicate tailwind/lucide scripts -->
     <script src="/public/js/home.js" type="module"></script>
     <script src="/public/js/settings.js"></script>
+    <script>
+      // Initialize Lucide icons if needed after dynamic content load
+      lucide.createIcons();
+    </script>
+
   </body>
->>>>>>> 800a064 (Enhance README and refactor HTML/CSS for improved user experience)
 </html>

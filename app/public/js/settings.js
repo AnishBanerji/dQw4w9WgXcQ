@@ -58,7 +58,8 @@ async function handleSubmit(event) {
       return;
     }
 
-    window.location.reload();
+    // Redirect to home page on successful settings update
+    window.location.href = '/';
   } catch {
     alertManager.newAlert(
       "Failed to update settings. Please try again.",
