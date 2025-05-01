@@ -553,6 +553,15 @@ def handle_attempt_kill(data):
                         update_victim = roomDB.update_one({'_id': room_id, 'players.id': victim_id}, {'$set': {'players.$.is_dead': True}})
                         if update_victim.modified_count > 0:
                             kill_successful = True
+
+                            # If victim killed, add to userDB with user's stats
+                            # Assumes killer_player_id is equivalent to the player's username
+                            #
+                            # Grabs stats, appends playersKilled by 1, then updates with new stats
+                            player_stats = userDB.find_one({"username": killer_player_id})["stats"]
+                            player_stats["playersKilled"] += 1
+                            userDB.update_one({"username": killer_player_id}, {"$set": {"stats": player_stats}})
+
                             victim_sid = next((csid for csid, cinfo in sid_map.items() if cinfo.get('room_id') == room_id and cinfo.get('player_id') == victim_id), None)
                             emit('player_died', {'victim_id': victim_id}, room=room_id)
                             if victim_sid: emit('you_died', {}, room=victim_sid)
@@ -621,6 +630,15 @@ def handle_attempt_task(data):
                     completed_count = updated_room_doc.get('completedTasks', 0)
                     total_count = updated_room_doc.get('totalTasks', 0)
                     emit('task_completed', {'task_id': target_task_id, 'player_id': player_id, 'completedTasks': completed_count, 'totalTasks': total_count}, room=room_id)
+
+                    # If task completed, add to userDB with user's stats
+                    # Assumes player_id is equivalent to the player's username
+                    #
+                    # Grabs stats, appends tasksDone by 1, then updates with new stats
+                    player_stats = userDB.find_one({"username": player_id})["stats"]
+                    player_stats["tasksDone"] += 1
+                    userDB.update_one({"username": player_id}, {"$set": {"stats": player_stats}})
+
                     # --- Check Game End Condition (Players Win) ---
                     if completed_count >= total_count > 0: # Ensure totalTasks > 0
                         print(f"[GAME_END] Players win by completing all tasks ({completed_count}/{total_count}) in room {room_id}!")
