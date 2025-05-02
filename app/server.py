@@ -9,6 +9,7 @@ from util.room import create_room, find_rooms, getRoomInfo # Import DB functions
 from util.authentication import *
 from util.settings import settingsChange
 from util.database import roomDB, userDB # Import userDB for logout
+from util.achieve import *
 import os
 import eventlet
 from util.serve import *
