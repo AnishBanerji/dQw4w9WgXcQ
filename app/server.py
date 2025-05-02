@@ -29,12 +29,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 # --- Rate Limiting Setup ---
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["200 per day", "50 per hour"],
-    storage_uri="memory://",
-)
+# limiter = Limiter(
+#     get_remote_address,
+#     app=app,
+#     default_limits=["200 per day", "50 per hour"],
+#     storage_uri="memory://",
+# )
 # --- End Rate Limiting Setup ---
 
 socketio = SocketIO(app)
@@ -226,7 +226,7 @@ def get_room_info_api(roomId):
     return jsonify(roomInfo)
 
 @app.route('/public/js/<filename>', methods=['GET'])
-@limiter.exempt # <<< Exempt this route
+# @limiter.exempt # <<< Exempt this route - REMOVED
 def getPublicJS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'js', filename)
@@ -234,7 +234,7 @@ def getPublicJS(filename):
     else: return "Not Found", 404
 
 @app.route('/public/css/<filename>', methods=['GET'])
-@limiter.exempt # <<< Exempt this route
+# @limiter.exempt # <<< Exempt this route - REMOVED
 def getPublicCSS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'css', filename)
@@ -242,14 +242,14 @@ def getPublicCSS(filename):
     else: return "Not Found", 404
 
 @app.route('/public/img/<filename>', methods=['GET'])
-@limiter.exempt # <<< Exempt this route
+# @limiter.exempt # <<< Exempt this route - REMOVED
 def get_imgs(filename):
     mimetype = get_mimetype(filename)
     filepath = os.path.join("public", "img", filename) # Use os.path.join
     return send_file(filepath, mimetype=mimetype)
 
 @app.route('/favicon.ico')
-@limiter.exempt # Favicon requests shouldn't be limited
+# @limiter.exempt # Favicon requests shouldn't be limited - REMOVED
 def favicon():
     filepath = os.path.join(os.path.dirname(__file__), 'public', 'favicon.ico')
     try:
