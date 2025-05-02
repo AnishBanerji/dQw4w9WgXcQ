@@ -31,7 +31,7 @@
 #       - myapp
 #     restart: always
 
-# New configuration for simple local testing:
+
 
 services:
   mongo:
@@ -58,9 +58,9 @@ services:
     depends_on:
       - mongo
     volumes:
-      - ./logs:/app/logs # Mount logs directory
+      - ./logs:/app/logs # Mount logs directory (Old - kept for reference if needed)
       # Optional: Mount app code for development ease (uncomment if needed)
-      # - ./app:/app
+      # - .:/app
     restart: unless-stopped
 
 volumes:

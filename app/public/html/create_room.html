@@ -204,6 +204,10 @@
       };
 
       try {
+          // ---> DEBUG: Log payload just before sending <---
+          console.log('[DEBUG] Payload object:', payload);
+          console.log('[DEBUG] Stringified Payload:', JSON.stringify(payload));
+          
           const response = await fetch('/create-room', {
               method: 'POST',
               headers: {

@@ -2,13 +2,14 @@ import os
 os.environ['FLASK_APP'] = 'app/server.py'
 # os.environ['FLASK_DEBUG'] = '1' # Optionally uncomment for auto-reload
 
-from flask import Flask, request, send_file, abort, jsonify, make_response, redirect, url_for
+from flask import Flask, request, send_file, abort, jsonify, make_response, redirect, url_for, g
 from flask_socketio import SocketIO, emit, join_room as join_socketio_room, leave_room
 import datetime
 from util.room import create_room, find_rooms, getRoomInfo # Import DB functions
 from util.authentication import *
 from util.settings import settingsChange
 from util.database import roomDB, userDB # Import userDB for logout
+from util.achieve import *
 import os
 import eventlet
 from util.serve import *
@@ -90,7 +91,12 @@ except Exception as e:
 sid_map = {} # { sid: {'player_id': player_id, 'room_id': room_id, 'username': username} }
 
 # Determine the absolute path for the logs directory relative to this file
+# LOG_FILE = '/app/requests.log' # Main log file
+# FULL_REQUEST_LOG_FILE = '/app/full_requests.log' # Separate file for full req/resp
+# MAX_LOG_BODY_SIZE = 2048 # Max bytes for request/response bodies in full log
+# AUTH_TOKEN_REDACTION = '[REDACTED_AUTH_TOKEN]' # Placeholder for redacted token
 LOGS_DIR = os.path.join(os.path.dirname(__file__), 'logs')
+# LOG_FILE = os.path.join(LOGS_DIR, 'requests.log')
 LOG_FILE = os.path.join(LOGS_DIR, 'requests.log')
 
 # --- Define initial player starting position --- 
@@ -100,11 +106,11 @@ DEFAULT_ANGLE = -math.pi / 2 # Facing down
 
 # Define fixed task locations (example)
 TASK_LOCATIONS = [
-    { "id": "task_top",    "x": 1800, "y": 300  },
-    { "id": "task_left",   "x": 300,  "y": 1800 },
-    { "id": "task_bottom", "x": 1800, "y": 3200 },
-    { "id": "task_right",  "x": 3200, "y": 1800 },
-    { "id": "task_center", "x": 1500, "y": 1500 },
+    { "id": "task_top",    "x": 1800, "y": 300,  "type": "timing_download" },
+    { "id": "task_left",   "x": 300,  "y": 1800, "type": "wires"        },
+    { "id": "task_bottom", "x": 1800, "y": 3200, "type": "keypad"       },
+    { "id": "task_right",  "x": 3200, "y": 1800, "type": "pattern"      },
+    { "id": "task_center", "x": 1500, "y": 1500, "type": "steering"     },
 ]
 TASK_RADIUS = 40
 TASK_RADIUS_SQ = TASK_RADIUS * TASK_RADIUS
@@ -112,10 +118,11 @@ KILL_RADIUS = 75 # Adjusted kill radius
 KILL_RADIUS_SQ = KILL_RADIUS * KILL_RADIUS
 
 # --- Constants ---
-MEETING_DURATION_SECONDS = 30 # Added
-EMERGENCY_BUTTON_COOLDOWN_SECONDS = 120 # Changed from 60 to 120 (2 minutes)
+MIN_PLAYERS = 2
+MAX_PLAYERS = 10
+MEETING_DURATION_SECONDS = 30
+EMERGENCY_BUTTON_COOLDOWN_SECONDS = 30 # Changed from 120 to 30
 
-# === Logging (Keep HEAD version) ===
 @app.before_request
 def log_req():
     if not os.path.exists(LOGS_DIR):
@@ -124,7 +131,8 @@ def log_req():
         except OSError as e:
             print(f"Error creating logs directory {LOGS_DIR}: {e}")
             return
-    dt = datetime.now()
+    # dt = datetime.now()
+    dt = datetime.now() # Use datetime.datetime explicitly
     dt_str = dt.strftime('%m-%d-%Y %H:%M:%S') # Use standard time format
     ip = request.remote_addr
     method = request.method
@@ -185,7 +193,6 @@ def make_room_route():
     # If result is not a tuple, assume it's the success dict {'roomId': ...} OR an error string
     if isinstance(result, str):
          # Explicitly return validation error strings with a 400 status and JSON structure
-         print(f"[API Error] /create-room validation failed: {result}") # Log the specific error
          return jsonify({"message": result}), 400
     # Otherwise, assume success (result should be the {'roomId': ...} dict)
     return jsonify(result), 200
@@ -216,6 +223,7 @@ def load_room(roomId):
 def get_room_info_api(roomId):
     try: roomInfo = getRoomInfo(roomId)
     except KeyError: return jsonify({"error": "Room not found"}), 404
+    except Exception as e: print(f"Error fetching room info API for {roomId}: {e}"); return jsonify({"error": "Server error fetching room info"}), 500
     return jsonify(roomInfo)
 
 @app.route('/public/js/<filename>', methods=['GET'])
@@ -252,21 +260,15 @@ def favicon():
 
 @app.route('/api/users/@me', methods=['GET'])
 def get_user_profile():
-    # print("[DEBUG] /api/users/@me route handler called", flush=True) # <<< ADDED DEBUG
     auth_token = request.cookies.get('auth_token')
-    if not auth_token: 
-        # print("[DEBUG] /api/users/@me: No auth_token cookie found", flush=True)
+    if not auth_token:
         return jsonify({"message": "Not authenticated"}), 401
     
-    # print(f"[DEBUG] /api/users/@me: Found auth_token cookie: {auth_token[:5]}...", flush=True)
     user = find_auth(auth_token)
     
-    if user is None: 
-        # print("[DEBUG] /api/users/@me: find_auth returned None (Invalid token)", flush=True)
+    if user is None:
         return jsonify({"message": "Invalid token"}), 401
     
-    # print(f"[DEBUG] /api/users/@me: User found: {user.get('username')}", flush=True)
-    # Use .get() for safer access to dictionary keys
     return jsonify({
         "username": user.get("username", "Unknown"), 
         "avatar_url": user.get("imageURL", "/public/img/default_avatar.webp") # Use imageURL field if exists
@@ -368,7 +370,6 @@ def handle_join_room(data):
             room_doc_after_add = getRoomInfo(room_id)
             actual_player_count = len(room_doc_after_add.get('players', []))
             roomDB.update_one({'_id': room_id}, {'$set': {'currPlayers': actual_player_count}})
-            print(f"Set currPlayers for room {room_id} to {actual_player_count} based on array length.")
 
         else: # Handle rejoin case (original logic)
              # Ensure the count is also correct on rejoin, might as well sync it here too?
@@ -378,7 +379,6 @@ def handle_join_room(data):
              room_doc_after_rejoin = getRoomInfo(room_id)
              actual_player_count_rejoin = len(room_doc_after_rejoin.get('players', []))
              roomDB.update_one({'_id': room_id}, {'$set': {'currPlayers': actual_player_count_rejoin}})
-             print(f"Synced currPlayers for room {room_id} to {actual_player_count_rejoin} on rejoin.")
 
         # Fetch final state after all updates
         room_doc = getRoomInfo(room_id)
@@ -431,10 +431,23 @@ def handle_start_game(data):
     tasks_for_room = [{**task_loc, "completed": False} for task_loc in TASK_LOCATIONS]
     total_tasks = len(tasks_for_room)
     try:
-        update_payload = {'$set': {'status': 'playing', 'it_player_id': killer_player_id, 'tasks': tasks_for_room, 'totalTasks': total_tasks, 'completedTasks': 0}}
+        # --- ADDED: Calculate initial kill cooldown time ---
+        initial_cooldown_seconds = 5
+        now_utc = datetime.now(timezone.utc)
+        initial_kill_ready_time = now_utc + timedelta(seconds=initial_cooldown_seconds)
+
+        update_payload = {'$set': {
+            'status': 'playing', 
+            'it_player_id': killer_player_id, 
+            'tasks': tasks_for_room, 
+            'totalTasks': total_tasks, 
+            'completedTasks': 0,
+            # --- ADDED: Initialize killer cooldown in DB ---
+            'killer_can_kill_after': initial_kill_ready_time 
+        }}
         update_result = roomDB.update_one({'_id': room_id}, update_payload)
         if update_result.matched_count == 0: raise Exception("Room not found during update")
-        print(f"[DB] Game started in room {room_id}. Killer: {killer_player_id}. Tasks Initialized: {total_tasks}")
+        print(f"[DB] Game started in room {room_id}. Killer: {killer_player_id}. Tasks Initialized: {total_tasks}. Initial kill ready at: {initial_kill_ready_time.isoformat()}")
         room_doc = getRoomInfo(room_id)
     except Exception as e: print(f"DB Error starting game in room {room_id}: {e}"); emit('start_game_error', {'message': 'Error starting game'}, room=sid); return
     initial_game_state = {
@@ -445,7 +458,10 @@ def handle_start_game(data):
     emit('game_started', initial_game_state, room=room_id)
     if killer_player_id:
         killer_sid = next((csid for csid, cinfo in sid_map.items() if cinfo.get('room_id') == room_id and cinfo.get('player_id') == killer_player_id), None)
-        if killer_sid: emit('you_are_killer', {}, room=killer_sid)
+        if killer_sid: 
+            emit('you_are_killer', {}, room=killer_sid)
+            # --- ADDED: Emit initial cooldown to killer ---
+            emit('kill_cooldown_update', {'cooldown_ends_at': initial_kill_ready_time.isoformat()}, room=killer_sid)
         else: print(f"Warning: Could not find SID for killer {killer_player_id}")
 
 # === player_move Handler (Merged) ===
@@ -498,7 +514,6 @@ def handle_player_move(data):
     # --- Game State Checks --- 
     if room_doc.get('status') != 'playing':
         # Allow movement only if game is playing
-        # print(f"[GAME ERROR] Move attempt from {username} ({sid}) but game not playing in room {room_id}")
         return
     current_players = room_doc.get('players', [])
     player_list_entry = next((p for p in current_players if p.get('id') == player_id), None)
@@ -506,7 +521,6 @@ def handle_player_move(data):
         print(f"[GAME ERROR] Move attempt from {username} ({sid}) but player not in room list {room_id}")
         return
     if player_list_entry.get('is_dead'):
-        # print(f"[GAME ERROR] Move attempt from dead player {username} ({sid}) in room {room_id}")
         return # Dead players can't move
 
     # --- Collision & Bounds Check --- 
@@ -536,8 +550,6 @@ def handle_player_move(data):
             # Should not happen if player is in room, but fallback
             final_x = INITIAL_X
             final_y = INITIAL_Y
-        # print(f"Collision detected for {username} at ({clamped_x:.1f}, {clamped_y:.1f}). Reverting to ({final_x:.1f}, {final_y:.1f})")
-    # else: print(f"Move for {username} to ({final_x:.1f}, {final_y:.1f}) is walkable.")
 
     # --- Update Database --- 
     pos_key = f'player_positions.{player_id}'
@@ -556,7 +568,6 @@ def handle_player_move(data):
         if update_result.matched_count == 0:
              print(f"[DB ERROR] Failed to update position for {username} ({player_id}) in room {room_id} - Room not found?")
              return
-        # print(f"DB update for move: {update_result.raw_result}")
     except Exception as e:
         print(f"[DB ERROR] Failed to update position for {username} ({player_id}) in room {room_id}: {e}")
         return
@@ -567,7 +578,6 @@ def handle_player_move(data):
         'position': {'x': final_x, 'y': final_y},
         'angle': new_angle
     }
-    # print(f"Broadcasting player_moved: {update_data} to room {room_id}")
     emit('player_moved', update_data, room=room_id, include_self=False) # Exclude self to avoid echo
 
 @socketio.on('attempt_kill')
@@ -583,6 +593,26 @@ def handle_attempt_kill(data):
         room_doc = getRoomInfo(room_id)
         if room_doc.get('status') != 'playing': return
         if room_doc.get('it_player_id') != killer_player_id: return
+
+        # --- ADDED: Check Kill Cooldown ---
+        now_utc = datetime.now(timezone.utc)
+        kill_ready_time = room_doc.get('killer_can_kill_after') 
+        
+        # Handle potential missing field or different timezone format if needed
+        if kill_ready_time and isinstance(kill_ready_time, datetime):
+             # Ensure comparison is timezone-aware
+            if kill_ready_time.tzinfo is None:
+                kill_ready_time = kill_ready_time.replace(tzinfo=timezone.utc) # Assume UTC if no timezone info
+
+            if now_utc < kill_ready_time: # Just check, no need to print here
+                # --- ADDED: Emit cooldown status back to killer ---
+                emit('kill_cooldown_update', {'cooldown_ends_at': kill_ready_time.isoformat()}, room=sid)
+                return # Exit if cooldown is active
+        elif kill_ready_time:
+             print(f"[KILL WARN] killer_can_kill_after for room {room_id} is not a datetime object: {type(kill_ready_time)}")
+             # Decide how to handle this - maybe default to allowing the kill or resetting cooldown? For now, let it proceed.
+        # --- End Cooldown Check ---
+
         killer_pos_data = room_doc.get('player_positions', {}).get(killer_player_id)
         if not killer_pos_data: return
         kill_successful = False
@@ -598,6 +628,18 @@ def handle_attempt_kill(data):
                         update_victim = roomDB.update_one({'_id': room_id, 'players.id': victim_id}, {'$set': {'players.$.is_dead': True}})
                         if update_victim.modified_count > 0:
                             kill_successful = True
+                            
+                            # --- ADDED: Set next kill cooldown --- 
+                            kill_cooldown_seconds = 5
+                            next_kill_ready_time = datetime.now(timezone.utc) + timedelta(seconds=kill_cooldown_seconds)
+                            roomDB.update_one({'_id': room_id}, {'$set': {'killer_can_kill_after': next_kill_ready_time}})
+
+                            # --- ADDED: Emit new cooldown to killer ---
+                            killer_sid = next((csid for csid, cinfo in sid_map.items() if cinfo.get('room_id') == room_id and cinfo.get('player_id') == killer_player_id), None)
+                            if killer_sid: 
+                                emit('kill_cooldown_update', {'cooldown_ends_at': next_kill_ready_time.isoformat()}, room=killer_sid)
+                            # --- End Emit Cooldown ---
+
                             victim_sid = next((csid for csid, cinfo in sid_map.items() if cinfo.get('room_id') == room_id and cinfo.get('player_id') == victim_id), None)
                             emit('player_died', {'victim_id': victim_id}, room=room_id)
                             if victim_sid: emit('you_died', {}, room=victim_sid)
@@ -623,7 +665,7 @@ def handle_attempt_kill(data):
 
 @socketio.on('attempt_task')
 def handle_attempt_task(data):
-    # (Keep HEAD version logic)
+    # (Keep HEAD version logic for initial checks)
     room_id = data.get('room_id')
     sid = request.sid
     sender_info = sid_map.get(sid)
@@ -632,52 +674,114 @@ def handle_attempt_task(data):
     if not player_id: return
     try:
         room_doc = getRoomInfo(room_id)
-        if room_doc.get('status') != 'playing': return # Can only do tasks if game is playing
-        # Check if player is killer or dead
+        if room_doc.get('status') != 'playing': return
         player_list = room_doc.get('players', [])
         player_entry = next((p for p in player_list if p.get('id') == player_id), None)
-        if not player_entry or player_entry.get('is_dead'): return # Dead players can't do tasks
-        if room_doc.get('it_player_id') == player_id: return # Killer can't do tasks
+        if not player_entry or player_entry.get('is_dead'): return
+        if room_doc.get('it_player_id') == player_id: return
         player_pos = room_doc.get('player_positions', {}).get(player_id)
-        if not player_pos: return # Need player position
+        if not player_pos: return
+
         tasks_in_room = room_doc.get('tasks', [])
         target_task_id = None
+        target_task_type = None
+        target_task_index = -1 # Keep track of index for potential use later
         min_dist_sq = TASK_RADIUS_SQ
+
         for i, task in enumerate(tasks_in_room):
             if not task.get('completed'):
                 dist_sq = (player_pos['x'] - task['x'])**2 + (player_pos['y'] - task['y'])**2
                 if dist_sq < min_dist_sq:
                     min_dist_sq = dist_sq
                     target_task_id = task.get('id')
-                    task_index_in_db_array = i # Need index for update
+                    # --- MODIFIED: Get task type ---
+                    target_task_type = task.get('type', 'simple_click') # Default if type missing
+                    target_task_index = i
+
         if target_task_id is not None:
-            print(f"Player {player_id} attempting task {target_task_id} in room {room_id}")
-            try:
-                # Update the specific task using its index in the array
-                task_completed_key = f'tasks.{task_index_in_db_array}.completed'
-                update_result = roomDB.update_one(
-                    {'_id': room_id, f'tasks.{task_index_in_db_array}.id': target_task_id}, # Ensure we target the correct task
-                    {'$set': {task_completed_key: True}, '$inc': {'completedTasks': 1}}
-                )
-                if update_result.modified_count > 0:
-                    print(f"Task {target_task_id} completed by {player_id} in room {room_id}.")
-                    # Refetch completed count after update
-                    updated_room_doc = getRoomInfo(room_id)
-                    completed_count = updated_room_doc.get('completedTasks', 0)
-                    total_count = updated_room_doc.get('totalTasks', 0)
-                    emit('task_completed', {'task_id': target_task_id, 'player_id': player_id, 'completedTasks': completed_count, 'totalTasks': total_count}, room=room_id)
-                    # --- Check Game End Condition (Players Win) ---
-                    if completed_count >= total_count > 0: # Ensure totalTasks > 0
-                        print(f"[GAME_END] Players win by completing all tasks ({completed_count}/{total_count}) in room {room_id}!")
-                        roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
-                        emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
-                        return # Exit handler early
-                    # --- End Game End Check ---
-                else: print(f"[TASK] Failed to update task {target_task_id} status in DB.")
-            except Exception as db_err: print(f"[TASK] DB Error completing task {target_task_id}: {db_err}")
-        else: print(f"Player {player_id} tried task in {room_id}, but none in range.")
+            emit('start_task_minigame', {'task_id': target_task_id, 'task_type': target_task_type}, room=sid)
+        else:
+            print(f"Player {player_id} tried task in {room_id}, but none in range.")
     except KeyError: print(f"[TASK ERROR] Room {room_id} not found.")
-    except Exception as e: print(f"[TASK ERROR] Unexpected error in room {room_id}: {e}")
+    except Exception as e: print(f"[TASK ERROR] Unexpected error in handle_attempt_task room {room_id}: {e}")
+
+@socketio.on('complete_task_minigame')
+def handle_complete_task_minigame(data):
+    room_id = data.get('room_id')
+    task_id_completed = data.get('task_id')
+    sid = request.sid
+    sender_info = sid_map.get(sid)
+
+    # Basic validation
+    if not sender_info or sender_info.get('room_id') != room_id:
+        print(f"[TASK COMPLETE ERROR] Invalid sender or room mismatch for sid {sid} in room {room_id}")
+        return
+    if not task_id_completed:
+        print(f"[TASK COMPLETE ERROR] Missing task_id from sid {sid} in room {room_id}")
+        return
+
+    player_id = sender_info.get('player_id')
+    if not player_id:
+        print(f"[TASK COMPLETE ERROR] Cannot identify player for sid {sid}")
+        return
+
+    try:
+        room_doc = getRoomInfo(room_id)
+        # --- Re-verify player/game status before completing ---
+        if room_doc.get('status') != 'playing':
+            print(f"[TASK COMPLETE ERROR] Game not playing in room {room_id}. Player {player_id} tried to complete {task_id_completed}.")
+            return
+        player_list = room_doc.get('players', [])
+        player_entry = next((p for p in player_list if p.get('id') == player_id), None)
+        if not player_entry or player_entry.get('is_dead'):
+            print(f"[TASK COMPLETE ERROR] Dead or non-existent player {player_id} tried to complete {task_id_completed} in room {room_id}.")
+            return
+        if room_doc.get('it_player_id') == player_id:
+            print(f"[TASK COMPLETE ERROR] Killer {player_id} tried to complete {task_id_completed} in room {room_id}.")
+            return
+
+        # Find the index of the task being completed
+        tasks_in_room = room_doc.get('tasks', [])
+        task_index_in_db_array = -1
+        for i, task in enumerate(tasks_in_room):
+            if task.get('id') == task_id_completed:
+                 if task.get('completed'): return # Silently ignore if already done
+                 task_index_in_db_array = i
+                 break
+
+        if task_index_in_db_array == -1:
+            print(f"[TASK COMPLETE ERROR] Task {task_id_completed} not found in room {room_id} for completion attempt by {player_id}.")
+            return
+
+        # --- Proceed with DB Update ---
+        print(f"Player {player_id} completing task {task_id_completed} in room {room_id}")
+        try:
+            task_completed_key = f'tasks.{task_index_in_db_array}.completed'
+            update_result = roomDB.update_one(
+                {'_id': room_id, f'tasks.{task_index_in_db_array}.id': task_id_completed},
+                {'$set': {task_completed_key: True}, '$inc': {'completedTasks': 1}}
+            )
+
+            if update_result.modified_count > 0:
+                # Refetch completed count after update
+                updated_room_doc = getRoomInfo(room_id)
+                completed_count = updated_room_doc.get('completedTasks', 0)
+                total_count = updated_room_doc.get('totalTasks', 0)
+                emit('task_completed', {'task_id': task_id_completed, 'player_id': player_id, 'completedTasks': completed_count, 'totalTasks': total_count}, room=room_id)
+
+                # Check Game End Condition (Players Win)
+                if completed_count >= total_count > 0:
+                    print(f"[GAME_END] Players win by completing all tasks ({completed_count}/{total_count}) in room {room_id}!")
+                    roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
+                    emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
+                    # Note: No early return needed here as it's the end of the handler
+            else:
+                print(f"[TASK COMPLETE ERROR] Failed to update task {task_id_completed} status in DB for player {player_id} in room {room_id}.")
+        except Exception as db_err:
+            print(f"[TASK COMPLETE DB ERROR] DB Error completing task {task_id_completed} by {player_id}: {db_err}")
+
+    except KeyError: print(f"[TASK COMPLETE ERROR] Room {room_id} not found.")
+    except Exception as e: print(f"[TASK COMPLETE ERROR] Unexpected error in handle_complete_task_minigame room {room_id}: {e}")
 
 @socketio.on('disconnect')
 def handle_disconnect():
@@ -756,7 +860,6 @@ def end_meeting(room_id):
                 # We are likely called by the timer thread itself, but cancel just in case
                 # of rare race conditions where end_meeting is called manually *just* before timer fires.
                 timer.cancel() 
-                print(f"[MEETING] Timer object cancelled/removed for room {room_id} in end_meeting.")
             else:
                 # Timer was already removed, likely by the vote handler.
                 # Check status again to be sure we should proceed.
