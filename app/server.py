@@ -157,7 +157,6 @@ def load_login():
     return send_file(filepath,mimetype="text/html")
 
 @app.route('/register',methods=["GET"])
-@limiter.limit("10 per hour") # Stricter limit for registration page load
 def load_register():
     filepath = "public/html/register.html"
     return send_file(filepath,mimetype='text/html')
@@ -275,9 +274,9 @@ def get_user_profile():
     })
 
 # Add URL rules (Keep HEAD versions)
-app.add_url_rule('/api/users/settings', 'settingsChange', limiter.limit("10 per hour")(login_required_http(settingsChange)), methods=['POST'])
-app.add_url_rule('/register', 'register_route', limiter.limit("5 per hour")(register), methods=['POST'])
-app.add_url_rule('/login', 'login_route', limiter.limit("10 per hour")(login), methods=['POST'])
+app.add_url_rule('/api/users/settings', 'settingsChange', login_required_http(settingsChange), methods=['POST'])
+app.add_url_rule('/register', 'register_route', register, methods=['POST'])
+app.add_url_rule('/login', 'login_route', login, methods=['POST'])
 
 # === Socket IO Handlers (Keep HEAD versions for find_rooms, join_room, start_game, attempt_kill, attempt_task, disconnect) ===
 
