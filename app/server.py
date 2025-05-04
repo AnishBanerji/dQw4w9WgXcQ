@@ -10,7 +10,8 @@ from util.authentication import *
 from util.settings import settingsChange
 from util.database import roomDB, userDB # Import userDB for logout
 from util.achieve import *
-import os
+import hashlib
+from werkzeug.utils import secure_filename
 import eventlet
 from util.serve import *
 import uuid
@@ -258,6 +259,33 @@ def favicon():
     except FileNotFoundError:
         abort(404) # Return 404 if the file doesn't exist
 
+
+
+@app.route('/api/user/update', methods=['POST'])
+def update_user():
+    avatar = request.files.get('avatar')
+
+    auth_token = request.cookies.get("auth_token")
+    if not auth_token:
+        return jsonify({"message": "Access denied"}), 403
+
+    hashed_token = hashlib.sha256(auth_token.encode()).hexdigest()
+    current_user = userDB.find_one({"hashed_token": hashed_token})
+
+    if not current_user:
+        return jsonify({"message": "Current user does not exist"}), 403
+
+    if avatar:
+        filename = secure_filename(avatar.filename)
+        filepath = os.path.join("./public/img", filename)
+        avatar.save(filepath)
+
+        image_url = f"/public/img/{filename}"
+
+        userDB.update_one({"hashed_token" : hashed_token}, {"$set": {"imageURL": image_url}})
+
+    return jsonify({"message": "Profile updated successfully"})
+
 @app.route('/api/users/@me', methods=['GET'])
 def get_user_profile():
     auth_token = request.cookies.get('auth_token')
@@ -271,7 +299,7 @@ def get_user_profile():
     
     return jsonify({
         "username": user.get("username", "Unknown"), 
-        "avatar_url": user.get("imageURL", "/public/img/default_avatar.webp") # Use imageURL field if exists
+        "avatar_url": user.get("imageURL", "./public/img/default_avatar.webp") # Use imageURL field if exists
     })
 
 # Add URL rules (Keep HEAD versions)
@@ -1223,5 +1251,6 @@ def handle_meeting_chat(data):
         print(f"[CHAT ERROR] Room {room_id} not found during meeting_chat.")
     except Exception as e:
         print(f"[CHAT ERROR] Unexpected error during meeting_chat for room {room_id}: {e}")
+
 
 # Add other handlers (handle_meeting_chat, handle_player_vote) here later
