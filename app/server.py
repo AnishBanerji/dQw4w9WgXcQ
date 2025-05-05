@@ -2,8 +2,8 @@ import os
 os.environ['FLASK_APP'] = 'app/server.py'
 # os.environ['FLASK_DEBUG'] = '1' # Optionally uncomment for auto-reload
 
-from flask import Flask, request, send_file, abort, jsonify, make_response, redirect, url_for, g
-from flask_socketio import SocketIO, emit, join_room as join_socketio_room, leave_room
+from flask import Flask, request, send_file, abort, jsonify, make_response, redirect, url_for, g, session
+from flask_socketio import SocketIO, emit, join_room as join_socketio_room, leave_room 
 import datetime
 from util.room import create_room, find_rooms, getRoomInfo # Import DB functions
 from util.authentication import *
@@ -17,7 +17,7 @@ from util.serve import *
 import uuid
 import random
 import math # Add math import for pi
-from PIL import Image # Import Pillow
+from PIL import Image, ImageDraw # Import Pillow
 from flask_limiter import Limiter # Import Limiter
 from flask_limiter.util import get_remote_address # Import address getter
 from functools import wraps # Added wraps for decorator
@@ -26,6 +26,7 @@ from dotenv import load_dotenv
 import json
 from datetime import datetime, timedelta, timezone # Added timezone
 import threading # Added threading
+import numpy as np
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -259,7 +260,27 @@ def favicon():
     except FileNotFoundError:
         abort(404) # Return 404 if the file doesn't exist
 
+def overlay_avatar_on_base(base_path, avatar_path, circle_center, circle_radius):
+    base = Image.open(base_path).convert("RGBA")
+    avatar = Image.open(avatar_path).convert("RGBA")
 
+    # Create circular mask
+    mask = Image.new("L", base.size, 0)
+    draw = ImageDraw.Draw(mask)
+    x, y = circle_center
+    draw.ellipse((x - circle_radius, y - circle_radius, x + circle_radius, y + circle_radius), fill=255)
+
+    # Resize avatar to fit circle
+    avatar = avatar.resize((circle_radius * 2, circle_radius * 2), Image.LANCZOS)
+
+    # Create transparent image to paste avatar in right spot
+    positioned_avatar = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    positioned_avatar.paste(avatar, (x - circle_radius, y - circle_radius), avatar)
+
+    # Composite avatar using mask
+    combined = Image.composite(positioned_avatar, base, mask)
+
+    return combined
 
 @app.route('/api/user/update', methods=['POST'])
 def update_user():
@@ -284,6 +305,14 @@ def update_user():
 
         userDB.update_one({"hashed_token" : hashed_token}, {"$set": {"imageURL": image_url}})
 
+        result = overlay_avatar_on_base("./public/img/Character.png", f"./public/img/{filename}", (197, 100), 28)
+        filepath = os.path.join("./public/img", current_user["username"] + "_model.png")
+        result.save(filepath)
+
+        model_url = f"/public/img/" + current_user["username"] + "_model.png"   
+
+        userDB.update_one({"hashed_token" : hashed_token}, {"$set": {"characterURL": model_url}})
+
     return jsonify({"message": "Profile updated successfully"})
 
 @app.route('/api/users/@me', methods=['GET'])
@@ -301,6 +330,7 @@ def get_user_profile():
         "username": user.get("username", "Unknown"), 
         "avatar_url": user.get("imageURL", "./public/img/default_avatar.webp") # Use imageURL field if exists
     })
+
 
 # Add URL rules (Keep HEAD versions)
 app.add_url_rule('/api/users/settings', 'settingsChange', limiter.limit("10 per hour")(login_required_http(settingsChange)), methods=['POST'])
