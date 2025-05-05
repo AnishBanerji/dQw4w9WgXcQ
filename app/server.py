@@ -214,12 +214,14 @@ def after_req_resp(response):
 @app.route('/', methods=['GET'])
 def load_home():
     filepath = "public/html/home.html"
+
     with open(filepath,'r') as f:
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
+
 
 @app.route('/favicon.ico')
 def get_fav():
@@ -231,9 +233,11 @@ def get_fav():
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
+
 @app.route('/login',methods=['GET'])
 def load_login():
     filepath = "public/html/login.html"
+
     with open(filepath,'r') as f:
         content = f.read()
     res = make_response(content)
@@ -245,12 +249,14 @@ def load_login():
 @limiter.limit("10 per hour") # Stricter limit for registration page load
 def load_register():
     filepath = "public/html/register.html"
+
     with open(filepath,'r') as f:
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
+
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -269,12 +275,14 @@ def logout():
 @login_required_http
 def load_createRoom():
     filepath = "public/html/create_room.html"
+
     with open(filepath,'r') as f:
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
+
 
 @app.route('/create-room', methods=['POST'])
 @login_required_http
@@ -298,6 +306,7 @@ def make_room_route():
 @login_required_http
 def load_findRoom():
     filepath = "public/html/find_room.html"
+
     with open(filepath,'r') as f:
         content = f.read()
     res = make_response(content)
@@ -305,16 +314,19 @@ def load_findRoom():
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
+
 @app.route('/settings', methods=['GET'])
 @login_required_http
 def getSettings():
     filepath = "public/html/settings.html"
+
     with open(filepath,'r') as f:
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
+
 
 @app.route('/stats', methods=['GET'])
 @login_required_http
@@ -358,12 +370,14 @@ def load_room(roomId):
     except KeyError: return "Room Not Found", 404
     except Exception as e: print(f"Error checking room {roomId} before load: {e}")
     filepath = "public/html/room.html"
+
     with open(filepath,'r') as f:
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
+
 
 @app.route('/api/room-info/<roomId>', methods=['GET'])
 @login_required_http
@@ -378,6 +392,7 @@ def get_room_info_api(roomId):
 def getPublicJS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'js', filename)
+
     if os.path.exists(file_path): 
         with open(file_path,'r') as f:
             content = f.read()
@@ -385,6 +400,7 @@ def getPublicJS(filename):
         res.headers['Content-Type'] = 'text/javascript'
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 200
+
     else: return "Not Found", 404
 
 @app.route('/public/css/<filename>', methods=['GET'])
@@ -392,6 +408,7 @@ def getPublicJS(filename):
 def getPublicCSS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'css', filename)
+
     if os.path.exists(file_path): 
         with open(file_path,'r') as f:
             content = f.read()
@@ -399,6 +416,7 @@ def getPublicCSS(filename):
         res.headers['Content-Type'] = 'text/css'
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 200
+
     else: return "Not Found", 404
 
 @app.route('/public/img/<filename>', methods=['GET'])
@@ -406,6 +424,7 @@ def getPublicCSS(filename):
 def get_imgs(filename):
     mimetype = get_mimetype(filename)
     filepath = os.path.join("public", "img", filename) # Use os.path.join
+
     with open(filepath,'rb') as f:
         content = f.read()
     res = make_response(content)
@@ -413,17 +432,20 @@ def get_imgs(filename):
     res.headers['X-Content-Type-Options'] = "nosniff"
     return res
 
+
 @app.route('/favicon.ico')
 @limiter.exempt # Favicon requests shouldn't be limited
 def favicon():
     filepath = os.path.join(os.path.dirname(__file__), 'public', 'favicon.ico')
     try:
+
         with open(filepath,'rb') as f:
             content = f.read()
         res = make_response(content)
         res.headers['Content-Type'] = 'image/vnd.microsoft.icon'
         res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 200
+
     except FileNotFoundError:
         abort(404) # Return 404 if the file doesn't exist
 
