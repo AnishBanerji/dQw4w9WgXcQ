@@ -632,11 +632,14 @@ def handle_start_game(data):
     if killer_player_id:
         killer_sid = next((csid for csid, cinfo in sid_map.items() if cinfo.get('room_id') == room_id and cinfo.get('player_id') == killer_player_id), None)
         if killer_sid: 
-            player = find_auth(killer_player_id)
-            player_stats = player["stats"]
-            player_stats["saboteurPlayed"] += 1
-            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
-            roomDB.update_one({'_id': room_id}, {"$set": {"saboteurUsername": player["username"]}})
+            player = userDB.find_one({"id": killer_player_id})
+            if player is not None:
+                player_stats = player["stats"]
+                player_stats["saboteurPlayed"] += 1
+                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                roomDB.update_one({'_id': room_id}, {"$set": {"saboteurUsername": player["username"]}})
+            else:
+                print(f"Warning: Could not find player object for killer id {killer_player_id}")
             
             emit('you_are_killer', {}, room=killer_sid)
             # --- ADDED: Emit initial cooldown to killer ---
@@ -813,11 +816,13 @@ def handle_attempt_kill(data):
                             # Assumes killer_player_id is equivalent to the player's username
                             #
                             # Grabs stats, appends playersKilled by 1, then updates with new stats
-                            player = find_auth(killer_player_id)
-                            if player:
-                                player_stats = userDB.find_one({"username": killer_player_id})["stats"]
-                            player_stats["playersKilled"] += 1
-                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                            player = userDB.find_one({"id": killer_player_id})
+                            if player is not None:
+                                player_stats = player["stats"]
+                                player_stats["playersKilled"] += 1
+                                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                            else:
+                                print(f"Could not find player object for player id {killer_player_id}")
 
                             
                             # --- ADDED: Set next kill cooldown --- 
@@ -844,16 +849,21 @@ def handle_attempt_kill(data):
                                     print(f"[GAME_END] Killer ({killer_username}) wins in room {room_id}!")
 
                                     # given a list of all players in lobby, add 1 to games played for all of them
-                                    for player in player_list:
-                                        player_stats = find_auth(player["id"])["stats"]
-                                        player_stats["gamesPlayed"] += 1
+                                    for player_item in player_list:
+                                        player_id = player_item["id"]
+                                        player = userDB.find_one({"id": player_id})
+                                        if player is not None:
+                                            player_stats = player["stats"]
+                                            player_stats["gamesPlayed"] += 1
 
-                                        # check if they're killer, somehow, and add a win
-                                        if player["username"] == find_auth(killer_player_id)["username"]:
-                                            player_stats["gamesWon"] += 1
-                                        
-                                        # update for each player their new stats
-                                        userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                                            # check if they're killer, somehow, and add a win
+                                            killer = userDB.find_one({"id": killer_player_id})
+                                            if player["username"] == killer["username"]:
+                                                player_stats["gamesWon"] += 1
+                                            # update for each player their new stats
+                                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                                        else:
+                                            print(f"Could not find player for id {player_id}")
                                     achieve(player_list)
                                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                                     emit('game_over', {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win', 'winner_id': killer_player_id, 'winner_username': killer_username, 'status': 'game_over'}, room=room_id)
@@ -977,12 +987,13 @@ def handle_complete_task_minigame(data):
                 # Assumes player_id is equivalent to the player's username
                 #
                 # Grabs stats, appends tasksDone by 1, then updates with new stats
-                player = find_auth(player_id)
-                if player:
-                    player_stats = userDB.find_one({"username": player_id})["stats"]
-                player_stats = userDB.find_one({"username": player_id})["stats"]
-                player_stats["tasksDone"] += 1
-                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                player = userDB.find_one({"id":player_id})
+                if player is not None:
+                    player_stats = player["stats"]
+                    player_stats["tasksDone"] += 1
+                    userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                else:
+                    print(f"Could not find player object for player id {player_id}")
 
 
                 # Check Game End Condition (Players Win)
@@ -990,16 +1001,21 @@ def handle_complete_task_minigame(data):
                     print(f"[GAME_END] Players win by completing all tasks ({completed_count}/{total_count}) in room {room_id}!")
 
                     # given a list of all players in lobby, add 1 to games played for all of them
-                    for player in player_list:
-                        player_stats = find_auth(player["id"])["stats"]
-                        player_stats["gamesPlayed"] += 1
+                    for player_item in player_list:
+                        player_id = player_item["id"]
+                        player = userDB.find_one({"id": player_id})
+                        if player is not None:
+                            player_stats = player["stats"]
+                            player_stats["gamesPlayed"] += 1
 
-                        # check if they're not killer, somehow, and add a win
-                        if player["username"] != room_doc["saboteurUsername"]:
-                            player_stats["gamesWon"] += 1
+                            # check if they're not killer, somehow, and add a win
+                            if player["username"] != room_doc["saboteurUsername"]:
+                                player_stats["gamesWon"] += 1
                         
-                        # update for each player their new stats
-                        userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                            # update for each player their new stats
+                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                        else:
+                            print(f"Could not find player object for player id {player_id}")
                     achieve(player_list)
                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                     emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
@@ -1105,7 +1121,7 @@ def end_meeting(room_id):
                 except Exception as e:
                      print(f"[MEETING ERROR] DB error checking status in end_meeting for room {room_id}: {e}")
                      return # Exit on other DB errors
-
+            room_doc = None
             # --- Double-check status *after* lock acquisition and timer removal ---
             # This is the most critical check to prevent double execution
             try:
@@ -1175,16 +1191,22 @@ def end_meeting(room_id):
                         print(f"[GAME_END] Crew wins by ejecting killer {ejected_player_id} in room {room_id}!")
 
                         # given a list of all players in lobby, add 1 to games played for all of them
-                        for player in new_player_list:
-                            player_stats = find_auth(player["id"])["stats"]
-                            player_stats["gamesPlayed"] += 1
+                        for player_item in new_player_list:
+                            player_id = player_item["id"]
+                            player = userDB.find_one({"id": player_id})
+                            if player is not None:
+                                player_stats = player["stats"]
+                                player_stats["gamesPlayed"] += 1
 
-                            # check if they're not killer, somehow, and add a win
-                            if player["username"] != find_auth(killer_id)["username"]:
-                                player_stats["gamesWon"] += 1
+                                # check if they're killer, somehow, and add a win
+                                killer = userDB.find_one({"id": killer_id})
+                                if player["username"] != killer["username"]:
+                                    player_stats["gamesWon"] += 1
                             
-                            # update for each player their new stats
-                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                                # update for each player their new stats
+                                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                            else:
+                                print(f"Could not find player object for player id {player_id}")
 
                         final_status = 'game_over'
                         game_over_data = {'message': 'Crew Wins! The Killer was ejected!', 'outcome': 'crew_win_vote', 'status': 'game_over'}
@@ -1198,16 +1220,21 @@ def end_meeting(room_id):
                             print(f"[GAME_END] Killer ({killer_username}) wins after ejection in room {room_id}!")
 
                             # given a list of all players in lobby, add 1 to games played for all of them
-                            for player in new_player_list:
-                                player_stats = find_auth(player["id"])["stats"]
-                                player_stats["gamesPlayed"] += 1
+                            for player_item in new_player_list:
+                                player_id = player_item["id"]
+                                player = userDB.find_one({"id": player_id})
+                                if player is not None:
+                                    player_stats = player["stats"]
+                                    player_stats["gamesPlayed"] += 1
 
-                                # check if they're killer, somehow, and add a win
-                                if player["username"] == killer_username:
-                                    player_stats["gamesWon"] += 1
+                                    # check if they're killer, somehow, and add a win
+                                    if player["username"] == killer_username:
+                                        player_stats["gamesWon"] += 1
                                 
-                                # update for each player their new stats
-                                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                                    # update for each player their new stats
+                                    userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                                else:
+                                    print(f"Could not find player object for player id {player_id}")
 
                             final_status = 'game_over'
                             game_over_data = {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win_vote', 'winner_id': killer_id, 'winner_username': killer_username, 'status': 'game_over'}
