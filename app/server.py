@@ -216,6 +216,11 @@ def load_home():
     filepath = "public/html/home.html"
     return send_file(filepath, mimetype='text/html')
 
+@app.route('/favicon.ico')
+def get_fav():
+    filepath = "public/img/favicon.ico"
+    return send_file(filepath,mimetype='image/vnd.microsoft.icon')
+
 @app.route('/login',methods=['GET'])
 def load_login():
     filepath = "public/html/login.html"

@@ -4951,3 +4951,1115 @@ TypeError: replace() argument 2 must be str, not int
 [05-05-2025 04:27:44]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
 [05-05-2025 04:27:44]: 172.21.0.1 (test) GET /api/users/@me -> 200
 [05-05-2025 04:27:45]: 172.21.0.1 (test) GET /stats -> 200
+[05-05-2025 10:31:58]: 172.21.0.1 GET / -> 304
+[05-05-2025 10:31:58]: 172.21.0.1 GET /public/js/alerts.js -> 304
+[05-05-2025 10:31:58]: 172.21.0.1 GET /public/js/auto.js -> 304
+[05-05-2025 10:31:59]: 172.21.0.1 GET /public/js/home.js -> 304
+[05-05-2025 10:31:59]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 10:31:59]: 172.21.0.1 GET /favicon.ico[05-05-2025 10:31:59]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:00]: 172.21.0.1 GET /login -> 200
+[05-05-2025 10:32:00]: 172.21.0.1 GET /public/js/home.js -> 304
+[05-05-2025 10:32:00]: 172.21.0.1 GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:01]: 172.21.0.1 GET /favicon.ico[05-05-2025 10:32:01]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:06]: 172.21.0.1 POST /login[05-05-2025 10:32:06]: LOGIN ATTEMPT - test -> SUCCESS -> 200
+[05-05-2025 10:32:08]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 10:32:08]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:08]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 10:32:08]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 10:32:08]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 10:32:08]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 10:32:08]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:15]: 172.21.0.1 (test) GET /create-room -> 200
+[05-05-2025 10:32:16]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:16]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 10:32:16]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 10:32:16]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:19]: 172.21.0.1 (test) POST /create-room -> 200
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /room/ee374dd8-f639-4e51-893c-4687f85123cc -> 200
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/js/game.js -> 200
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/img/Unfinished Task.png -> 200
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/img/Map.png -> 200
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/img/Dead Character.png -> 200
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/img/Emergency Button.png -> 200
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/img/Finished Task.png -> 200
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/img/test_model.png[05-05-2025 10:32:20]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 10:32:20]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:20]: 172.21.0.1 (test) GET /public/img/Character.png -> 200
+[05-05-2025 10:32:26]: 172.21.0.1 GET / -> 200
+[05-05-2025 10:32:26]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 10:32:26]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 10:32:26]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 10:32:26]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 10:32:27]: 172.21.0.1 GET /favicon.ico[05-05-2025 10:32:27]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:28]: 172.21.0.1 GET /register -> 200
+[05-05-2025 10:32:28]: 172.21.0.1 GET /public/js/home.js -> 304
+[05-05-2025 10:32:28]: 172.21.0.1 GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:28]: 172.21.0.1 GET /favicon.ico[05-05-2025 10:32:28]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:36]: 172.21.0.1 POST /register[05-05-2025 10:32:36]: LOGIN ATTEMPT - Test2 -> FAILURE (Username already exists) -> 400
+[05-05-2025 10:32:40]: 172.21.0.1 POST /register[05-05-2025 10:32:40]: LOGIN ATTEMPT - Test5 -> SUCCESS -> 200
+[05-05-2025 10:32:41]: 172.21.0.1 (Test5) GET / -> 304
+[05-05-2025 10:32:41]: 172.21.0.1 (Test5) GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:41]: 172.21.0.1 (Test5) GET /public/js/auto.js -> 304
+[05-05-2025 10:32:41]: 172.21.0.1 (Test5) GET /public/js/home.js -> 304
+[05-05-2025 10:32:42]: 172.21.0.1 (Test5) GET /favicon.ico[05-05-2025 10:32:42]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:42]: 172.21.0.1 (Test5) GET /api/users/@me -> 200
+[05-05-2025 10:32:45]: 172.21.0.1 (Test5) GET /create-room -> 200
+[05-05-2025 10:32:45]: 172.21.0.1 (Test5) GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:45]: 172.21.0.1 (Test5) GET /public/js/home.js -> 304
+[05-05-2025 10:32:45]: 172.21.0.1 (Test5) GET /favicon.ico[05-05-2025 10:32:45]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:46]: 172.21.0.1 (Test5) GET / -> 304
+[05-05-2025 10:32:46]: 172.21.0.1 (Test5) GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:46]: 172.21.0.1 (Test5) GET /public/js/auto.js -> 304
+[05-05-2025 10:32:46]: 172.21.0.1 (Test5) GET /public/js/home.js -> 304
+[05-05-2025 10:32:46]: 172.21.0.1 (Test5) GET /favicon.ico[05-05-2025 10:32:46]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:46]: 172.21.0.1 (Test5) GET /api/users/@me -> 200
+[05-05-2025 10:32:47]: 172.21.0.1 (Test5) GET /find-room -> 200
+[05-05-2025 10:32:47]: 172.21.0.1 (Test5) GET /public/js/home.js -> 304
+[05-05-2025 10:32:47]: 172.21.0.1 (Test5) GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:47]: 172.21.0.1 (Test5) GET /favicon.ico[05-05-2025 10:32:47]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /room/ee374dd8-f639-4e51-893c-4687f85123cc[05-05-2025 10:32:52]: 172.21.0.1 (test) GET /public/img/test_model.png[05-05-2025 10:32:52]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:32:52]: 172.21.0.1 (test) GET /public/img/Test5_model.png[05-05-2025 10:32:52]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+ -> 200
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/js/game.js -> 200
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/js/alerts.js -> 304
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/js/home.js -> 304
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/img/Dead Character.png -> 200
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/img/Map.png -> 200
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/img/Finished Task.png -> 200
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/img/Unfinished Task.png -> 200
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/img/Emergency Button.png -> 200
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 10:32:52]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/img/test_model.png[05-05-2025 10:32:52]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:32:52]: 172.21.0.1 (test) GET /public/img/test_model.png[05-05-2025 10:32:52]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:32:52]: 172.21.0.1 (test) GET /public/img/Test5_model.png[05-05-2025 10:32:52]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /favicon.ico[05-05-2025 10:32:52]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:32:52]: 172.21.0.1 (Test5) GET /public/img/Character.png -> 200
+[05-05-2025 10:38:13]: 172.21.0.1 (test) GET /public/img/test_model.png[05-05-2025 10:38:13]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:38:13]: 172.21.0.1 (test) GET /public/img/Test5_model.png[05-05-2025 10:38:13]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:38:13]: 172.21.0.1 (Test5) GET /public/img/test_model.png[05-05-2025 10:38:13]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:38:13]: 172.21.0.1 (Test5) GET /public/img/Map.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (test) GET /public/img/Map.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (test) GET /public/img/Dead Character.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 10:38:13]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:38:13]: 172.21.0.1 (Test5) GET /public/img/Dead Character.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (Test5) GET /public/img/Unfinished Task.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (test) GET /public/img/Finished Task.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (test) GET /public/img/Unfinished Task.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (test) GET /public/img/Emergency Button.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (Test5) GET /public/img/Emergency Button.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (Test5) GET /public/img/Finished Task.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (Test5) GET /public/img/Character.png -> 304
+[05-05-2025 10:38:13]: 172.21.0.1 (test) GET /public/img/Character.png -> 304
+[05-05-2025 10:38:27]: 172.21.0.1 (Test5) GET /room/ee374dd8-f639-4e51-893c-4687f85123cc -> 304
+[05-05-2025 10:38:27]: 172.21.0.1 (test) GET /public/img/test_model.png[05-05-2025 10:38:27]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:38:27]: 172.21.0.1 (Test5) GET /public/js/home.js -> 304
+[05-05-2025 10:38:27]: 172.21.0.1 (Test5) GET /public/js/alerts.js -> 304
+[05-05-2025 10:38:27]: 172.21.0.1 (Test5) GET /public/js/game.js -> 304
+[05-05-2025 10:38:27]: 172.21.0.1 (Test5) GET /public/img/Unfinished Task.png -> 304
+[05-05-2025 10:38:27]: 172.21.0.1 (Test5) GET /public/img/Map.png -> 304
+[05-05-2025 10:38:27]: 172.21.0.1 (Test5) GET /public/img/Dead Character.png -> 304
+[05-05-2025 10:38:28]: 172.21.0.1 (Test5) GET /public/img/Finished Task.png -> 304
+[05-05-2025 10:38:28]: 172.21.0.1 (Test5) GET /public/img/Emergency Button.png -> 304
+[05-05-2025 10:38:28]: 172.21.0.1 (test) GET /public/img/test_model.png[05-05-2025 10:38:28]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:38:28]: 172.21.0.1 (Test5) GET /public/img/test_model.png[05-05-2025 10:38:28]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:38:28]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 10:38:28]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:38:28]: 172.21.0.1 (test) GET /public/img/Test5_model.png[05-05-2025 10:38:28]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:38:28]: 172.21.0.1 (Test5) GET /favicon.ico[05-05-2025 10:38:28]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:38:28]: 172.21.0.1 (Test5) GET /public/img/Character.png -> 304
+[05-05-2025 10:38:28]: 172.21.0.1 (Test5) GET /public/img/test_model.png[05-05-2025 10:38:28]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:38:28]: 172.21.0.1 (test) GET /public/img/test_model.png[05-05-2025 10:38:28]: ERROR - [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/test_model.png'
+
+ -> 500
+[05-05-2025 10:38:28]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 10:38:28]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:38:28]: 172.21.0.1 (test) GET /public/img/Test5_model.png[05-05-2025 10:38:28]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:38:51]: 172.21.0.1 (test) GET /create-room -> 200
+[05-05-2025 10:38:51]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 10:38:51]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 352, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:38:52]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 10:38:52]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:38:53]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 10:38:53]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 10:38:53]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 10:38:53]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 10:38:53]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 10:38:53]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 10:38:53]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 359, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 361, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:40:39]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 10:40:39]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 357, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:40:39]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 10:40:39]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 10:40:39]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 10:40:39]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 10:40:39]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 10:40:39]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 10:40:39]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 364, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 366, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:41:38]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 10:41:38]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 10:41:38]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 10:41:38]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 10:41:38]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 10:41:39]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 10:41:39]: ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/app/server.py", line 364, in favicon
+    return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/favicon.ico'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 366, in favicon
+    abort(404) # Return 404 if the file doesn't exist
+    ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+ -> 500
+[05-05-2025 10:42:25]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 10:42:25]: ERROR - [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 357, in get_imgs
+    return send_file(filepath, mimetype=mimetype)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 504, in send_file
+    return werkzeug.utils.send_file(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/utils.py", line 428, in send_file
+    stat = os.stat(path)
+           ^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/app/public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 10:42:25]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 10:42:25]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 10:42:25]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 10:42:25]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 10:42:25]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 10:42:26]: 172.21.0.1 (test) GET /favicon.ico -> 200

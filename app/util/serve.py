@@ -4,7 +4,8 @@ def get_mimetype(filename):
         'jpeg':'image/jpeg',
         'png':'image/png',
         'webp':'image/webp',
-        'gif': 'image/gif'
+        'gif': 'image/gif',
+        'ico':'image/vnd.microsoft.icon'
     }
     parts = filename.rsplit('.', 1)
     if len(parts) > 1:
