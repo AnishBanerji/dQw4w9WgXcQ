@@ -7,25 +7,36 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
+            background: radial-gradient(ellipse at bottom, #0d0d0d 0%, #000000 100%);
+            font-family: 'Arial', sans-serif;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
             max-width: 800px;
-            margin: 50px auto;
-            background: white;
+            background-color: #1a1a1a;
+            border: 5px solid #888;
             padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px #333;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 320px;
+            max-height: 900px;
         }
 
         h1 {
             text-align: center;
             margin-bottom: 20px;
-            color: #333;
+            color: whitesmoke;
         }
 
         table {
@@ -45,12 +56,9 @@
             color: white;
         }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
         tr:hover {
             background-color: #e9f5ff;
+            color: #000;
         }
 
         .achievements-table th {
@@ -100,8 +108,7 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-    <h1>Achievements</h1>
+        <h1>Achievements</h1>
         <table class="achievements-table">
             <tbody>
                 <tr>
