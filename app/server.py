@@ -286,24 +286,24 @@ def getStats():
     achievements = user.get('achievements')
     with open(filepath, 'r') as f:
         content = f.read()
-    content = content.replace('Placeholder1',str(stats.get('gamesPlayed',None)))
-    content = content.replace('Placeholder2',str(stats.get('gamesWon',None)))
+    content = content.replace('gamesPlayed',str(stats.get('gamesPlayed',None)))
+    content = content.replace('gamesWon',str(stats.get('gamesWon',None)))
     if int(stats.get('gamesPlayed')) != 0:
         winper = (int(stats.get('gamesWon'))/int(stats.get('gamesPlayed')))*100
     else:
         winper = 0
-    content = content.replace('Placeholder3',str(winper))
-    content = content.replace('Placeholder4',str(int(stats.get('gamesPlayed'))-int(stats.get('saboteurPlayed'))))
-    content = content.replace('Placeholder5',str(stats.get('tasksDone',None)))
-    content = content.replace('Placeholder6',str(stats.get('saboteurPlayed',None)))
-    content = content.replace('Placeholder7',str(stats.get('playersKilled',None)))
+    content = content.replace('winPer',str(winper))
+    content = content.replace('crewGames',str(int(stats.get('gamesPlayed'))-int(stats.get('saboteurPlayed'))))
+    content = content.replace('tasks',str(stats.get('tasksDone',None)))
+    content = content.replace('killGames',str(stats.get('saboteurPlayed',None)))
+    content = content.replace('playersKilled',str(stats.get('playersKilled',None)))
 
-    content = content.replace("Placeholder8", "Unlocked" if 'First Game Played' in achievements else "Locked")
-    content = content.replace("Placeholder9", "Unlocked" if 'First Game Won' in achievements else "Locked")
-    content = content.replace("Placeholder10", "Unlocked" if 'First Kill' in achievements else "Locked")
-    content = content.replace("Placeholder11", "Unlocked" if 'Play 5 Games' in achievements else "Locked")
-    content = content.replace("Placeholder12", "Unlocked" if 'Kill 5 Players' in achievements else "Locked")
-    content = content.replace("Placeholder13", "Unlocked" if 'Win 5 Games' in achievements else "Locked")
+    content = content.replace("firstGame", "Unlocked" if 'First Game Played' in achievements else "Locked")
+    content = content.replace("firstWin", "Unlocked" if 'First Game Won' in achievements else "Locked")
+    content = content.replace("firstKill", "Unlocked" if 'First Kill' in achievements else "Locked")
+    content = content.replace("playedFive", "Unlocked" if 'Play 5 Games' in achievements else "Locked")
+    content = content.replace("killedFive", "Unlocked" if 'Kill 5 Players' in achievements else "Locked")
+    content = content.replace("wonFive", "Unlocked" if 'Win 5 Games' in achievements else "Locked")
 
     res = make_response(content)
     res.headers['X-Content-Type-Options'] = "nosniff"
