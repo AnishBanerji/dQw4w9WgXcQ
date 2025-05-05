@@ -5,7 +5,10 @@ def achieve(players_list):
                     'First Kill':['playersKilled',1], 
                     'First Task Done':['tasksDone', 1],
                     'First Game Won':['gamesWon', 1],
-                    'First Time Saboteur':['saboteurPlayed',1]}
+                    'First Time Saboteur':['saboteurPlayed',1],
+                    'Play 5 Games':['gamesPlayed', 5],
+                    'Kill 5 Players':['playersKilled',5],
+                    'Win 5 Games':['gamesWon',5]}
     ret = {}
     for player in players_list:
         username = player.get('username',None)

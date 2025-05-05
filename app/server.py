@@ -284,8 +284,32 @@ def getStats():
     user = find_auth(auth_token)
     stats = user.get('stats')
     achievements = user.get('achievements')
-    
-    return send_file(filepath,mimetype='text/html')
+    with open(filepath, 'r') as f:
+        content = f.read()
+    content = content.replace('Placeholder1',str(stats.get('gamesPlayed',None)))
+    content = content.replace('Placeholder2',str(stats.get('gamesWon',None)))
+    if int(stats.get('gamesPlayed')) != 0:
+        winper = (int(stats.get('gamesWon'))/int(stats.get('gamesPlayed')))*100
+    else:
+        winper = 0
+    content = content.replace('Placeholder3',str(winper))
+    content = content.replace('Placeholder4',str(int(stats.get('gamesPlayed'))-int(stats.get('saboteurPlayed'))))
+    content = content.replace('Placeholder5',str(stats.get('tasksDone',None)))
+    content = content.replace('Placeholder6',str(stats.get('saboteurPlayed',None)))
+    content = content.replace('Placeholder7',str(stats.get('playersKilled',None)))
+
+    content = content.replace("Placeholder8", "Unlocked" if 'First Game Played' in achievements else "Locked")
+    content = content.replace("Placeholder9", "Unlocked" if 'First Game Won' in achievements else "Locked")
+    content = content.replace("Placeholder10", "Unlocked" if 'First Kill' in achievements else "Locked")
+    content = content.replace("Placeholder11", "Unlocked" if 'Play 5 Games' in achievements else "Locked")
+    content = content.replace("Placeholder12", "Unlocked" if 'Kill 5 Players' in achievements else "Locked")
+    content = content.replace("Placeholder13", "Unlocked" if 'Win 5 Games' in achievements else "Locked")
+
+    res = make_response(content)
+    res.headers['X-Content-Type-Options'] = "nosniff"
+    res.headers['Content-Type'] = 'text/html'
+
+    return res, 200
 
 @app.route('/room/<roomId>', methods=['GET'])
 @login_required_http
@@ -1149,6 +1173,19 @@ def end_meeting(room_id):
                     if ejected_player_id == killer_id:
                         # Crew Wins
                         print(f"[GAME_END] Crew wins by ejecting killer {ejected_player_id} in room {room_id}!")
+
+                        # given a list of all players in lobby, add 1 to games played for all of them
+                        for player in new_player_list:
+                            player_stats = find_auth(player["id"])["stats"]
+                            player_stats["gamesPlayed"] += 1
+
+                            # check if they're not killer, somehow, and add a win
+                            if player["username"] != find_auth(killer_id)["username"]:
+                                player_stats["gamesWon"] += 1
+                            
+                            # update for each player their new stats
+                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                         final_status = 'game_over'
                         game_over_data = {'message': 'Crew Wins! The Killer was ejected!', 'outcome': 'crew_win_vote', 'status': 'game_over'}
                     else:
@@ -1159,6 +1196,19 @@ def end_meeting(room_id):
                             killer_info = next((p for p in new_player_list if p.get('id') == killer_id), None)
                             killer_username = killer_info.get('username', 'Unknown') if killer_info else 'Unknown'
                             print(f"[GAME_END] Killer ({killer_username}) wins after ejection in room {room_id}!")
+
+                            # given a list of all players in lobby, add 1 to games played for all of them
+                            for player in new_player_list:
+                                player_stats = find_auth(player["id"])["stats"]
+                                player_stats["gamesPlayed"] += 1
+
+                                # check if they're killer, somehow, and add a win
+                                if player["username"] == killer_username:
+                                    player_stats["gamesWon"] += 1
+                                
+                                # update for each player their new stats
+                                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                             final_status = 'game_over'
                             game_over_data = {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win_vote', 'winner_id': killer_id, 'winner_username': killer_username, 'status': 'game_over'}
 
