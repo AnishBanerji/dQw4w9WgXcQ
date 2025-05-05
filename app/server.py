@@ -2,21 +2,22 @@ import os
 os.environ['FLASK_APP'] = 'app/server.py'
 # os.environ['FLASK_DEBUG'] = '1' # Optionally uncomment for auto-reload
 
-from flask import Flask, request, send_file, abort, jsonify, make_response, redirect, url_for, g
-from flask_socketio import SocketIO, emit, join_room as join_socketio_room, leave_room
+from flask import Flask, request, send_file, abort, jsonify, make_response, redirect, url_for, g, session
+from flask_socketio import SocketIO, emit, join_room as join_socketio_room, leave_room 
 import datetime
 from util.room import create_room, find_rooms, getRoomInfo # Import DB functions
 from util.authentication import *
 from util.settings import settingsChange
 from util.database import roomDB, userDB # Import userDB for logout
 from util.achieve import *
-import os
+import hashlib
+from werkzeug.utils import secure_filename
 import eventlet
 from util.serve import *
 import uuid
 import random
 import math # Add math import for pi
-from PIL import Image # Import Pillow
+from PIL import Image, ImageDraw # Import Pillow
 from flask_limiter import Limiter # Import Limiter
 from flask_limiter.util import get_remote_address # Import address getter
 from functools import wraps # Added wraps for decorator
@@ -25,16 +26,17 @@ from dotenv import load_dotenv
 import json
 from datetime import datetime, timedelta, timezone # Added timezone
 import threading # Added threading
+import numpy as np
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import traceback
 app = Flask(__name__)
 # --- Rate Limiting Setup ---
-# limiter = Limiter(
-#     get_remote_address,
-#     app=app,
-#     default_limits=["200 per day", "50 per hour"],
-#     storage_uri="memory://",
-# )
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
 # --- End Rate Limiting Setup ---
 
 socketio = SocketIO(app)
@@ -98,7 +100,7 @@ sid_map = {} # { sid: {'player_id': player_id, 'room_id': room_id, 'username': u
 LOGS_DIR = os.path.join(os.path.dirname(__file__), 'logs')
 # LOG_FILE = os.path.join(LOGS_DIR, 'requests.log')
 LOG_FILE = os.path.join(LOGS_DIR, 'requests.log')
-
+FULL_LOG_FILE = os.path.join(LOGS_DIR, 'server.log')
 # --- Define initial player starting position --- 
 INITIAL_X = 1800
 INITIAL_Y = 1800
@@ -123,7 +125,55 @@ MAX_PLAYERS = 10
 MEETING_DURATION_SECONDS = 30
 EMERGENCY_BUTTON_COOLDOWN_SECONDS = 30 # Changed from 120 to 30
 
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    dt = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+    tb = traceback.format_exc()
+    with open(LOG_FILE, 'a') as f:
+        f.write(f"[{dt}]: ERROR - {str(e)}\n{tb}\n")
+    return jsonify({"error": "Internal server error"}), 500
+
+
 @app.before_request
+def log_raw():
+    try:
+        if request.path.startswith('/login') or request.path.startswith('/register'):
+            # Only log headers for login/register to avoid password logging
+            raw = f"HEADERS:\n{dict(request.headers)}"
+        else:
+            body = request.get_data(as_text=True)[:2048]
+            raw = f"HEADERS:\n{dict(request.headers)}\nBODY:\n{body}"
+        clean = redact_tokens_and_passwords(raw)
+        with open(FULL_LOG_FILE, 'a') as f:
+            f.write(f"--- REQUEST {request.method} {request.path} ---\n{clean}\n")
+    except Exception as e:
+        print(f"Request logging failed: {e}")
+ 
+
+@app.after_request
+def log_raw_response(response):
+    try:
+        body = response.get_data(as_text=True)[:2048]
+        raw = f"HEADERS:\n{dict(response.headers)}\nBODY:\n{body}"
+        clean = redact_tokens_and_passwords(raw)
+        with open(FULL_LOG_FILE, 'a') as f:
+            f.write(f"--- RESPONSE {request.method} {request.path} ---\n{clean}\n")
+    except Exception as e:
+        print(f"Response logging failed: {e}")
+    return response
+
+def redact_tokens_and_passwords(raw: str) -> str:
+    # Remove lines with auth token or password fields (case insensitive)
+    lines = raw.splitlines()
+    filtered = []
+    for line in lines:
+        if any(s in line.lower() for s in ['authorization', 'auth_token', 'password']):
+            continue
+        filtered.append(line)
+    return "\n".join(filtered)
+
+@app.before_request #problem
 def log_req():
     if not os.path.exists(LOGS_DIR):
         try:
@@ -131,19 +181,34 @@ def log_req():
         except OSError as e:
             print(f"Error creating logs directory {LOGS_DIR}: {e}")
             return
-    # dt = datetime.now()
     dt = datetime.now() # Use datetime.datetime explicitly
     dt_str = dt.strftime('%m-%d-%Y %H:%M:%S') # Use standard time format
-    ip = request.remote_addr
+    ip = request.headers.get('X-Real-IP') or request.remote_addr
     method = request.method
     path = request.path
-    log = f'[{dt_str}]: {ip} {method} {path}\n'
+    auth_token = request.cookies.get('auth_token',None)
+    username = None
+    if auth_token != None:
+        user = find_auth(auth_token)
+        username = user.get('username')
+    if username == None or auth_token ==None:
+        log = f'[{dt_str}]: {ip} {method} {path}'
+    else:
+        log = f'[{dt_str}]: {ip} ({username}) {method} {path}'
     print(log) # Keep console log
     try:
         with open(LOG_FILE, 'a') as f:
             f.write(log)
     except Exception as e:
         print(f"Error writing to log file {LOG_FILE}: {e}")
+
+@app.after_request
+def after_req_resp(response):
+    resp_code = str(response.status_code)
+    with open(LOG_FILE, 'a') as f:
+        f.write(" -> "+resp_code+'\n')
+    return response
+
 
 # === HTTP Routes (Keep HEAD versions) ===
 @app.route('/', methods=['GET'])
@@ -157,6 +222,7 @@ def load_login():
     return send_file(filepath,mimetype="text/html")
 
 @app.route('/register',methods=["GET"])
+@limiter.limit("10 per hour") # Stricter limit for registration page load
 def load_register():
     filepath = "public/html/register.html"
     return send_file(filepath,mimetype='text/html')
@@ -226,7 +292,7 @@ def get_room_info_api(roomId):
     return jsonify(roomInfo)
 
 @app.route('/public/js/<filename>', methods=['GET'])
-# @limiter.exempt # <<< Exempt this route - REMOVED
+@limiter.exempt # <<< Exempt this route
 def getPublicJS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'js', filename)
@@ -234,7 +300,7 @@ def getPublicJS(filename):
     else: return "Not Found", 404
 
 @app.route('/public/css/<filename>', methods=['GET'])
-# @limiter.exempt # <<< Exempt this route - REMOVED
+@limiter.exempt # <<< Exempt this route
 def getPublicCSS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'css', filename)
@@ -242,20 +308,75 @@ def getPublicCSS(filename):
     else: return "Not Found", 404
 
 @app.route('/public/img/<filename>', methods=['GET'])
-# @limiter.exempt # <<< Exempt this route - REMOVED
+@limiter.exempt # <<< Exempt this route
 def get_imgs(filename):
     mimetype = get_mimetype(filename)
     filepath = os.path.join("public", "img", filename) # Use os.path.join
     return send_file(filepath, mimetype=mimetype)
 
 @app.route('/favicon.ico')
-# @limiter.exempt # Favicon requests shouldn't be limited - REMOVED
+@limiter.exempt # Favicon requests shouldn't be limited
 def favicon():
     filepath = os.path.join(os.path.dirname(__file__), 'public', 'favicon.ico')
     try:
         return send_file(filepath, mimetype='image/vnd.microsoft.icon')
     except FileNotFoundError:
         abort(404) # Return 404 if the file doesn't exist
+
+def overlay_avatar_on_base(base_path, avatar_path, circle_center, circle_radius):
+    base = Image.open(base_path).convert("RGBA")
+    avatar = Image.open(avatar_path).convert("RGBA")
+
+    # Create circular mask
+    mask = Image.new("L", base.size, 0)
+    draw = ImageDraw.Draw(mask)
+    x, y = circle_center
+    draw.ellipse((x - circle_radius, y - circle_radius, x + circle_radius, y + circle_radius), fill=255)
+
+    # Resize avatar to fit circle
+    avatar = avatar.resize((circle_radius * 2, circle_radius * 2), Image.LANCZOS)
+
+    # Create transparent image to paste avatar in right spot
+    positioned_avatar = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    positioned_avatar.paste(avatar, (x - circle_radius, y - circle_radius), avatar)
+
+    # Composite avatar using mask
+    combined = Image.composite(positioned_avatar, base, mask)
+
+    return combined
+
+@app.route('/api/user/update', methods=['POST'])
+def update_user():
+    avatar = request.files.get('avatar')
+
+    auth_token = request.cookies.get("auth_token")
+    if not auth_token:
+        return jsonify({"message": "Access denied"}), 403
+
+    hashed_token = hashlib.sha256(auth_token.encode()).hexdigest()
+    current_user = userDB.find_one({"hashed_token": hashed_token})
+
+    if not current_user:
+        return jsonify({"message": "Current user does not exist"}), 403
+
+    if avatar:
+        filename = secure_filename(avatar.filename)
+        filepath = os.path.join("./public/img", filename)
+        avatar.save(filepath)
+
+        image_url = f"/public/img/{filename}"
+
+        userDB.update_one({"hashed_token" : hashed_token}, {"$set": {"imageURL": image_url}})
+
+        result = overlay_avatar_on_base("./public/img/Character.png", f"./public/img/{filename}", (197, 100), 28)
+        filepath = os.path.join("./public/img", current_user["username"] + "_model.png")
+        result.save(filepath)
+
+        model_url = f"/public/img/" + current_user["username"] + "_model.png"   
+
+        userDB.update_one({"hashed_token" : hashed_token}, {"$set": {"characterURL": model_url}})
+
+    return jsonify({"message": "Profile updated successfully"})
 
 @app.route('/api/users/@me', methods=['GET'])
 def get_user_profile():
@@ -270,14 +391,30 @@ def get_user_profile():
     
     return jsonify({
         "username": user.get("username", "Unknown"), 
-        "avatar_url": user.get("imageURL", "/public/img/default_avatar.webp") # Use imageURL field if exists
+        "avatar_url": user.get("imageURL", "./public/img/default_avatar.webp") # Use imageURL field if exists
     })
 
-# Add URL rules (Keep HEAD versions)
-app.add_url_rule('/api/users/settings', 'settingsChange', login_required_http(settingsChange), methods=['POST'])
-app.add_url_rule('/register', 'register_route', register, methods=['POST'])
-app.add_url_rule('/login', 'login_route', login, methods=['POST'])
 
+# Add URL rules (Keep HEAD versions)
+app.add_url_rule('/api/users/settings', 'settingsChange', limiter.limit("10 per hour")(login_required_http(settingsChange)), methods=['POST'])
+@app.route('/login',methods=['POST'])
+def handle_login():
+    username, success, reason, res, code = login()
+    log_auth_attempt(username, success,reason)
+    return res, code
+
+@app.route('/register',methods=['POST'])
+def handle_reg():
+    username, success, reason, res, code = register()
+    log_auth_attempt(username, success, reason)
+    return res, code
+
+def log_auth_attempt(username, success, reason=""):
+    dt = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+    status = "SUCCESS" if success else f"FAILURE ({reason})"
+    log_line = f"[{dt}]: LOGIN ATTEMPT - {username} -> {status}\n"
+    with open(LOG_FILE, 'a') as f:
+        f.write(log_line)
 # === Socket IO Handlers (Keep HEAD versions for find_rooms, join_room, start_game, attempt_kill, attempt_task, disconnect) ===
 
 @socketio.on('find_rooms')
@@ -1222,5 +1359,6 @@ def handle_meeting_chat(data):
         print(f"[CHAT ERROR] Room {room_id} not found during meeting_chat.")
     except Exception as e:
         print(f"[CHAT ERROR] Unexpected error during meeting_chat for room {room_id}: {e}")
+
 
 # Add other handlers (handle_meeting_chat, handle_player_vote) here later
