@@ -4786,3 +4786,168 @@
 [05-02-2025 03:08:12]: 192.168.65.1 GET /public/js/auto.js
 [05-02-2025 03:08:12]: 192.168.65.1 GET /public/js/home.js
 [05-02-2025 03:08:12]: 192.168.65.1 GET /api/users/@me
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:42:42]: 172.21.0.1 (test) GET /logout -> 302
+[05-05-2025 02:42:42]: 172.21.0.1 GET /login -> 304
+[05-05-2025 02:42:42]: 172.21.0.1 GET /public/js/alerts.js -> 304
+[05-05-2025 02:42:42]: 172.21.0.1 GET /public/js/home.js -> 304
+[05-05-2025 02:42:53]: 172.21.0.1 POST /login[05-05-2025 02:42:53]: LOGIN ATTEMPT - test -> SUCCESS
+ -> 200
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:42:56]: 172.21.0.1 (test) GET /create-room -> 304
+[05-05-2025 02:42:56]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:42:56]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:43:00]: 172.21.0.1 (test) POST /create-room -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /room/64ebf060-6f3c-4a55-9ae8-4d118010483f -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/js/game.js -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Character.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Map.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Dead Character.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Emergency Button.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Finished Task.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Unfinished Task.png -> 200
+[05-05-2025 02:44:38]: 172.21.0.1 (test) GET /create-room -> 200
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /settings -> 200
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/img/default_avatar.webp -> 304
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/js/settings.js -> 200
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:44:42]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 02:44:43]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:44:43]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:44:43]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:44:43]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:56:06]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 02:56:06]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 02:56:06]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 02:56:06]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 02:56:06]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 04:15:17]: 172.21.0.1 GET / -> 200
+[05-05-2025 04:15:17]: 172.21.0.1 GET /public/js/alerts.js -> 304
+[05-05-2025 04:15:17]: 172.21.0.1 GET /public/js/auto.js -> 304
+[05-05-2025 04:15:17]: 172.21.0.1 GET /public/js/home.js -> 304
+[05-05-2025 04:15:17]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 04:15:20]: 172.21.0.1 GET /stats -> 302
+[05-05-2025 04:15:20]: 172.21.0.1 GET /login -> 200
+[05-05-2025 04:15:20]: 172.21.0.1 GET /public/js/home.js -> 304
+[05-05-2025 04:15:20]: 172.21.0.1 GET /public/js/alerts.js -> 304
+[05-05-2025 04:15:28]: 172.21.0.1 POST /login[05-05-2025 04:15:28]: LOGIN ATTEMPT - test -> SUCCESS -> 200
+[05-05-2025 04:15:30]: 172.21.0.1 (test) GET /stats[05-05-2025 04:15:30]: ERROR - 'NoneType' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 58, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 289, in getStats
+    content.replace('Placeholder1',stats.get('gamesPlayed',None))
+                                   ^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+ -> 500
+[05-05-2025 04:17:01]: 172.21.0.1 (test) POST /login[05-05-2025 04:17:01]: LOGIN ATTEMPT - test -> SUCCESS -> 200
+[05-05-2025 04:17:03]: 172.21.0.1 (test) GET /stats[05-05-2025 04:17:03]: ERROR - 'NoneType' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 58, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 289, in getStats
+    content.replace('Placeholder1',stats.get('gamesPlayed',None))
+                                   ^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+ -> 500
+[05-05-2025 04:17:09]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 04:17:09]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 04:17:09]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 04:17:09]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 04:17:09]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 04:17:20]: 172.21.0.1 (test) GET /stats[05-05-2025 04:17:20]: ERROR - 'NoneType' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 58, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 289, in getStats
+    content.replace('Placeholder1',stats.get('gamesPlayed',None))
+                                   ^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+ -> 500
+[05-05-2025 04:20:32]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 04:20:32]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 04:20:32]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 04:20:32]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 04:20:32]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 04:20:33]: 172.21.0.1 (test) GET /stats[05-05-2025 04:20:33]: ERROR - 'NoneType' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 58, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 289, in getStats
+    content.replace('Placeholder1',stats.get('gamesPlayed',None))
+                                   ^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+ -> 500
+[05-05-2025 04:24:19]: 172.21.0.1 (test) GET /stats[05-05-2025 04:24:19]: ERROR - replace() argument 2 must be str, not int
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 58, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 291, in getStats
+    content.replace('Placeholder1',stats.get('gamesPlayed',None))
+TypeError: replace() argument 2 must be str, not int
+
+ -> 500
+[05-05-2025 04:25:39]: 172.21.0.1 (test) GET /stats -> 200
+[05-05-2025 04:27:44]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 04:27:44]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 04:27:44]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 04:27:44]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 04:27:44]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 04:27:45]: 172.21.0.1 (test) GET /stats -> 200

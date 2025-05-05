@@ -28,7 +28,7 @@ from datetime import datetime, timedelta, timezone # Added timezone
 import threading # Added threading
 import numpy as np
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import traceback
 app = Flask(__name__)
 # --- Rate Limiting Setup ---
 limiter = Limiter(
@@ -100,7 +100,7 @@ sid_map = {} # { sid: {'player_id': player_id, 'room_id': room_id, 'username': u
 LOGS_DIR = os.path.join(os.path.dirname(__file__), 'logs')
 # LOG_FILE = os.path.join(LOGS_DIR, 'requests.log')
 LOG_FILE = os.path.join(LOGS_DIR, 'requests.log')
-
+FULL_LOG_FILE = os.path.join(LOGS_DIR, 'server.log')
 # --- Define initial player starting position --- 
 INITIAL_X = 1800
 INITIAL_Y = 1800
@@ -125,7 +125,55 @@ MAX_PLAYERS = 10
 MEETING_DURATION_SECONDS = 30
 EMERGENCY_BUTTON_COOLDOWN_SECONDS = 30 # Changed from 120 to 30
 
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    dt = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+    tb = traceback.format_exc()
+    with open(LOG_FILE, 'a') as f:
+        f.write(f"[{dt}]: ERROR - {str(e)}\n{tb}\n")
+    return jsonify({"error": "Internal server error"}), 500
+
+
 @app.before_request
+def log_raw():
+    try:
+        if request.path.startswith('/login') or request.path.startswith('/register'):
+            # Only log headers for login/register to avoid password logging
+            raw = f"HEADERS:\n{dict(request.headers)}"
+        else:
+            body = request.get_data(as_text=True)[:2048]
+            raw = f"HEADERS:\n{dict(request.headers)}\nBODY:\n{body}"
+        clean = redact_tokens_and_passwords(raw)
+        with open(FULL_LOG_FILE, 'a') as f:
+            f.write(f"--- REQUEST {request.method} {request.path} ---\n{clean}\n")
+    except Exception as e:
+        print(f"Request logging failed: {e}")
+ 
+
+@app.after_request
+def log_raw_response(response):
+    try:
+        body = response.get_data(as_text=True)[:2048]
+        raw = f"HEADERS:\n{dict(response.headers)}\nBODY:\n{body}"
+        clean = redact_tokens_and_passwords(raw)
+        with open(FULL_LOG_FILE, 'a') as f:
+            f.write(f"--- RESPONSE {request.method} {request.path} ---\n{clean}\n")
+    except Exception as e:
+        print(f"Response logging failed: {e}")
+    return response
+
+def redact_tokens_and_passwords(raw: str) -> str:
+    # Remove lines with auth token or password fields (case insensitive)
+    lines = raw.splitlines()
+    filtered = []
+    for line in lines:
+        if any(s in line.lower() for s in ['authorization', 'auth_token', 'password']):
+            continue
+        filtered.append(line)
+    return "\n".join(filtered)
+
+@app.before_request #problem
 def log_req():
     if not os.path.exists(LOGS_DIR):
         try:
@@ -133,19 +181,34 @@ def log_req():
         except OSError as e:
             print(f"Error creating logs directory {LOGS_DIR}: {e}")
             return
-    # dt = datetime.now()
     dt = datetime.now() # Use datetime.datetime explicitly
     dt_str = dt.strftime('%m-%d-%Y %H:%M:%S') # Use standard time format
-    ip = request.remote_addr
+    ip = request.headers.get('X-Real-IP') or request.remote_addr
     method = request.method
     path = request.path
-    log = f'[{dt_str}]: {ip} {method} {path}\n'
+    auth_token = request.cookies.get('auth_token',None)
+    username = None
+    if auth_token != None:
+        user = find_auth(auth_token)
+        username = user.get('username')
+    if username == None or auth_token ==None:
+        log = f'[{dt_str}]: {ip} {method} {path}'
+    else:
+        log = f'[{dt_str}]: {ip} ({username}) {method} {path}'
     print(log) # Keep console log
     try:
         with open(LOG_FILE, 'a') as f:
             f.write(log)
     except Exception as e:
         print(f"Error writing to log file {LOG_FILE}: {e}")
+
+@app.after_request
+def after_req_resp(response):
+    resp_code = str(response.status_code)
+    with open(LOG_FILE, 'a') as f:
+        f.write(" -> "+resp_code+'\n')
+    return response
+
 
 # === HTTP Routes (Keep HEAD versions) ===
 @app.route('/', methods=['GET'])
@@ -199,6 +262,8 @@ def make_room_route():
     # Otherwise, assume success (result should be the {'roomId': ...} dict)
     return jsonify(result), 200
 
+
+
 @app.route('/find-room',methods=['GET'])
 @login_required_http
 def load_findRoom():
@@ -215,7 +280,36 @@ def getSettings():
 @login_required_http
 def getStats():
     filepath = "public/html/stats.html"
-    return send_file(filepath,mimetype='text/html')
+    auth_token = request.cookies.get('auth_token')
+    user = find_auth(auth_token)
+    stats = user.get('stats')
+    achievements = user.get('achievements')
+    with open(filepath, 'r') as f:
+        content = f.read()
+    content = content.replace('Placeholder1',str(stats.get('gamesPlayed',None)))
+    content = content.replace('Placeholder2',str(stats.get('gamesWon',None)))
+    if int(stats.get('gamesPlayed')) != 0:
+        winper = (int(stats.get('gamesWon'))/int(stats.get('gamesPlayed')))*100
+    else:
+        winper = 0
+    content = content.replace('Placeholder3',str(winper))
+    content = content.replace('Placeholder4',str(int(stats.get('gamesPlayed'))-int(stats.get('saboteurPlayed'))))
+    content = content.replace('Placeholder5',str(stats.get('tasksDone',None)))
+    content = content.replace('Placeholder6',str(stats.get('saboteurPlayed',None)))
+    content = content.replace('Placeholder7',str(stats.get('playersKilled',None)))
+
+    content = content.replace("Placeholder8", "Unlocked" if 'First Game Played' in achievements else "Locked")
+    content = content.replace("Placeholder9", "Unlocked" if 'First Game Won' in achievements else "Locked")
+    content = content.replace("Placeholder10", "Unlocked" if 'First Kill' in achievements else "Locked")
+    content = content.replace("Placeholder11", "Unlocked" if 'Play 5 Games' in achievements else "Locked")
+    content = content.replace("Placeholder12", "Unlocked" if 'Kill 5 Players' in achievements else "Locked")
+    content = content.replace("Placeholder13", "Unlocked" if 'Win 5 Games' in achievements else "Locked")
+
+    res = make_response(content)
+    res.headers['X-Content-Type-Options'] = "nosniff"
+    res.headers['Content-Type'] = 'text/html'
+
+    return res, 200
 
 @app.route('/room/<roomId>', methods=['GET'])
 @login_required_http
@@ -340,9 +434,24 @@ def get_user_profile():
 
 # Add URL rules (Keep HEAD versions)
 app.add_url_rule('/api/users/settings', 'settingsChange', limiter.limit("10 per hour")(login_required_http(settingsChange)), methods=['POST'])
-app.add_url_rule('/register', 'register_route', limiter.limit("5 per hour")(register), methods=['POST'])
-app.add_url_rule('/login', 'login_route', limiter.limit("10 per hour")(login), methods=['POST'])
+@app.route('/login',methods=['POST'])
+def handle_login():
+    username, success, reason, res, code = login()
+    log_auth_attempt(username, success,reason)
+    return res, code
 
+@app.route('/register',methods=['POST'])
+def handle_reg():
+    username, success, reason, res, code = register()
+    log_auth_attempt(username, success, reason)
+    return res, code
+
+def log_auth_attempt(username, success, reason=""):
+    dt = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+    status = "SUCCESS" if success else f"FAILURE ({reason})"
+    log_line = f"[{dt}]: LOGIN ATTEMPT - {username} -> {status}"
+    with open(LOG_FILE, 'a') as f:
+        f.write(log_line)
 # === Socket IO Handlers (Keep HEAD versions for find_rooms, join_room, start_game, attempt_kill, attempt_task, disconnect) ===
 
 @socketio.on('find_rooms')
@@ -745,7 +854,7 @@ def handle_attempt_kill(data):
                                         
                                         # update for each player their new stats
                                         userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
-
+                                    achieve(player_list)
                                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                                     emit('game_over', {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win', 'winner_id': killer_player_id, 'winner_username': killer_username, 'status': 'game_over'}, room=room_id)
                                     return # Exit handler early
@@ -891,7 +1000,7 @@ def handle_complete_task_minigame(data):
                         
                         # update for each player their new stats
                         userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
-
+                    achieve(player_list)
                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                     emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
                     # Note: No early return needed here as it's the end of the handler
@@ -1016,7 +1125,7 @@ def end_meeting(room_id):
             print(f"[MEETING] Proceeding to end meeting for room {room_id}.")
             # --- Tally Votes (moved print inside) ---
             print(f"[MEETING] Ending meeting for room {room_id}.") # Combined print
-
+            player_list = room_doc.get('players', [])
             # --- Tally Votes ---
             votes = room_doc.get('meeting_votes', {})
             vote_counts = {}
@@ -1123,7 +1232,9 @@ def end_meeting(room_id):
 
             # --- Emit Game Over if necessary using socketio.emit ---
             if game_over_data:
+                achieve(player_list)
                 socketio.emit('game_over', game_over_data, room=room_id)
+                
 
         # --- Lock automatically released by `with` statement ---
 
