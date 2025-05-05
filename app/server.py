@@ -823,7 +823,7 @@ def handle_attempt_kill(data):
                                         
                                         # update for each player their new stats
                                         userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
-
+                                    achieve(player_list)
                                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                                     emit('game_over', {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win', 'winner_id': killer_player_id, 'winner_username': killer_username, 'status': 'game_over'}, room=room_id)
                                     return # Exit handler early
@@ -969,7 +969,7 @@ def handle_complete_task_minigame(data):
                         
                         # update for each player their new stats
                         userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
-
+                    achieve(player_list)
                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                     emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
                     # Note: No early return needed here as it's the end of the handler
@@ -1094,7 +1094,7 @@ def end_meeting(room_id):
             print(f"[MEETING] Proceeding to end meeting for room {room_id}.")
             # --- Tally Votes (moved print inside) ---
             print(f"[MEETING] Ending meeting for room {room_id}.") # Combined print
-
+            player_list = room_doc.get('players', [])
             # --- Tally Votes ---
             votes = room_doc.get('meeting_votes', {})
             vote_counts = {}
@@ -1175,7 +1175,9 @@ def end_meeting(room_id):
 
             # --- Emit Game Over if necessary using socketio.emit ---
             if game_over_data:
+                achieve(player_list)
                 socketio.emit('game_over', game_over_data, room=room_id)
+                
 
         # --- Lock automatically released by `with` statement ---
 

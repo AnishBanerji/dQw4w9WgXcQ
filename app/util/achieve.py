@@ -1,8 +1,6 @@
 from util.database import *
 from util.room import getRoomInfo
-def achieve(roomID):
-    room_doc = getRoomInfo(roomID)
-    players_list = room_doc.get('players',[])
+def achieve(players_list):
     ach_to_stats = {'First Game Played':['gamesPlayed', 1],
                     'First Kill':['playersKilled',1], 
                     'First Task Done':['tasksDone', 1],
