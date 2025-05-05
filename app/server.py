@@ -213,7 +213,7 @@ def getSettings():
 
 @app.route('/stats', methods=['GET'])
 @login_required_http
-def getSettings():
+def getStats():
     filepath = "public/html/stats.html"
     return send_file(filepath,mimetype='text/html')
 
