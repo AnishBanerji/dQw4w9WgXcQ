@@ -10319,3 +10319,1368 @@ Traceback (most recent call last):
 FileNotFoundError: [Errno 2] No such file or directory: 'public/img/Test5_model.png'
 
  -> 500
+[05-05-2025 11:23:36]: 172.21.0.1 (Test5) GET /public/img/test_model.png[05-05-2025 11:23:36]: ERROR - [Errno 2] No such file or directory: 'public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 399, in get_imgs
+    with open(filepath,'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'public/img/test_model.png'
+
+ -> 500
+[05-05-2025 11:23:36]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 11:23:36]: ERROR - [Errno 2] No such file or directory: 'public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 399, in get_imgs
+    with open(filepath,'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 11:23:36]: 172.21.0.1 (Test5) GET /public/img/Map.png -> 200
+[05-05-2025 11:23:36]: 172.21.0.1 (Test5) GET /public/img/Unfinished Task.png -> 200
+[05-05-2025 11:23:36]: 172.21.0.1 (Test5) GET /public/img/Dead Character.png -> 200
+[05-05-2025 11:23:36]: 172.21.0.1 (Test5) GET /public/img/Finished Task.png -> 200
+[05-05-2025 11:23:36]: 172.21.0.1 (Test5) GET /public/img/Emergency Button.png -> 200
+[05-05-2025 11:23:36]: 172.21.0.1 (Test5) GET /public/img/Character.png -> 200
+[05-05-2025 11:23:56]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:23:56]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:23:56]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:23:56]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:23:56]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:23:57]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:23:57]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 227, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:23:58]: 172.21.0.1 (test) GET /logout -> 302
+[05-05-2025 11:23:58]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:24:01]: 172.21.0.1 GET /find-room -> 302
+[05-05-2025 11:24:01]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:28:20]: 172.21.0.1 (Test5) GET /public/img/test_model.png[05-05-2025 11:28:20]: ERROR - [Errno 2] No such file or directory: 'public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 409, in get_imgs
+    with open(filepath,'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'public/img/test_model.png'
+
+ -> 500
+[05-05-2025 11:28:20]: 172.21.0.1 (Test5) GET /public/img/Test5_model.png[05-05-2025 11:28:20]: ERROR - [Errno 2] No such file or directory: 'public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 409, in get_imgs
+    with open(filepath,'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 11:36:32]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:36:32]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:36:32]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:36:32]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:36:32]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:36:32]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:36:32]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:36:34]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:36:34]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:36:34]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:36:35]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:36:35]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:36:36]: 172.21.0.1 GET /register -> 200
+[05-05-2025 11:36:36]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:36:36]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:36:36]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:36:36]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:36:37]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:36:37]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:35]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:37:35]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:37:35]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:35]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:37:35]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:37:35]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:37:35]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:36]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:37:36]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:36]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:37:36]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:37:36]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:37]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:37:37]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:37]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:37:37]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:37:37]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:37:37]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:37:37]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:39]: 172.21.0.1 GET /create-room -> 302
+[05-05-2025 11:37:39]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:37:39]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:39]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:37:39]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:37:39]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:41]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:37:41]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:41]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:37:41]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:37:41]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:37:41]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:37:41]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:42]: 172.21.0.1 GET /settings -> 302
+[05-05-2025 11:37:42]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:37:42]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:42]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:37:42]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:37:42]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:43]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:37:43]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:43]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:37:43]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:37:43]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:37:43]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:37:43]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:44]: 172.21.0.1 GET /login -> 304
+[05-05-2025 11:37:44]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:44]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:37:44]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:37:44]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:52]: 172.21.0.1 POST /login[05-05-2025 11:37:52]: LOGIN ATTEMPT - test -> SUCCESS -> 200
+[05-05-2025 11:37:54]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:37:54]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:54]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:37:54]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:37:54]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:37:54]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:37:54]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:55]: 172.21.0.1 (test) GET /create-room -> 200
+[05-05-2025 11:37:55]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:55]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:37:55]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:37:55]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:56]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:37:56]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:56]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:37:56]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:37:56]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:37:56]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:37:56]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:57]: 172.21.0.1 (test) GET /settings -> 200
+[05-05-2025 11:37:57]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:57]: 172.21.0.1 (test) GET /public/img/default_avatar.webp -> 200
+[05-05-2025 11:37:57]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:37:57]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:37:57]: 172.21.0.1 (test) GET /public/js/settings.js -> 200
+[05-05-2025 11:37:57]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:37:57]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:37:57]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:37:58]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:37:58]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:37:58]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:37:58]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:37:58]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:37:58]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:37:58]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:01]: 172.21.0.1 (test) GET /find-room -> 200
+[05-05-2025 11:38:01]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:01]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:38:01]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:01]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:02]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:38:02]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:02]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:38:02]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:38:02]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:38:02]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:02]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:11]: 172.21.0.1 (test) GET /logout -> 302
+[05-05-2025 11:38:11]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:38:11]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:38:11]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:11]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:38:11]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:13]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:38:13]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:13]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:38:13]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:38:13]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:38:13]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:38:13]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:14]: 172.21.0.1 GET /register -> 200
+[05-05-2025 11:38:14]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:14]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:38:15]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:38:15]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:16]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:38:16]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:16]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:38:16]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:38:16]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:38:16]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:38:16]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:17]: 172.21.0.1 GET /settings -> 302
+[05-05-2025 11:38:17]: 172.21.0.1 GET /login -> 304
+[05-05-2025 11:38:17]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:18]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:38:18]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:38:18]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:19]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:38:19]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:19]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:38:19]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:38:19]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:38:19]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:38:19]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:32]: 172.21.0.1 GET /login -> 304
+[05-05-2025 11:38:32]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:32]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:38:32]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:38:32]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:39]: 172.21.0.1 POST /login[05-05-2025 11:38:39]: LOGIN ATTEMPT - test -> SUCCESS -> 200
+[05-05-2025 11:38:40]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:38:40]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:40]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:38:40]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:38:40]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:38:40]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:40]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:43]: 172.21.0.1 (test) GET /find-room -> 200
+[05-05-2025 11:38:44]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:44]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:38:44]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:44]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /room/c5e30d73-0081-4d71-8f78-3cf93e43fe67 -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/js/game.js -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/img/Map.png -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/img/Dead Character.png -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/img/Finished Task.png -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/img/Unfinished Task.png -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/img/Emergency Button.png -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/img/Test5_model.png[05-05-2025 11:38:48]: ERROR - [Errno 2] No such file or directory: 'public/img/Test5_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 409, in get_imgs
+    with open(filepath,'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'public/img/Test5_model.png'
+
+ -> 500
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/img/test_model.png[05-05-2025 11:38:48]: ERROR - [Errno 2] No such file or directory: 'public/img/test_model.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 409, in get_imgs
+    with open(filepath,'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'public/img/test_model.png'
+
+ -> 500
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /public/img/Character.png -> 200
+[05-05-2025 11:38:48]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:48]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:49]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:49]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:50]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:38:50]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:50]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:38:50]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:38:50]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:38:50]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:50]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:52]: 172.21.0.1 (test) GET /settings -> 200
+[05-05-2025 11:38:52]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:52]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:38:52]: 172.21.0.1 (test) GET /public/img/default_avatar.webp -> 200
+[05-05-2025 11:38:52]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:38:52]: 172.21.0.1 (test) GET /public/js/settings.js -> 200
+[05-05-2025 11:38:52]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:38:52]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:52]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:38:56]: 172.21.0.1 (test) POST /api/users/settings -> 200
+[05-05-2025 11:38:56]: 172.21.0.1 (test) POST /api/user/update -> 200
+[05-05-2025 11:38:59]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:38:59]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:38:59]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:38:59]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:38:59]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:38:59]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:38:59]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:39:00]: 172.21.0.1 (test) GET /create-room -> 200
+[05-05-2025 11:39:00]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:39:00]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:39:00]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:39:00]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:39:04]: 172.21.0.1 (test) POST /create-room -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /room/a1296d95-e8ea-4cde-ab29-64d0f8ecf32a -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/js/game.js -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/img/Unfinished Task.png -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/img/Dead Character.png -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/img/Map.png -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/img/Finished Task.png -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/img/Emergency Button.png -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /public/img/test_model.png -> 200
+[05-05-2025 11:39:05]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:39:05]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:39:09]: 172.21.0.1 (test) GET /create-room -> 200
+[05-05-2025 11:39:09]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:39:09]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:39:11]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:39:11]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:39:11]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:39:11]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:39:11]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:39:11]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:39:11]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:40:39]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:40:39]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:40:39]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:40:39]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:40:40]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:40:40]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:40:40]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:40:41]: 172.21.0.1 (test) GET /logout -> 302
+[05-05-2025 11:40:41]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:40:41]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:40:41]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:40:41]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:40:41]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:40:42]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:40:42]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:40:42]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:40:42]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:40:42]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:40:42]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:40:42]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:40:43]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:40:43]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:40:43]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:40:43]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:40:43]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:40:48]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:40:48]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:40:48]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:40:48]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:40:48]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:40:48]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:40:48]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:40:50]: 172.21.0.1 GET /stats -> 302
+[05-05-2025 11:40:50]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:40:50]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:40:50]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:40:50]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:40:50]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:40:51]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:40:51]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:40:51]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:40:51]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:40:51]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:40:51]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:40:51]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:03]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:41:03]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:03]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:41:03]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:41:03]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:41:03]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:41:03]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:04]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:41:04]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:04]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:41:04]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:41:04]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:06]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:41:06]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:06]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:41:06]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:41:06]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:41:06]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:41:06]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:07]: 172.21.0.1 GET /register -> 200
+[05-05-2025 11:41:07]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:07]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:41:07]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:41:07]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:08]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:41:08]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:08]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:41:08]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:41:08]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:41:08]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:41:08]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:09]: 172.21.0.1 GET /settings -> 302
+[05-05-2025 11:41:09]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:41:09]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:09]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:41:09]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:41:09]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:10]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:41:10]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:10]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:41:10]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:41:10]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:41:10]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:41:10]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:12]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:41:12]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:12]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:41:12]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:41:12]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:17]: 172.21.0.1 POST /login[05-05-2025 11:41:18]: LOGIN ATTEMPT - test -> SUCCESS -> 200
+[05-05-2025 11:41:19]: 172.21.0.1 (test) GET / -> 200
+[05-05-2025 11:41:19]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:19]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:41:19]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:41:19]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:41:19]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:41:19]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /settings -> 200
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /public/js/alerts.js -> 200
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /public/js/auto.js -> 200
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /public/img/default_avatar.webp -> 200
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /public/js/home.js -> 200
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /public/js/settings.js -> 200
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /public/img/Valorant_Screenshot_2025.05.05_-_03.19.48.62.png[05-05-2025 11:41:20]: ERROR - [Errno 2] No such file or directory: 'public/img/Valorant_Screenshot_2025.05.05_-_03.19.48.62.png'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 409, in get_imgs
+    with open(filepath,'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'public/img/Valorant_Screenshot_2025.05.05_-_03.19.48.62.png'
+
+ -> 500
+[05-05-2025 11:41:20]: 172.21.0.1 (test) GET /favicon.ico[05-05-2025 11:41:20]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:45:16]: 172.21.0.1 (test) POST /api/users/settings -> 400
+[05-05-2025 11:45:23]: 172.21.0.1 (test) POST /api/users/settings -> 200
+[05-05-2025 11:45:23]: 172.21.0.1 (test) POST /api/user/update -> 200
+[05-05-2025 11:46:08]: 172.21.0.1 (test) POST /api/users/settings -> 200
+[05-05-2025 11:46:09]: 172.21.0.1 (test) POST /api/user/update -> 200
+[05-05-2025 11:46:32]: 172.21.0.1 (test) POST /api/users/settings -> 200
+[05-05-2025 11:46:32]: 172.21.0.1 (test12) POST /api/user/update -> 200
+[05-05-2025 11:46:49]: 172.21.0.1 (test12) GET / -> 200
+[05-05-2025 11:46:49]: 172.21.0.1 (test12) GET /public/js/auto.js -> 200
+[05-05-2025 11:46:49]: 172.21.0.1 (test12) GET /public/js/home.js -> 200
+[05-05-2025 11:46:49]: 172.21.0.1 (test12) GET /public/js/alerts.js -> 200
+[05-05-2025 11:46:49]: 172.21.0.1 (test12) GET /api/users/@me -> 200
+[05-05-2025 11:46:49]: 172.21.0.1 (test12) GET /favicon.ico[05-05-2025 11:46:49]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /settings -> 200
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /public/js/alerts.js -> 200
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /public/js/home.js -> 200
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /public/img/default_avatar.webp -> 200
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /public/js/auto.js -> 200
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /public/js/settings.js -> 200
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /api/users/@me -> 200
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /favicon.ico[05-05-2025 11:46:52]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:46:52]: 172.21.0.1 (test12) GET /public/img/Valorant_Screenshot_2025.05.05_-_03.19.48.62.png -> 200
+[05-05-2025 11:47:27]: 172.21.0.1 (test12) GET / -> 200
+[05-05-2025 11:47:27]: 172.21.0.1 (test12) GET /public/js/alerts.js -> 200
+[05-05-2025 11:47:27]: 172.21.0.1 (test12) GET /public/js/auto.js -> 200
+[05-05-2025 11:47:27]: 172.21.0.1 (test12) GET /public/js/home.js -> 200
+[05-05-2025 11:47:27]: 172.21.0.1 (test12) GET /api/users/@me -> 200
+[05-05-2025 11:47:27]: 172.21.0.1 (test12) GET /favicon.ico[05-05-2025 11:47:27]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:47:29]: 172.21.0.1 (test12) GET /logout -> 302
+[05-05-2025 11:47:29]: 172.21.0.1 GET /login -> 200
+[05-05-2025 11:47:29]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:47:29]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:47:29]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:47:29]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:47:30]: 172.21.0.1 GET / -> 200
+[05-05-2025 11:47:30]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:47:30]: 172.21.0.1 GET /public/js/auto.js -> 200
+[05-05-2025 11:47:30]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:47:30]: 172.21.0.1 GET /api/users/@me -> 401
+[05-05-2025 11:47:30]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:47:30]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:47:32]: 172.21.0.1 GET /register -> 200
+[05-05-2025 11:47:32]: 172.21.0.1 GET /public/js/alerts.js -> 200
+[05-05-2025 11:47:32]: 172.21.0.1 GET /public/js/home.js -> 200
+[05-05-2025 11:47:32]: 172.21.0.1 GET /favicon.ico[05-05-2025 11:47:32]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:47:43]: 172.21.0.1 POST /register[05-05-2025 11:47:43]: LOGIN ATTEMPT - Spider -> SUCCESS -> 200
+[05-05-2025 11:47:45]: 172.21.0.1 (Spider) GET / -> 200
+[05-05-2025 11:47:45]: 172.21.0.1 (Spider) GET /public/js/alerts.js -> 200
+[05-05-2025 11:47:45]: 172.21.0.1 (Spider) GET /public/js/auto.js -> 200
+[05-05-2025 11:47:45]: 172.21.0.1 (Spider) GET /public/js/home.js -> 200
+[05-05-2025 11:47:45]: 172.21.0.1 (Spider) GET /api/users/@me -> 200
+[05-05-2025 11:47:45]: 172.21.0.1 (Spider) GET /favicon.ico[05-05-2025 11:47:45]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:49:00]: 172.21.0.1 (Spider) GET /settings -> 200
+[05-05-2025 11:49:00]: 172.21.0.1 (Spider) GET /public/img/default_avatar.webp -> 200
+[05-05-2025 11:49:00]: 172.21.0.1 (Spider) GET /public/js/home.js -> 200
+[05-05-2025 11:49:00]: 172.21.0.1 (Spider) GET /public/js/alerts.js -> 200
+[05-05-2025 11:49:00]: 172.21.0.1 (Spider) GET /public/js/settings.js -> 200
+[05-05-2025 11:49:00]: 172.21.0.1 (Spider) GET /public/js/auto.js -> 200
+[05-05-2025 11:49:00]: 172.21.0.1 (Spider) GET /api/users/@me -> 200
+[05-05-2025 11:49:00]: 172.21.0.1 (Spider) GET /favicon.ico[05-05-2025 11:49:00]: ERROR - 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/server.py", line 228, in get_fav
+    content = f.read()
+              ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 10: invalid start byte
+
+ -> 500
+[05-05-2025 11:49:05]: 172.21.0.1 (Spider) POST /api/users/settings -> 200

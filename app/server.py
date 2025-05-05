@@ -218,6 +218,7 @@ def load_home():
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
 @app.route('/favicon.ico')
@@ -227,6 +228,7 @@ def get_fav():
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'image/vnd.microsoft.icon'
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
 @app.route('/login',methods=['GET'])
@@ -235,7 +237,8 @@ def load_login():
     with open(filepath,'r') as f:
         content = f.read()
     res = make_response(content)
-    res.headers['Content-Type'] = 'test/html'
+    res.headers['Content-Type'] = 'text/html'
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
 @app.route('/register',methods=["GET"])
@@ -246,6 +249,7 @@ def load_register():
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
 @app.route('/logout', methods=['GET'])
@@ -269,6 +273,7 @@ def load_createRoom():
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
 @app.route('/create-room', methods=['POST'])
@@ -297,6 +302,7 @@ def load_findRoom():
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
 @app.route('/settings', methods=['GET'])
@@ -307,6 +313,7 @@ def getSettings():
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
 @app.route('/stats', methods=['GET'])
@@ -355,6 +362,7 @@ def load_room(roomId):
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = 'text/html'
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res, 200
 
 @app.route('/api/room-info/<roomId>', methods=['GET'])
@@ -375,6 +383,7 @@ def getPublicJS(filename):
             content = f.read()
         res = make_response(content)
         res.headers['Content-Type'] = 'text/javascript'
+        res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 200
     else: return "Not Found", 404
 
@@ -388,6 +397,7 @@ def getPublicCSS(filename):
             content = f.read()
         res = make_response(content)
         res.headers['Content-Type'] = 'text/css'
+        res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 200
     else: return "Not Found", 404
 
@@ -400,6 +410,7 @@ def get_imgs(filename):
         content = f.read()
     res = make_response(content)
     res.headers['Content-Type'] = mimetype
+    res.headers['X-Content-Type-Options'] = "nosniff"
     return res
 
 @app.route('/favicon.ico')
@@ -411,6 +422,7 @@ def favicon():
             content = f.read()
         res = make_response(content)
         res.headers['Content-Type'] = 'image/vnd.microsoft.icon'
+        res.headers['X-Content-Type-Options'] = "nosniff"
         return res, 200
     except FileNotFoundError:
         abort(404) # Return 404 if the file doesn't exist
