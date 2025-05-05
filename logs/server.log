@@ -184,3 +184,23 @@ HEADERS:
 {'Content-Type': 'application/json', 'Content-Length': '68'}
 BODY:
 {"avatar_url":"./public/img/default_avatar.webp","username":"test"}
+--- REQUEST GET / ---
+HEADERS:
+BODY:
+--- REQUEST GET /public/js/auto.js ---
+HEADERS:
+BODY:
+--- REQUEST GET /public/js/alerts.js ---
+HEADERS:
+BODY:
+--- REQUEST GET /public/js/home.js ---
+HEADERS:
+BODY:
+--- REQUEST GET /api/users/@me ---
+HEADERS:
+BODY:
+--- RESPONSE GET /api/users/@me ---
+HEADERS:
+{'Content-Type': 'application/json', 'Content-Length': '68'}
+BODY:
+{"avatar_url":"./public/img/default_avatar.webp","username":"test"}
