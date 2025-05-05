@@ -192,6 +192,12 @@ def getSettings():
     filepath = "public/html/settings.html"
     return send_file(filepath,mimetype='text/html')
 
+@app.route('/stats', methods=['GET'])
+@login_required_http
+def getSettings():
+    filepath = "public/html/stats.html"
+    return send_file(filepath,mimetype='text/html')
+
 @app.route('/room/<roomId>', methods=['GET'])
 @login_required_http
 def load_room(roomId):
