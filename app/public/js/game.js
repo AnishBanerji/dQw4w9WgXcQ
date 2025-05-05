@@ -257,7 +257,6 @@ function loadImage(name, src) {
     });
 }
 
-
 // --- Game State ---
 let players = {}; // Store player data { player_id: { x, y, username, id, angle, is_dead } }
 let myPlayerId = null;
@@ -392,36 +391,38 @@ function getRoomIdFromUrl() {
 }
 
 function drawPlayer(player, isLocalPlayer) {
-    const characterImg = player.is_dead? images.deadCharacter: images[player.username];
+    // Choose image based on dead status
+    const characterImg = player.is_dead ? images.deadCharacter : images.character;
 
+    // Ensure image is loaded and player data (pos/angle) is valid before drawing
     if (!characterImg || typeof player?.x !== 'number' || typeof player?.y !== 'number' || typeof player?.angle !== 'number') {
+        // console.warn("Skipping drawPlayer due to missing image or invalid player data:", player);
         return;
     }
 
     ctx.save(); // Save context state before transforming
 
-    // Move to player's position
+    // Translate to the player's center position
     ctx.translate(player.x, player.y);
 
-    // Rotate character image based on player's angle
-    ctx.rotate(player.angle - Math.PI / 2); // Adjust if image points down by default
+    // Rotate based on the player's angle
+    ctx.rotate(player.angle - Math.PI / 2); // Assuming base image faces DOWN
 
-    // Draw the character image centered at the player's position
+    // Draw the character image centered at the translated+rotated origin
     const drawX = -characterImg.width / 2;
     const drawY = -characterImg.height / 2;
     ctx.drawImage(characterImg, drawX, drawY);
 
-    ctx.restore(); // Reset context state after drawing
+    ctx.restore(); // Restore context state (removes translation and rotation)
 
-    // --- Draw username below character ---
-    ctx.fillStyle = 'black';
-    ctx.font = 'bold 10px Verdana, Geneva, sans-serif';
+    // --- Drawing elements relative to the player's world position (like text) ---
+    ctx.fillStyle = 'black'; // Set fillStyle to black for the username
+    ctx.font = 'bold 10px Verdana, Geneva, sans-serif'; // Smaller, bold, different font stack
     ctx.textAlign = 'center';
-
-    const textY = player.y - (characterImg.height / 2) + 60; // Adjust text position
-    ctx.fillText(player.username || '?', player.x, textY);
+    // Adjust text Y position based on image height - move lower down onto icon
+    const textY = player.y - (characterImg.height / 2) + 60; // Changed offset from +5 to +15
+    ctx.fillText(player.username || '?', player.x, textY); // Draw username
 }
-
 
 // --- Client-side walkability check ---
 function is_walkable_client(x, y) {
@@ -526,7 +527,6 @@ function updateUI() {
             startGameBtn.style.display = isHost ? 'inline-block' : 'none';
             startGameBtn.disabled = currentPlayers < minPlayers; // Disable if not enough players
         }
-        loadAssetsForPlayers(allPlayersList); // Load player images
     } else if (roomStatus === 'playing') {
         setDisplay(backBtn, 'block');
         setDisplay(roomCodeDisplay, 'block');
@@ -599,43 +599,33 @@ function updateUI() {
     }
 }
 
-async function loadAssetsForPlayers(allPlayersList) {
-    const playerImagePromises = allPlayersList.map(async (player) => {
-        const username = player.username;
-        const imagePath = `/public/img/${username}_model.png`;
-
-        try {
-            await loadImage(username, imagePath);
-        } catch (err) {
-            console.warn(`Failed to load image for ${username}: ${err.message}. Falling back to default.`);
-            try {
-                await loadImage(username, '/public/img/Character.png');
-            } catch (fallbackErr) {
-                console.error(`Failed to load fallback image for ${username}: ${fallbackErr.message}`);
-            }
-        }
-    });
-
-    const staticAssets = [
+async function loadAssets() {
+    await Promise.all([
         loadImage('map', '/public/img/Map.png'),
+        loadImage('character', '/public/img/Character.png'),
         loadImage('deadCharacter', '/public/img/Dead Character.png'),
         loadImage('task_unfinished', '/public/img/Unfinished Task.png'),
         loadImage('task_finished', '/public/img/Finished Task.png'),
-        loadImage('emergency_button', '/public/img/Emergency Button.png')
-    ];
-
-    await Promise.all([...playerImagePromises, ...staticAssets]);
+        loadImage('emergency_button', '/public/img/Emergency Button.png') // Load button image
+        // REMOVED: loadImage('download_task', '/public/img/Download Task.png')
+    ]);
 
     const mapImg = images.map;
     if (mapImg) {
         mapWidthClient = mapImg.naturalWidth;
         mapHeightClient = mapImg.naturalHeight;
+    } else {
+         console.error("Map image not found after load! Client collision bounds check might fail.");
+    }
+
+    // --- ADDED: Check if task images loaded ---
+    if (!images.task_unfinished || !images.task_finished) {
+         console.warn("Task images failed to load. Tasks might not be visible.");
+         // Depending on importance, could throw an error here
     }
 
     assetsLoaded = true;
 }
-
-
 
 function gameLoop() {
     // ADDED: Log status at the start of the loop
@@ -1463,7 +1453,7 @@ async function initGame() {
     socket.emit('join_room', { room_id: roomId });
 
     try {
-        loadAssetsForPlayers(allPlayersList); // Load player images
+        await loadAssets();
         assetsLoaded = true;
         // console.log("Assets loaded!");
     } catch (error) {
@@ -2391,9 +2381,5 @@ function cleanupTimingDownloadGame(isSuccess = false) {
 }
 
 // --- End Timing Download Functions ---
-
-console.log("My Player ID:", myPlayerId);
-console.log("Server Killer ID:", data.it_player_id);
-console.log("Am I Killer?", isKiller);
 
 initGame();
