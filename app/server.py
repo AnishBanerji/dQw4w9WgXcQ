@@ -211,6 +211,12 @@ def getSettings():
     filepath = "public/html/settings.html"
     return send_file(filepath,mimetype='text/html')
 
+@app.route('/stats', methods=['GET'])
+@login_required_http
+def getStats():
+    filepath = "public/html/stats.html"
+    return send_file(filepath,mimetype='text/html')
+
 @app.route('/room/<roomId>', methods=['GET'])
 @login_required_http
 def load_room(roomId):
@@ -517,6 +523,12 @@ def handle_start_game(data):
     if killer_player_id:
         killer_sid = next((csid for csid, cinfo in sid_map.items() if cinfo.get('room_id') == room_id and cinfo.get('player_id') == killer_player_id), None)
         if killer_sid: 
+            player = find_auth(killer_player_id)
+            player_stats = player["stats"]
+            player_stats["saboteurPlayed"] += 1
+            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+            roomDB.update_one({'_id': room_id}, {"$set": {"saboteurUsername": player["username"]}})
+            
             emit('you_are_killer', {}, room=killer_sid)
             # --- ADDED: Emit initial cooldown to killer ---
             emit('kill_cooldown_update', {'cooldown_ends_at': initial_kill_ready_time.isoformat()}, room=killer_sid)
@@ -649,6 +661,7 @@ def handle_attempt_kill(data):
     if not killer_player_id: return
     try:
         room_doc = getRoomInfo(room_id)
+        player_list = room_doc.get('players', [])
         if room_doc.get('status') != 'playing': return
         if room_doc.get('it_player_id') != killer_player_id: return
 
@@ -686,6 +699,17 @@ def handle_attempt_kill(data):
                         update_victim = roomDB.update_one({'_id': room_id, 'players.id': victim_id}, {'$set': {'players.$.is_dead': True}})
                         if update_victim.modified_count > 0:
                             kill_successful = True
+
+                            # If victim killed, add to userDB with user's stats
+                            # Assumes killer_player_id is equivalent to the player's username
+                            #
+                            # Grabs stats, appends playersKilled by 1, then updates with new stats
+                            player = find_auth(killer_player_id)
+                            if player:
+                                player_stats = userDB.find_one({"username": killer_player_id})["stats"]
+                            player_stats["playersKilled"] += 1
+                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                             
                             # --- ADDED: Set next kill cooldown --- 
                             kill_cooldown_seconds = 5
@@ -709,6 +733,19 @@ def handle_attempt_kill(data):
                                 killer_username = killer_info.get('username', 'Unknown') if killer_info else 'Unknown'
                                 if alive_players_count <= 1:
                                     print(f"[GAME_END] Killer ({killer_username}) wins in room {room_id}!")
+
+                                    # given a list of all players in lobby, add 1 to games played for all of them
+                                    for player in player_list:
+                                        player_stats = find_auth(player["id"])["stats"]
+                                        player_stats["gamesPlayed"] += 1
+
+                                        # check if they're killer, somehow, and add a win
+                                        if player["username"] == find_auth(killer_player_id)["username"]:
+                                            player_stats["gamesWon"] += 1
+                                        
+                                        # update for each player their new stats
+                                        userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                                     emit('game_over', {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win', 'winner_id': killer_player_id, 'winner_username': killer_username, 'status': 'game_over'}, room=room_id)
                                     return # Exit handler early
@@ -827,9 +864,34 @@ def handle_complete_task_minigame(data):
                 total_count = updated_room_doc.get('totalTasks', 0)
                 emit('task_completed', {'task_id': task_id_completed, 'player_id': player_id, 'completedTasks': completed_count, 'totalTasks': total_count}, room=room_id)
 
+                # If task completed, add to userDB with user's stats
+                # Assumes player_id is equivalent to the player's username
+                #
+                # Grabs stats, appends tasksDone by 1, then updates with new stats
+                player = find_auth(player_id)
+                if player:
+                    player_stats = userDB.find_one({"username": player_id})["stats"]
+                player_stats = userDB.find_one({"username": player_id})["stats"]
+                player_stats["tasksDone"] += 1
+                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
+
                 # Check Game End Condition (Players Win)
                 if completed_count >= total_count > 0:
                     print(f"[GAME_END] Players win by completing all tasks ({completed_count}/{total_count}) in room {room_id}!")
+
+                    # given a list of all players in lobby, add 1 to games played for all of them
+                    for player in player_list:
+                        player_stats = find_auth(player["id"])["stats"]
+                        player_stats["gamesPlayed"] += 1
+
+                        # check if they're not killer, somehow, and add a win
+                        if player["username"] != room_doc["saboteurUsername"]:
+                            player_stats["gamesWon"] += 1
+                        
+                        # update for each player their new stats
+                        userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                     emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
                     # Note: No early return needed here as it's the end of the handler
