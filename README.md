@@ -8,13 +8,19 @@ A real-time multiplayer game inspired by Among Us, built for CSE 312. Players jo
     *   Passwords salted and hashed using bcrypt.
     *   Session persistence using HttpOnly cookies with hashed tokens stored in the database.
 *   **Real-time Multiplayer:** Multiple players can interact in the same game instance simultaneously.
-*   **WebSocket Communication:** Player movements and game events are broadcast in real-time using Socket.IO.
+*   **WebSocket Communication:** Player movements, game events, chat, and actions are broadcast in real-time using Socket.IO.
 *   **Game Mechanics:**
-    *   Continuous player movement (WASD controls).
+    *   Lobby system for finding and creating game rooms.
+    *   Role assignment (Crewmate or Killer).
+    *   Continuous player movement (`WASD` controls).
     *   Visible player characters and usernames.
-    *   Task system for Crewmates.
-    *   Killing mechanic for the designated Killer (Space bar).
-    *   Clear win conditions (all tasks completed or Killer eliminates Crew).
+    *   **Task System:** Crewmates must complete various interactive minigame tasks (Wires, Keypad, Pattern Matching, Steering, Timing, etc.).
+    *   **Killing Mechanic:** Killer can eliminate Crewmates (`Space` bar) after a cooldown period.
+    *   **Meeting System:** Players can report bodies (`R`) or call Emergency Meetings (`E`) to discuss and vote.
+    *   **Voting:** Players vote to eject suspected Killers during meetings.
+    *   **Chat:** In-meeting text chat for discussion.
+    *   **Spectating:** Eliminated players become ghosts and can watch the remainder of the game.
+    *   Clear win conditions (all tasks completed, Killer eliminated, or Killer numbers equal Crew).
 *   **Dockerized:** Runs fully within Docker containers using Docker Compose.
 *   **Logging:** Server requests (IP, method, path, timestamp) are logged to a file (`./logs/requests.log`).
 
@@ -121,6 +127,19 @@ A real-time multiplayer game inspired by Among Us, built for CSE 312. Players jo
 
 ## Game Instructions
 
-*   **Movement:** Use `
+*   **Movement:** Use `WASD` keys to move your character.
+*   **Goal:**
+    *   **Crewmate:** Complete all team tasks (interactive minigames at highlighted locations) OR identify and vote out the Killer during meetings.
+    *   **Killer:** Eliminate Crewmates until your numbers equal theirs.
+*   **Core Actions:**
+    *   `Space`: Interact with Tasks, Use Emergency Button, Kill (as Killer).
+*   **Meetings:**
+    *   Meetings are called automatically when a body is discovered, or when a player uses the Emergency Button (walk up to it and press `Space`).
+    *   During meetings, use the chat to discuss who might be the Killer.
+    *   Vote by clicking on a player in the list. The player with the most votes is ejected.
+*   **Winning:**
+    *   Crewmates win if all tasks are completed or the Killer is voted out.
+    *   The Killer wins if they eliminate enough Crewmates.
+*   **Death/Ghosts:** Eliminated players spectate the rest of the game.
 
 # ... potentially more instructions ...
