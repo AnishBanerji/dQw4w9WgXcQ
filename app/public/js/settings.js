@@ -38,10 +38,8 @@ async function fetchUserSettings() {
 const avatarInput = document.getElementById("avatar");
 const avatarPreview = document.getElementById("avatar-preview");
 
-// Click to open file picker
 avatarPreview.addEventListener("click", () => avatarInput.click());
 
-// Show preview when a file is selected
 avatarInput.addEventListener("change", () => {
   const file = avatarInput.files[0];
   if (file) {
@@ -53,7 +51,6 @@ avatarInput.addEventListener("change", () => {
   }
 });
 
-// Handle form submission
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -61,13 +58,12 @@ async function handleSubmit(event) {
   const password = document.getElementById("password").value;
   const avatar = avatarInput.files[0];
 
-  // First call: Send username/password via x-www-form-urlencoded
   const urlEncodedData = new URLSearchParams();
   urlEncodedData.append("username", username);
   if (password) urlEncodedData.append("password", password);
 
   try {
-    const settingsResponse = await fetch("/api/user/settings", {
+    const settingsResponse = await fetch("/api/users/settings", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: urlEncodedData,
@@ -84,7 +80,6 @@ async function handleSubmit(event) {
     return;
   }
 
-  // Second call: Send avatar (if present) via FormData
   if (avatar) {
     const formData = new FormData();
     formData.append("avatar", avatar);
