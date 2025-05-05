@@ -35,6 +35,15 @@ def register():
     username = data.get('username')
     password = data.get('password')
     reason= ""
+    stats = {
+        "gamesPlayed": 0,
+        "gamesWon": 0,
+        "tasksDone": 0,
+        "playersKilled": 0,
+        "saboteurPlayed": 0
+    }
+    achievements = []
+
     
     if userDB.find_one({"username": username}):
         res = make_response(jsonify({"message": "Username already exists"}))
@@ -56,7 +65,9 @@ def register():
         "username": username,
         "password": hashed_password.decode(),
         "imageURL": "./public/img/default_avatar.webp",
-        "id": secrets.token_hex(10)
+        "id": secrets.token_hex(10),
+        "stats": stats,
+        "achievements": achievements
     }
     
     userDB.insert_one(user_info)

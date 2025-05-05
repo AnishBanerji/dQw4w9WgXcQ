@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats and Achievements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9f5ff;
+        }
+
+        .achievements-table th {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar with Back Button -->
+    <div class="absolute top-3 left-3">
+        <button onclick="location.href='/'"
+            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded text-white font-bold cursor-pointer">
+            Back
+        </button>
+    </div>
+    <div class="container">
+        <h1>Statistics</h1>
+        <table>
+            <tbody>
+                <tr>
+                    <td>Games Played</td>
+                    <td>Placeholder</td>
+                </tr>
+                <tr>
+                    <td>Wins</td>
+                    <td>Placeholder</td>
+                </tr>
+                <tr>
+                    <td>Win Percentage</td>
+                    <td>Placeholder</td>
+                </tr>
+                <tr>
+                    <td>Games As Crewmate</td>
+                    <td>Placeholder</td>
+                </tr>
+                <tr>
+                    <td>Tasks Done</td>
+                    <td>Placeholder</td>
+                </tr>
+                <tr>
+                    <td>Tasks Per Game (As Crewmate)</td>
+                    <td>Placeholder</td>
+                </tr>
+                <tr>
+                    <td>Games As Killer</td>
+                    <td>Placeholder</td>
+                </tr>
+                <tr>
+                    <td>Players Killed</td>
+                    <td>Placeholder</td>
+                </tr>
+                <tr>
+                    <td>Kills Per Game (As Killer)</td>
+                    <td>Placeholder</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h1>Achievements</h1>
+        <table class="achievements-table">
+            <tbody>
+                <tr>
+                    <td>First Game Played</td>
+                    <td>Unlocked</td>
+                </tr>
+                <tr>
+                    <td>First Game Won</td>
+                    <td>Unlocked</td>
+                </tr>
+                <tr>
+                    <td>First Kill</td>
+                    <td>Unlocked</td>
+                </tr>
+                <tr>
+                    <td>First Task Done</td>
+                    <td>Locked</td>
+                </tr>
+                <tr>
+                    <td>Play 5 Games</td>
+                    <td>Locked</td>
+                </tr>
+                <tr>
+                    <td>Kill 5 Players</td>
+                    <td>Locked</td>
+                </tr>
+                <tr>
+                    <td>Complete 5 Tasks</td>
+                    <td>Locked</td>
+                </tr>
+                <tr>
+                    <td>Win 5 Games</td>
+                    <td>Locked</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
