@@ -3,9 +3,7 @@ from util.room import getRoomInfo
 def achieve(players_list):
     ach_to_stats = {'First Game Played':['gamesPlayed', 1],
                     'First Kill':['playersKilled',1], 
-                    'First Task Done':['tasksDone', 1],
                     'First Game Won':['gamesWon', 1],
-                    'First Time Saboteur':['saboteurPlayed',1],
                     'Play 5 Games':['gamesPlayed', 5],
                     'Kill 5 Players':['playersKilled',5],
                     'Win 5 Games':['gamesWon',5]}
@@ -27,4 +25,3 @@ def achieve(players_list):
 
 
     
-
