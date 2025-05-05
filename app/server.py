@@ -157,11 +157,18 @@ def load_login():
     filepath = "public/html/login.html"
     return send_file(filepath,mimetype="text/html")
 
-@app.route('/register',methods=["GET"])
-@limiter.limit("10 per hour") # Stricter limit for registration page load
-def load_register():
-    filepath = "public/html/register.html"
-    return send_file(filepath,mimetype='text/html')
+@app.route('/register',methods=['POST'])
+def handle_reg():
+    username, success, reason, res, code = register()
+    log_auth_attempt(username, success, reason)
+    return res, code
+
+def log_auth_attempt(username, success, reason=""):
+    dt = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+    status = "SUCCESS" if success else f"FAILURE ({reason})"
+    log_line = f"[{dt}]: LOGIN ATTEMPT - {username} -> {status}"
+    with open(LOG_FILE, 'a') as f:
+        f.write(log_line)
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -329,6 +336,41 @@ def get_user_profile():
         "username": user.get("username", "Unknown"), 
         "avatar_url": user.get("imageURL", "/public/img/default_avatar.webp") # Use imageURL field if exists
     })
+
+@app.route('/stats', methods=['GET'])
+@login_required_http
+def getStats():
+    filepath = "public/html/stats.html"
+    auth_token = request.cookies.get('auth_token')
+    user = find_auth(auth_token)
+    stats = user.get('stats')
+    achievements = user.get('achievements')
+    with open(filepath, 'r') as f:
+        content = f.read()
+    content = content.replace('gamesPlayed',str(stats.get('gamesPlayed',None)))
+    content = content.replace('gamesWon',str(stats.get('gamesWon',None)))
+    if int(stats.get('gamesPlayed')) != 0:
+        winper = (int(stats.get('gamesWon'))/int(stats.get('gamesPlayed')))*100
+    else:
+        winper = 0
+    content = content.replace('winPer',str(winper))
+    content = content.replace('crewGames',str(int(stats.get('gamesPlayed'))-int(stats.get('saboteurPlayed'))))
+    content = content.replace('tasks',str(stats.get('tasksDone',None)))
+    content = content.replace('killGames',str(stats.get('saboteurPlayed',None)))
+    content = content.replace('playersKilled',str(stats.get('playersKilled',None)))
+
+    content = content.replace("firstGame", "Unlocked" if 'First Game Played' in achievements else "Locked")
+    content = content.replace("firstWin", "Unlocked" if 'First Game Won' in achievements else "Locked")
+    content = content.replace("firstKill", "Unlocked" if 'First Kill' in achievements else "Locked")
+    content = content.replace("playedFive", "Unlocked" if 'Play 5 Games' in achievements else "Locked")
+    content = content.replace("killedFive", "Unlocked" if 'Kill 5 Players' in achievements else "Locked")
+    content = content.replace("wonFive", "Unlocked" if 'Win 5 Games' in achievements else "Locked")
+
+    res = make_response(content)
+    res.headers['X-Content-Type-Options'] = "nosniff"
+    res.headers['Content-Type'] = 'text/html'
+
+    return res, 200
 
 # Add URL rules (Keep HEAD versions)
 app.add_url_rule('/api/users/settings', 'settingsChange', limiter.limit("10 per hour")(login_required_http(settingsChange)), methods=['POST'])
