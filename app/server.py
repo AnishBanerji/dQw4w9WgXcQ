@@ -864,33 +864,33 @@ def handle_complete_task_minigame(data):
                 total_count = updated_room_doc.get('totalTasks', 0)
                 emit('task_completed', {'task_id': task_id_completed, 'player_id': player_id, 'completedTasks': completed_count, 'totalTasks': total_count}, room=room_id)
 
-                    # If task completed, add to userDB with user's stats
-                    # Assumes player_id is equivalent to the player's username
-                    #
-                    # Grabs stats, appends tasksDone by 1, then updates with new stats
-                    player = find_auth(player_id)
-                    if player:
-                        player_stats = userDB.find_one({"username": player_id})["stats"]
+                # If task completed, add to userDB with user's stats
+                # Assumes player_id is equivalent to the player's username
+                #
+                # Grabs stats, appends tasksDone by 1, then updates with new stats
+                player = find_auth(player_id)
+                if player:
                     player_stats = userDB.find_one({"username": player_id})["stats"]
-                    player_stats["tasksDone"] += 1
-                    userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                player_stats = userDB.find_one({"username": player_id})["stats"]
+                player_stats["tasksDone"] += 1
+                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
 
 
                 # Check Game End Condition (Players Win)
                 if completed_count >= total_count > 0:
                     print(f"[GAME_END] Players win by completing all tasks ({completed_count}/{total_count}) in room {room_id}!")
 
-                        # given a list of all players in lobby, add 1 to games played for all of them
-                        for player in player_list:
-                            player_stats = find_auth(player["id"])["stats"]
-                            player_stats["gamesPlayed"] += 1
+                    # given a list of all players in lobby, add 1 to games played for all of them
+                    for player in player_list:
+                        player_stats = find_auth(player["id"])["stats"]
+                        player_stats["gamesPlayed"] += 1
 
-                            # check if they're not killer, somehow, and add a win
-                            if player["username"] != room_doc["saboteurUsername"]:
-                                player_stats["gamesWon"] += 1
-                            
-                            # update for each player their new stats
-                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                        # check if they're not killer, somehow, and add a win
+                        if player["username"] != room_doc["saboteurUsername"]:
+                            player_stats["gamesWon"] += 1
+                        
+                        # update for each player their new stats
+                        userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
 
                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                     emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
