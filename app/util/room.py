@@ -1,5 +1,4 @@
 import uuid
-from util.player import *
 from util.authentication import *
 from util.database import roomDB
 

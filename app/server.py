@@ -412,7 +412,7 @@ def handle_reg():
 def log_auth_attempt(username, success, reason=""):
     dt = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
     status = "SUCCESS" if success else f"FAILURE ({reason})"
-    log_line = f"[{dt}]: LOGIN ATTEMPT - {username} -> {status}\n"
+    log_line = f"[{dt}]: LOGIN ATTEMPT - {username} -> {status}"
     with open(LOG_FILE, 'a') as f:
         f.write(log_line)
 # === Socket IO Handlers (Keep HEAD versions for find_rooms, join_room, start_game, attempt_kill, attempt_task, disconnect) ===

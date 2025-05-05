@@ -4786,3 +4786,51 @@
 [05-02-2025 03:08:12]: 192.168.65.1 GET /public/js/auto.js
 [05-02-2025 03:08:12]: 192.168.65.1 GET /public/js/home.js
 [05-02-2025 03:08:12]: 192.168.65.1 GET /api/users/@me
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:42:32]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:42:42]: 172.21.0.1 (test) GET /logout -> 302
+[05-05-2025 02:42:42]: 172.21.0.1 GET /login -> 304
+[05-05-2025 02:42:42]: 172.21.0.1 GET /public/js/alerts.js -> 304
+[05-05-2025 02:42:42]: 172.21.0.1 GET /public/js/home.js -> 304
+[05-05-2025 02:42:53]: 172.21.0.1 POST /login[05-05-2025 02:42:53]: LOGIN ATTEMPT - test -> SUCCESS
+ -> 200
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:42:54]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:42:56]: 172.21.0.1 (test) GET /create-room -> 304
+[05-05-2025 02:42:56]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:42:56]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:43:00]: 172.21.0.1 (test) POST /create-room -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /room/64ebf060-6f3c-4a55-9ae8-4d118010483f -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/js/game.js -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Character.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Map.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Dead Character.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Emergency Button.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Finished Task.png -> 200
+[05-05-2025 02:43:01]: 172.21.0.1 (test) GET /public/img/Unfinished Task.png -> 200
+[05-05-2025 02:44:38]: 172.21.0.1 (test) GET /create-room -> 200
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:44:39]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /settings -> 200
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/img/default_avatar.webp -> 304
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /public/js/settings.js -> 200
+[05-05-2025 02:44:41]: 172.21.0.1 (test) GET /api/users/@me -> 200
+[05-05-2025 02:44:42]: 172.21.0.1 (test) GET / -> 304
+[05-05-2025 02:44:43]: 172.21.0.1 (test) GET /public/js/alerts.js -> 304
+[05-05-2025 02:44:43]: 172.21.0.1 (test) GET /public/js/auto.js -> 304
+[05-05-2025 02:44:43]: 172.21.0.1 (test) GET /public/js/home.js -> 304
+[05-05-2025 02:44:43]: 172.21.0.1 (test) GET /api/users/@me -> 200
