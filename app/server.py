@@ -217,6 +217,90 @@ def getSettings():
     filepath = "public/html/settings.html"
     return send_file(filepath,mimetype='text/html')
 
+@app.route('/stats', methods=['GET'])
+@login_required_http
+def getStats():
+    filepath = "public/html/stats.html"
+    auth_token = request.cookies.get('auth_token')
+    user = find_auth(auth_token)
+    stats = user.get('stats')
+    achievements = user.get('achievements')
+    with open(filepath, 'r') as f:
+        content = f.read()
+    content = content.replace('gamesPlayed',str(stats.get('gamesPlayed',None)))
+    content = content.replace('gamesWon',str(stats.get('gamesWon',None)))
+    if int(stats.get('gamesPlayed')) != 0:
+        winper = (int(stats.get('gamesWon'))/int(stats.get('gamesPlayed')))*100
+    else:
+        winper = 0
+    content = content.replace('winPer',str(winper))
+    content = content.replace('crewGames',str(int(stats.get('gamesPlayed'))-int(stats.get('saboteurPlayed'))))
+    content = content.replace('tasks',str(stats.get('tasksDone',None)))
+    content = content.replace('killGames',str(stats.get('saboteurPlayed',None)))
+    content = content.replace('playersKilled',str(stats.get('playersKilled',None)))
+
+    content = content.replace("firstGame", "Unlocked" if 'First Game Played' in achievements else "Locked")
+    content = content.replace("firstWin", "Unlocked" if 'First Game Won' in achievements else "Locked")
+    content = content.replace("firstKill", "Unlocked" if 'First Kill' in achievements else "Locked")
+    content = content.replace("playedFive", "Unlocked" if 'Play 5 Games' in achievements else "Locked")
+    content = content.replace("killedFive", "Unlocked" if 'Kill 5 Players' in achievements else "Locked")
+    content = content.replace("wonFive", "Unlocked" if 'Win 5 Games' in achievements else "Locked")
+
+    res = make_response(content)
+    res.headers['X-Content-Type-Options'] = "nosniff"
+    res.headers['Content-Type'] = 'text/html'
+
+    return res, 200
+
+@app.route('/room/<roomId>', methods=['GET'])
+@login_required_http
+def load_room(roomId):
+    try: getRoomInfo(roomId)
+    except KeyError: return "Room Not Found", 404
+    except Exception as e: print(f"Error checking room {roomId} before load: {e}")
+    filepath = "public/html/room.html"
+    return send_file(filepath, mimetype='text/html')
+
+@app.route('/api/room-info/<roomId>', methods=['GET'])
+@login_required_http
+def get_room_info_api(roomId):
+    try: roomInfo = getRoomInfo(roomId)
+    except KeyError: return jsonify({"error": "Room not found"}), 404
+    except Exception as e: print(f"Error fetching room info API for {roomId}: {e}"); return jsonify({"error": "Server error fetching room info"}), 500
+    return jsonify(roomInfo)
+
+@app.route('/public/js/<filename>', methods=['GET'])
+@limiter.exempt # <<< Exempt this route
+def getPublicJS(filename):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, 'public', 'js', filename)
+    if os.path.exists(file_path): return send_file(file_path, mimetype="text/javascript")
+    else: return "Not Found", 404
+
+@app.route('/public/css/<filename>', methods=['GET'])
+@limiter.exempt # <<< Exempt this route
+def getPublicCSS(filename):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, 'public', 'css', filename)
+    if os.path.exists(file_path): return send_file(file_path, mimetype="text/css")
+    else: return "Not Found", 404
+
+@app.route('/public/img/<filename>', methods=['GET'])
+@limiter.exempt # <<< Exempt this route
+def get_imgs(filename):
+    mimetype = get_mimetype(filename)
+    filepath = os.path.join("public", "img", filename) # Use os.path.join
+    return send_file(filepath, mimetype=mimetype)
+
+@app.route('/favicon.ico')
+@limiter.exempt # Favicon requests shouldn't be limited
+def favicon():
+    filepath = os.path.join(os.path.dirname(__file__), 'public', 'favicon.ico')
+    try:
+        return send_file(filepath, mimetype='image/vnd.microsoft.icon')
+    except FileNotFoundError:
+        abort(404) # Return 404 if the file doesn't exist
+
 def overlay_avatar_on_base(base_path, avatar_path, circle_center, circle_radius):
     base = Image.open(base_path).convert("RGBA")
     avatar = Image.open(avatar_path).convert("RGBA")
@@ -557,6 +641,14 @@ def handle_start_game(data):
     if killer_player_id:
         killer_sid = next((csid for csid, cinfo in sid_map.items() if cinfo.get('room_id') == room_id and cinfo.get('player_id') == killer_player_id), None)
         if killer_sid: 
+            player = userDB.find_one({"id": killer_player_id})
+            if player is not None:
+                player_stats = player["stats"]
+                player_stats["saboteurPlayed"] += 1
+                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                roomDB.update_one({'_id': room_id}, {"$set": {"saboteurUsername": player["username"]}})
+            else:
+                print(f"Warning: Could not find player object for killer id {killer_player_id}")
             emit('you_are_killer', {}, room=killer_sid)
             # --- ADDED: Emit initial cooldown to killer ---
             emit('kill_cooldown_update', {'cooldown_ends_at': initial_kill_ready_time.isoformat()}, room=killer_sid)
@@ -726,6 +818,17 @@ def handle_attempt_kill(data):
                         update_victim = roomDB.update_one({'_id': room_id, 'players.id': victim_id}, {'$set': {'players.$.is_dead': True}})
                         if update_victim.modified_count > 0:
                             kill_successful = True
+                            # If victim killed, add to userDB with user's stats
+                            # Assumes killer_player_id is equivalent to the player's username
+                            #
+                            # Grabs stats, appends playersKilled by 1, then updates with new stats
+                            player = userDB.find_one({"id": killer_player_id})
+                            if player is not None:
+                                player_stats = player["stats"]
+                                player_stats["playersKilled"] += 1
+                                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                            else:
+                                print(f"Could not find player object for player id {killer_player_id}")
                             
                             # --- ADDED: Set next kill cooldown --- 
                             kill_cooldown_seconds = 5
@@ -749,6 +852,23 @@ def handle_attempt_kill(data):
                                 killer_username = killer_info.get('username', 'Unknown') if killer_info else 'Unknown'
                                 if alive_players_count <= 1:
                                     print(f"[GAME_END] Killer ({killer_username}) wins in room {room_id}!")
+                                    # given a list of all players in lobby, add 1 to games played for all of them
+                                    for player_item in player_list:
+                                        player_id = player_item["id"]
+                                        player = userDB.find_one({"id": player_id})
+                                        if player is not None:
+                                            player_stats = player["stats"]
+                                            player_stats["gamesPlayed"] += 1
+
+                                            # check if they're killer, somehow, and add a win
+                                            killer = userDB.find_one({"id": killer_player_id})
+                                            if player["username"] == killer["username"]:
+                                                player_stats["gamesWon"] += 1
+                                            # update for each player their new stats
+                                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                                        else:
+                                            print(f"Could not find player for id {player_id}")
+                                    achieve(player_list)
                                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                                     emit('game_over', {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win', 'winner_id': killer_player_id, 'winner_username': killer_username, 'status': 'game_over'}, room=room_id)
                                     return # Exit handler early
@@ -867,9 +987,40 @@ def handle_complete_task_minigame(data):
                 total_count = updated_room_doc.get('totalTasks', 0)
                 emit('task_completed', {'task_id': task_id_completed, 'player_id': player_id, 'completedTasks': completed_count, 'totalTasks': total_count}, room=room_id)
 
+                # If task completed, add to userDB with user's stats
+                # Assumes player_id is equivalent to the player's username
+                #
+                # Grabs stats, appends tasksDone by 1, then updates with new stats
+                player = userDB.find_one({"id":player_id})
+                if player is not None:
+                    player_stats = player["stats"]
+                    player_stats["tasksDone"] += 1
+                    userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                else:
+                    print(f"Could not find player object for player id {player_id}")
+
+
                 # Check Game End Condition (Players Win)
                 if completed_count >= total_count > 0:
                     print(f"[GAME_END] Players win by completing all tasks ({completed_count}/{total_count}) in room {room_id}!")
+
+                    # given a list of all players in lobby, add 1 to games played for all of them
+                    for player_item in player_list:
+                        player_id = player_item["id"]
+                        player = userDB.find_one({"id": player_id})
+                        if player is not None:
+                            player_stats = player["stats"]
+                            player_stats["gamesPlayed"] += 1
+
+                            # check if they're not killer, somehow, and add a win
+                            if player["username"] != room_doc["saboteurUsername"]:
+                                player_stats["gamesWon"] += 1
+                        
+                            # update for each player their new stats
+                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                        else:
+                            print(f"Could not find player object for player id {player_id}")
+                    achieve(player_list)
                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                     emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
                     # Note: No early return needed here as it's the end of the handler
@@ -974,7 +1125,7 @@ def end_meeting(room_id):
                 except Exception as e:
                      print(f"[MEETING ERROR] DB error checking status in end_meeting for room {room_id}: {e}")
                      return # Exit on other DB errors
-
+            room_doc = None
             # --- Double-check status *after* lock acquisition and timer removal ---
             # This is the most critical check to prevent double execution
             try:
@@ -1042,6 +1193,23 @@ def end_meeting(room_id):
                     if ejected_player_id == killer_id:
                         # Crew Wins
                         print(f"[GAME_END] Crew wins by ejecting killer {ejected_player_id} in room {room_id}!")
+                        # given a list of all players in lobby, add 1 to games played for all of them
+                        for player_item in new_player_list:
+                            player_id = player_item["id"]
+                            player = userDB.find_one({"id": player_id})
+                            if player is not None:
+                                player_stats = player["stats"]
+                                player_stats["gamesPlayed"] += 1
+
+                                # check if they're killer, somehow, and add a win
+                                killer = userDB.find_one({"id": killer_id})
+                                if player["username"] != killer["username"]:
+                                    player_stats["gamesWon"] += 1
+                            
+                                # update for each player their new stats
+                                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                            else:
+                                print(f"Could not find player object for player id {player_id}")
                         final_status = 'game_over'
                         game_over_data = {'message': 'Crew Wins! The Killer was ejected!', 'outcome': 'crew_win_vote', 'status': 'game_over'}
                     else:
@@ -1052,6 +1220,22 @@ def end_meeting(room_id):
                             killer_info = next((p for p in new_player_list if p.get('id') == killer_id), None)
                             killer_username = killer_info.get('username', 'Unknown') if killer_info else 'Unknown'
                             print(f"[GAME_END] Killer ({killer_username}) wins after ejection in room {room_id}!")
+                            # given a list of all players in lobby, add 1 to games played for all of them
+                            for player_item in new_player_list:
+                                player_id = player_item["id"]
+                                player = userDB.find_one({"id": player_id})
+                                if player is not None:
+                                    player_stats = player["stats"]
+                                    player_stats["gamesPlayed"] += 1
+
+                                    # check if they're killer, somehow, and add a win
+                                    if player["username"] == killer_username:
+                                        player_stats["gamesWon"] += 1
+                                
+                                    # update for each player their new stats
+                                    userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                                else:
+                                    print(f"Could not find player object for player id {player_id}")
                             final_status = 'game_over'
                             game_over_data = {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win_vote', 'winner_id': killer_id, 'winner_username': killer_username, 'status': 'game_over'}
 
