@@ -262,6 +262,8 @@ def make_room_route():
     # Otherwise, assume success (result should be the {'roomId': ...} dict)
     return jsonify(result), 200
 
+
+
 @app.route('/find-room',methods=['GET'])
 @login_required_http
 def load_findRoom():
@@ -278,6 +280,11 @@ def getSettings():
 @login_required_http
 def getStats():
     filepath = "public/html/stats.html"
+    auth_token = request.cookies.get('auth_token')
+    user = find_auth(auth_token)
+    stats = user.get('stats')
+    achievements = user.get('achievements')
+    
     return send_file(filepath,mimetype='text/html')
 
 @app.route('/room/<roomId>', methods=['GET'])
