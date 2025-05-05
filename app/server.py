@@ -1064,6 +1064,19 @@ def end_meeting(room_id):
                     if ejected_player_id == killer_id:
                         # Crew Wins
                         print(f"[GAME_END] Crew wins by ejecting killer {ejected_player_id} in room {room_id}!")
+
+                        # given a list of all players in lobby, add 1 to games played for all of them
+                        for player in new_player_list:
+                            player_stats = find_auth(player["id"])["stats"]
+                            player_stats["gamesPlayed"] += 1
+
+                            # check if they're not killer, somehow, and add a win
+                            if player["username"] != find_auth(killer_id)["username"]:
+                                player_stats["gamesWon"] += 1
+                            
+                            # update for each player their new stats
+                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                         final_status = 'game_over'
                         game_over_data = {'message': 'Crew Wins! The Killer was ejected!', 'outcome': 'crew_win_vote', 'status': 'game_over'}
                     else:
@@ -1074,6 +1087,19 @@ def end_meeting(room_id):
                             killer_info = next((p for p in new_player_list if p.get('id') == killer_id), None)
                             killer_username = killer_info.get('username', 'Unknown') if killer_info else 'Unknown'
                             print(f"[GAME_END] Killer ({killer_username}) wins after ejection in room {room_id}!")
+
+                            # given a list of all players in lobby, add 1 to games played for all of them
+                            for player in new_player_list:
+                                player_stats = find_auth(player["id"])["stats"]
+                                player_stats["gamesPlayed"] += 1
+
+                                # check if they're killer, somehow, and add a win
+                                if player["username"] == killer_username:
+                                    player_stats["gamesWon"] += 1
+                                
+                                # update for each player their new stats
+                                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                             final_status = 'game_over'
                             game_over_data = {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win_vote', 'winner_id': killer_id, 'winner_username': killer_username, 'status': 'game_over'}
 
