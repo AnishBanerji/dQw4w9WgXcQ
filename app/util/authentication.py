@@ -34,18 +34,29 @@ def register():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
+    reason= ""
+    stats = {
+        "gamesPlayed": 0,
+        "gamesWon": 0,
+        "tasksDone": 0,
+        "playersKilled": 0,
+        "saboteurPlayed": 0
+    }
+    achievements = []
 
     
     if userDB.find_one({"username": username}):
         res = make_response(jsonify({"message": "Username already exists"}))
+        reason = "Username already exists"
         res.headers['X-Content-Type-Options'] = "nosniff"
-        return res, 400
+        return username, False, reason, res, 400
     
     
     if validate_password(password) == False:
         res = make_response(jsonify({"message": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character"}))
+        reason = "Invalid Password"
         res.headers['X-Content-Type-Options'] = "nosniff"
-        return res, 400
+        return username, False, reason, res, 400
 
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode(), salt)
@@ -54,7 +65,9 @@ def register():
         "username": username,
         "password": hashed_password.decode(),
         "imageURL": "./public/img/default_avatar.webp",
-        "id": secrets.token_hex(10)
+        "id": secrets.token_hex(10),
+        "stats": stats,
+        "achievements": achievements
     }
     
     userDB.insert_one(user_info)
@@ -74,7 +87,7 @@ def register():
     )
     
     res.headers['X-Content-Type-Options'] = "nosniff"
-    return res, 200
+    return username, True, "",res, 200
 
 def login():
     print("[DEBUG] login() function called", flush=True)
@@ -83,7 +96,9 @@ def login():
         if data is None:
              print("[DEBUG] login(): request.get_json() returned None. Check Content-Type?", flush=True)
              # Explicitly return 400 if JSON parsing failed or Content-Type wasn't application/json
-             return make_response(jsonify({"message": "Request must be JSON"}), 400) 
+             res=make_response(jsonify({"message": "Request must be JSON"}))
+             reason = "Request must be JSON"
+             return "",False,reason,res, 400
         
         print(f"[DEBUG] login(): Received JSON data: {data}", flush=True)
         username = data.get('username')
@@ -93,12 +108,16 @@ def login():
         if not username or not password:
             print(f"[DEBUG] login(): Missing username or password in JSON data.", flush=True)
             # Return 400 if essential fields are missing
-            return make_response(jsonify({"message": "Username and password required"}), 400)
+            res= make_response(jsonify({"message": "Username and password required"}))
+            reason = "Username and password required"
+            return username, False, reason, res, 400
 
     except Exception as e:
         # Catch potential errors during JSON parsing or initial access
         print(f"[DEBUG] login(): Error processing request JSON: {e}", flush=True)
-        return make_response(jsonify({"message": "Invalid request format"}), 400)
+        res = make_response(jsonify({"message": "Invalid request format"}))
+        reason = "Invalid request format"
+        return username,False,reason,res, 400
 
     # --- Proceed only if initial data parsing succeeded ---
     user_data = userDB.find_one({"username": username})
@@ -106,14 +125,16 @@ def login():
         print(f"[DEBUG] login(): User '{username}' not found in DB.", flush=True)
         res = make_response(jsonify({"message": "Invalid credentials"}))
         res.headers['X-Content-Type-Options'] = "nosniff"
-        return res, 400
+        reason = "Username does not exist"
+        return username, False, reason,res, 400
 
     stored_hashed_password_str = user_data.get("password")
     if not stored_hashed_password_str:
         print(f"[DEBUG] login(): No password stored for user '{username}'.", flush=True)
         res = make_response(jsonify({"message": "Server error: User record incomplete"}))
         res.headers['X-Content-Type-Options'] = "nosniff"
-        return res, 500
+        reason = "No password stored for user"
+        return username, False, reason, res, 500
         
     stored_hashed_password_bytes = stored_hashed_password_str.encode('utf-8')
     provided_password_bytes = password.encode('utf-8')
@@ -124,7 +145,8 @@ def login():
         print(f"[DEBUG] login(): bcrypt.checkpw error for user '{username}': {e}", flush=True)
         res = make_response(jsonify({"message": "Server error during authentication"}))
         res.headers['X-Content-Type-Options'] = "nosniff"
-        return res, 500
+        reason = "Server error during authentication"
+        return username, False, reason, res, 500
         
     if passwords_match:
         print(f"[DEBUG] login(): Password match successful for user: {username}", flush=True)
@@ -143,12 +165,13 @@ def login():
             samesite='Lax'
         )
         res.headers['X-Content-Type-Options'] = "nosniff"
-        return res
+        return username, True,"",res, 200
     else:
         print(f"[DEBUG] login(): Password mismatch for user: {username}", flush=True)
         res = make_response(jsonify({"message": "Invalid credentials"}))
         res.headers['X-Content-Type-Options'] = "nosniff"
-        return res, 400
+        reason = "Password Mismatch"
+        return username, False, reason,res, 400
 
 def logout():
     auth_token = request.cookies.get('auth_token')

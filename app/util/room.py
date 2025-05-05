@@ -1,73 +1,8 @@
 import uuid
-from util.player import *
 from util.authentication import *
 from util.database import roomDB
-from flask import request
 
-class Room:
-    def __init__(self):
-        self.roomName = ""
-        self.roomType = ""
-        self.passcode = ""
-        self.maxPlayers = 0
-        self.roomId = ''
-        self.players = []
-        self.currPlayers = 0
-        self.status = 'waiting'
-        self.it_player_id = None
-        self.player_positions = {}
 
-    def setRoomId(self, roomId: str):
-        self.roomId = roomId
-
-    def getRoomId(self):
-        return self.roomId
-
-    def setRoomName(self, roomName: str):
-        self.roomName = roomName
-
-    def getRoomName(self):
-        return self.roomName
-
-    def setRoomType(self, roomType: str):
-        self.roomType = roomType
-
-    def getRoomType(self):
-        return self.roomType
-
-    def setPasscode(self, passcode: str):
-        self.passcode = passcode
-
-    def getPasscode(self):
-        return self.passcode
-
-    def setMaxPlayers(self, maxPlayers: int):
-        self.maxPlayers = maxPlayers
-
-    def getMaxPlayers(self):
-        return self.maxPlayers
-
-    def addNewPlayer(self, player: Player):
-        self.players.append(player.__dict__)
-        self.currPlayers += 1
-
-    def getPlayers(self):
-        return self.players
-
-    def getCurrentNumberPlayers(self):
-        return self.currPlayers
-
-    def removePlayerByUsername(self, username: str):
-        initial_length = len(self.players)
-        self.players = [p for p in self.players if p.get('username') != username]
-        players_removed = initial_length - len(self.players)
-        if players_removed > 0:
-            self.currPlayers -= players_removed
-            # print(f"Removed {players_removed} player(s) with username {username}. Current players: {self.currPlayers}")
-            return True
-        else:
-            # print(f"Player with username {username} not found in room {self.roomId}.")
-            return False
 
 
 def create_room(request):

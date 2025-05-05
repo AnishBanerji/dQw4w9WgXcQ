@@ -2,21 +2,22 @@ import os
 os.environ['FLASK_APP'] = 'app/server.py'
 # os.environ['FLASK_DEBUG'] = '1' # Optionally uncomment for auto-reload
 
-from flask import Flask, request, send_file, abort, jsonify, make_response, redirect, url_for, g
-from flask_socketio import SocketIO, emit, join_room as join_socketio_room, leave_room
+from flask import Flask, request, send_file, abort, jsonify, make_response, redirect, url_for, g, session
+from flask_socketio import SocketIO, emit, join_room as join_socketio_room, leave_room 
 import datetime
 from util.room import create_room, find_rooms, getRoomInfo # Import DB functions
 from util.authentication import *
 from util.settings import settingsChange
 from util.database import roomDB, userDB # Import userDB for logout
 from util.achieve import *
-import os
+import hashlib
+from werkzeug.utils import secure_filename
 import eventlet
 from util.serve import *
 import uuid
 import random
 import math # Add math import for pi
-from PIL import Image # Import Pillow
+from PIL import Image, ImageDraw # Import Pillow
 from flask_limiter import Limiter # Import Limiter
 from flask_limiter.util import get_remote_address # Import address getter
 from functools import wraps # Added wraps for decorator
@@ -25,16 +26,17 @@ from dotenv import load_dotenv
 import json
 from datetime import datetime, timedelta, timezone # Added timezone
 import threading # Added threading
+import numpy as np
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import traceback
 app = Flask(__name__)
 # --- Rate Limiting Setup ---
-# limiter = Limiter(
-#     get_remote_address,
-#     app=app,
-#     default_limits=["200 per day", "50 per hour"],
-#     storage_uri="memory://",
-# )
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
 # --- End Rate Limiting Setup ---
 
 socketio = SocketIO(app)
@@ -98,7 +100,7 @@ sid_map = {} # { sid: {'player_id': player_id, 'room_id': room_id, 'username': u
 LOGS_DIR = os.path.join(os.path.dirname(__file__), 'logs')
 # LOG_FILE = os.path.join(LOGS_DIR, 'requests.log')
 LOG_FILE = os.path.join(LOGS_DIR, 'requests.log')
-
+FULL_LOG_FILE = os.path.join(LOGS_DIR, 'server.log')
 # --- Define initial player starting position --- 
 INITIAL_X = 1800
 INITIAL_Y = 1800
@@ -123,7 +125,55 @@ MAX_PLAYERS = 10
 MEETING_DURATION_SECONDS = 30
 EMERGENCY_BUTTON_COOLDOWN_SECONDS = 30 # Changed from 120 to 30
 
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    dt = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+    tb = traceback.format_exc()
+    with open(LOG_FILE, 'a') as f:
+        f.write(f"[{dt}]: ERROR - {str(e)}\n{tb}\n")
+    return jsonify({"error": "Internal server error"}), 500
+
+
 @app.before_request
+def log_raw():
+    try:
+        if request.path.startswith('/login') or request.path.startswith('/register'):
+            # Only log headers for login/register to avoid password logging
+            raw = f"HEADERS:\n{dict(request.headers)}"
+        else:
+            body = request.get_data(as_text=True)[:2048]
+            raw = f"HEADERS:\n{dict(request.headers)}\nBODY:\n{body}"
+        clean = redact_tokens_and_passwords(raw)
+        with open(FULL_LOG_FILE, 'a') as f:
+            f.write(f"--- REQUEST {request.method} {request.path} ---\n{clean}\n")
+    except Exception as e:
+        print(f"Request logging failed: {e}")
+ 
+
+@app.after_request
+def log_raw_response(response):
+    try:
+        body = response.get_data(as_text=True)[:2048]
+        raw = f"HEADERS:\n{dict(response.headers)}\nBODY:\n{body}"
+        clean = redact_tokens_and_passwords(raw)
+        with open(FULL_LOG_FILE, 'a') as f:
+            f.write(f"--- RESPONSE {request.method} {request.path} ---\n{clean}\n")
+    except Exception as e:
+        print(f"Response logging failed: {e}")
+    return response
+
+def redact_tokens_and_passwords(raw: str) -> str:
+    # Remove lines with auth token or password fields (case insensitive)
+    lines = raw.splitlines()
+    filtered = []
+    for line in lines:
+        if any(s in line.lower() for s in ['authorization', 'auth_token', 'password']):
+            continue
+        filtered.append(line)
+    return "\n".join(filtered)
+
+@app.before_request #problem
 def log_req():
     if not os.path.exists(LOGS_DIR):
         try:
@@ -131,19 +181,34 @@ def log_req():
         except OSError as e:
             print(f"Error creating logs directory {LOGS_DIR}: {e}")
             return
-    # dt = datetime.now()
     dt = datetime.now() # Use datetime.datetime explicitly
     dt_str = dt.strftime('%m-%d-%Y %H:%M:%S') # Use standard time format
-    ip = request.remote_addr
+    ip = request.headers.get('X-Real-IP') or request.remote_addr
     method = request.method
     path = request.path
-    log = f'[{dt_str}]: {ip} {method} {path}\n'
+    auth_token = request.cookies.get('auth_token',None)
+    username = None
+    if auth_token != None:
+        user = find_auth(auth_token)
+        username = user.get('username')
+    if username == None or auth_token ==None:
+        log = f'[{dt_str}]: {ip} {method} {path}'
+    else:
+        log = f'[{dt_str}]: {ip} ({username}) {method} {path}'
     print(log) # Keep console log
     try:
         with open(LOG_FILE, 'a') as f:
             f.write(log)
     except Exception as e:
         print(f"Error writing to log file {LOG_FILE}: {e}")
+
+@app.after_request
+def after_req_resp(response):
+    resp_code = str(response.status_code)
+    with open(LOG_FILE, 'a') as f:
+        f.write(" -> "+resp_code+'\n')
+    return response
+
 
 # === HTTP Routes (Keep HEAD versions) ===
 @app.route('/', methods=['GET'])
@@ -157,6 +222,7 @@ def load_login():
     return send_file(filepath,mimetype="text/html")
 
 @app.route('/register',methods=["GET"])
+@limiter.limit("10 per hour") # Stricter limit for registration page load
 def load_register():
     filepath = "public/html/register.html"
     return send_file(filepath,mimetype='text/html')
@@ -196,6 +262,8 @@ def make_room_route():
     # Otherwise, assume success (result should be the {'roomId': ...} dict)
     return jsonify(result), 200
 
+
+
 @app.route('/find-room',methods=['GET'])
 @login_required_http
 def load_findRoom():
@@ -207,6 +275,41 @@ def load_findRoom():
 def getSettings():
     filepath = "public/html/settings.html"
     return send_file(filepath,mimetype='text/html')
+
+@app.route('/stats', methods=['GET'])
+@login_required_http
+def getStats():
+    filepath = "public/html/stats.html"
+    auth_token = request.cookies.get('auth_token')
+    user = find_auth(auth_token)
+    stats = user.get('stats')
+    achievements = user.get('achievements')
+    with open(filepath, 'r') as f:
+        content = f.read()
+    content = content.replace('Placeholder1',str(stats.get('gamesPlayed',None)))
+    content = content.replace('Placeholder2',str(stats.get('gamesWon',None)))
+    if int(stats.get('gamesPlayed')) != 0:
+        winper = (int(stats.get('gamesWon'))/int(stats.get('gamesPlayed')))*100
+    else:
+        winper = 0
+    content = content.replace('Placeholder3',str(winper))
+    content = content.replace('Placeholder4',str(int(stats.get('gamesPlayed'))-int(stats.get('saboteurPlayed'))))
+    content = content.replace('Placeholder5',str(stats.get('tasksDone',None)))
+    content = content.replace('Placeholder6',str(stats.get('saboteurPlayed',None)))
+    content = content.replace('Placeholder7',str(stats.get('playersKilled',None)))
+
+    content = content.replace("Placeholder8", "Unlocked" if 'First Game Played' in achievements else "Locked")
+    content = content.replace("Placeholder9", "Unlocked" if 'First Game Won' in achievements else "Locked")
+    content = content.replace("Placeholder10", "Unlocked" if 'First Kill' in achievements else "Locked")
+    content = content.replace("Placeholder11", "Unlocked" if 'Play 5 Games' in achievements else "Locked")
+    content = content.replace("Placeholder12", "Unlocked" if 'Kill 5 Players' in achievements else "Locked")
+    content = content.replace("Placeholder13", "Unlocked" if 'Win 5 Games' in achievements else "Locked")
+
+    res = make_response(content)
+    res.headers['X-Content-Type-Options'] = "nosniff"
+    res.headers['Content-Type'] = 'text/html'
+
+    return res, 200
 
 @app.route('/room/<roomId>', methods=['GET'])
 @login_required_http
@@ -226,7 +329,7 @@ def get_room_info_api(roomId):
     return jsonify(roomInfo)
 
 @app.route('/public/js/<filename>', methods=['GET'])
-# @limiter.exempt # <<< Exempt this route - REMOVED
+@limiter.exempt # <<< Exempt this route
 def getPublicJS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'js', filename)
@@ -234,7 +337,7 @@ def getPublicJS(filename):
     else: return "Not Found", 404
 
 @app.route('/public/css/<filename>', methods=['GET'])
-# @limiter.exempt # <<< Exempt this route - REMOVED
+@limiter.exempt # <<< Exempt this route
 def getPublicCSS(filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'public', 'css', filename)
@@ -242,20 +345,75 @@ def getPublicCSS(filename):
     else: return "Not Found", 404
 
 @app.route('/public/img/<filename>', methods=['GET'])
-# @limiter.exempt # <<< Exempt this route - REMOVED
+@limiter.exempt # <<< Exempt this route
 def get_imgs(filename):
     mimetype = get_mimetype(filename)
     filepath = os.path.join("public", "img", filename) # Use os.path.join
     return send_file(filepath, mimetype=mimetype)
 
 @app.route('/favicon.ico')
-# @limiter.exempt # Favicon requests shouldn't be limited - REMOVED
+@limiter.exempt # Favicon requests shouldn't be limited
 def favicon():
     filepath = os.path.join(os.path.dirname(__file__), 'public', 'favicon.ico')
     try:
         return send_file(filepath, mimetype='image/vnd.microsoft.icon')
     except FileNotFoundError:
         abort(404) # Return 404 if the file doesn't exist
+
+def overlay_avatar_on_base(base_path, avatar_path, circle_center, circle_radius):
+    base = Image.open(base_path).convert("RGBA")
+    avatar = Image.open(avatar_path).convert("RGBA")
+
+    # Create circular mask
+    mask = Image.new("L", base.size, 0)
+    draw = ImageDraw.Draw(mask)
+    x, y = circle_center
+    draw.ellipse((x - circle_radius, y - circle_radius, x + circle_radius, y + circle_radius), fill=255)
+
+    # Resize avatar to fit circle
+    avatar = avatar.resize((circle_radius * 2, circle_radius * 2), Image.LANCZOS)
+
+    # Create transparent image to paste avatar in right spot
+    positioned_avatar = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    positioned_avatar.paste(avatar, (x - circle_radius, y - circle_radius), avatar)
+
+    # Composite avatar using mask
+    combined = Image.composite(positioned_avatar, base, mask)
+
+    return combined
+
+@app.route('/api/user/update', methods=['POST'])
+def update_user():
+    avatar = request.files.get('avatar')
+
+    auth_token = request.cookies.get("auth_token")
+    if not auth_token:
+        return jsonify({"message": "Access denied"}), 403
+
+    hashed_token = hashlib.sha256(auth_token.encode()).hexdigest()
+    current_user = userDB.find_one({"hashed_token": hashed_token})
+
+    if not current_user:
+        return jsonify({"message": "Current user does not exist"}), 403
+
+    if avatar:
+        filename = secure_filename(avatar.filename)
+        filepath = os.path.join("./public/img", filename)
+        avatar.save(filepath)
+
+        image_url = f"/public/img/{filename}"
+
+        userDB.update_one({"hashed_token" : hashed_token}, {"$set": {"imageURL": image_url}})
+
+        result = overlay_avatar_on_base("./public/img/Character.png", f"./public/img/{filename}", (197, 100), 28)
+        filepath = os.path.join("./public/img", current_user["username"] + "_model.png")
+        result.save(filepath)
+
+        model_url = f"/public/img/" + current_user["username"] + "_model.png"   
+
+        userDB.update_one({"hashed_token" : hashed_token}, {"$set": {"characterURL": model_url}})
+
+    return jsonify({"message": "Profile updated successfully"})
 
 @app.route('/api/users/@me', methods=['GET'])
 def get_user_profile():
@@ -270,14 +428,30 @@ def get_user_profile():
     
     return jsonify({
         "username": user.get("username", "Unknown"), 
-        "avatar_url": user.get("imageURL", "/public/img/default_avatar.webp") # Use imageURL field if exists
+        "avatar_url": user.get("imageURL", "./public/img/default_avatar.webp") # Use imageURL field if exists
     })
 
-# Add URL rules (Keep HEAD versions)
-app.add_url_rule('/api/users/settings', 'settingsChange', login_required_http(settingsChange), methods=['POST'])
-app.add_url_rule('/register', 'register_route', register, methods=['POST'])
-app.add_url_rule('/login', 'login_route', login, methods=['POST'])
 
+# Add URL rules (Keep HEAD versions)
+app.add_url_rule('/api/users/settings', 'settingsChange', limiter.limit("10 per hour")(login_required_http(settingsChange)), methods=['POST'])
+@app.route('/login',methods=['POST'])
+def handle_login():
+    username, success, reason, res, code = login()
+    log_auth_attempt(username, success,reason)
+    return res, code
+
+@app.route('/register',methods=['POST'])
+def handle_reg():
+    username, success, reason, res, code = register()
+    log_auth_attempt(username, success, reason)
+    return res, code
+
+def log_auth_attempt(username, success, reason=""):
+    dt = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+    status = "SUCCESS" if success else f"FAILURE ({reason})"
+    log_line = f"[{dt}]: LOGIN ATTEMPT - {username} -> {status}"
+    with open(LOG_FILE, 'a') as f:
+        f.write(log_line)
 # === Socket IO Handlers (Keep HEAD versions for find_rooms, join_room, start_game, attempt_kill, attempt_task, disconnect) ===
 
 @socketio.on('find_rooms')
@@ -458,6 +632,12 @@ def handle_start_game(data):
     if killer_player_id:
         killer_sid = next((csid for csid, cinfo in sid_map.items() if cinfo.get('room_id') == room_id and cinfo.get('player_id') == killer_player_id), None)
         if killer_sid: 
+            player = find_auth(killer_player_id)
+            player_stats = player["stats"]
+            player_stats["saboteurPlayed"] += 1
+            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+            roomDB.update_one({'_id': room_id}, {"$set": {"saboteurUsername": player["username"]}})
+            
             emit('you_are_killer', {}, room=killer_sid)
             # --- ADDED: Emit initial cooldown to killer ---
             emit('kill_cooldown_update', {'cooldown_ends_at': initial_kill_ready_time.isoformat()}, room=killer_sid)
@@ -590,6 +770,7 @@ def handle_attempt_kill(data):
     if not killer_player_id: return
     try:
         room_doc = getRoomInfo(room_id)
+        player_list = room_doc.get('players', [])
         if room_doc.get('status') != 'playing': return
         if room_doc.get('it_player_id') != killer_player_id: return
 
@@ -627,6 +808,17 @@ def handle_attempt_kill(data):
                         update_victim = roomDB.update_one({'_id': room_id, 'players.id': victim_id}, {'$set': {'players.$.is_dead': True}})
                         if update_victim.modified_count > 0:
                             kill_successful = True
+
+                            # If victim killed, add to userDB with user's stats
+                            # Assumes killer_player_id is equivalent to the player's username
+                            #
+                            # Grabs stats, appends playersKilled by 1, then updates with new stats
+                            player = find_auth(killer_player_id)
+                            if player:
+                                player_stats = userDB.find_one({"username": killer_player_id})["stats"]
+                            player_stats["playersKilled"] += 1
+                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                             
                             # --- ADDED: Set next kill cooldown --- 
                             kill_cooldown_seconds = 5
@@ -650,6 +842,19 @@ def handle_attempt_kill(data):
                                 killer_username = killer_info.get('username', 'Unknown') if killer_info else 'Unknown'
                                 if alive_players_count <= 1:
                                     print(f"[GAME_END] Killer ({killer_username}) wins in room {room_id}!")
+
+                                    # given a list of all players in lobby, add 1 to games played for all of them
+                                    for player in player_list:
+                                        player_stats = find_auth(player["id"])["stats"]
+                                        player_stats["gamesPlayed"] += 1
+
+                                        # check if they're killer, somehow, and add a win
+                                        if player["username"] == find_auth(killer_player_id)["username"]:
+                                            player_stats["gamesWon"] += 1
+                                        
+                                        # update for each player their new stats
+                                        userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                                    achieve(player_list)
                                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                                     emit('game_over', {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win', 'winner_id': killer_player_id, 'winner_username': killer_username, 'status': 'game_over'}, room=room_id)
                                     return # Exit handler early
@@ -768,9 +973,34 @@ def handle_complete_task_minigame(data):
                 total_count = updated_room_doc.get('totalTasks', 0)
                 emit('task_completed', {'task_id': task_id_completed, 'player_id': player_id, 'completedTasks': completed_count, 'totalTasks': total_count}, room=room_id)
 
+                # If task completed, add to userDB with user's stats
+                # Assumes player_id is equivalent to the player's username
+                #
+                # Grabs stats, appends tasksDone by 1, then updates with new stats
+                player = find_auth(player_id)
+                if player:
+                    player_stats = userDB.find_one({"username": player_id})["stats"]
+                player_stats = userDB.find_one({"username": player_id})["stats"]
+                player_stats["tasksDone"] += 1
+                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
+
                 # Check Game End Condition (Players Win)
                 if completed_count >= total_count > 0:
                     print(f"[GAME_END] Players win by completing all tasks ({completed_count}/{total_count}) in room {room_id}!")
+
+                    # given a list of all players in lobby, add 1 to games played for all of them
+                    for player in player_list:
+                        player_stats = find_auth(player["id"])["stats"]
+                        player_stats["gamesPlayed"] += 1
+
+                        # check if they're not killer, somehow, and add a win
+                        if player["username"] != room_doc["saboteurUsername"]:
+                            player_stats["gamesWon"] += 1
+                        
+                        # update for each player their new stats
+                        userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+                    achieve(player_list)
                     roomDB.update_one({'_id': room_id}, {'$set': {'status': 'game_over'}})
                     emit('game_over', {'message': 'Players Win! All tasks completed!', 'outcome': 'players_win', 'status': 'game_over'}, room=room_id)
                     # Note: No early return needed here as it's the end of the handler
@@ -895,7 +1125,7 @@ def end_meeting(room_id):
             print(f"[MEETING] Proceeding to end meeting for room {room_id}.")
             # --- Tally Votes (moved print inside) ---
             print(f"[MEETING] Ending meeting for room {room_id}.") # Combined print
-
+            player_list = room_doc.get('players', [])
             # --- Tally Votes ---
             votes = room_doc.get('meeting_votes', {})
             vote_counts = {}
@@ -943,6 +1173,19 @@ def end_meeting(room_id):
                     if ejected_player_id == killer_id:
                         # Crew Wins
                         print(f"[GAME_END] Crew wins by ejecting killer {ejected_player_id} in room {room_id}!")
+
+                        # given a list of all players in lobby, add 1 to games played for all of them
+                        for player in new_player_list:
+                            player_stats = find_auth(player["id"])["stats"]
+                            player_stats["gamesPlayed"] += 1
+
+                            # check if they're not killer, somehow, and add a win
+                            if player["username"] != find_auth(killer_id)["username"]:
+                                player_stats["gamesWon"] += 1
+                            
+                            # update for each player their new stats
+                            userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                         final_status = 'game_over'
                         game_over_data = {'message': 'Crew Wins! The Killer was ejected!', 'outcome': 'crew_win_vote', 'status': 'game_over'}
                     else:
@@ -953,6 +1196,19 @@ def end_meeting(room_id):
                             killer_info = next((p for p in new_player_list if p.get('id') == killer_id), None)
                             killer_username = killer_info.get('username', 'Unknown') if killer_info else 'Unknown'
                             print(f"[GAME_END] Killer ({killer_username}) wins after ejection in room {room_id}!")
+
+                            # given a list of all players in lobby, add 1 to games played for all of them
+                            for player in new_player_list:
+                                player_stats = find_auth(player["id"])["stats"]
+                                player_stats["gamesPlayed"] += 1
+
+                                # check if they're killer, somehow, and add a win
+                                if player["username"] == killer_username:
+                                    player_stats["gamesWon"] += 1
+                                
+                                # update for each player their new stats
+                                userDB.update_one({"username": player["username"]}, {"$set": {"stats": player_stats}})
+
                             final_status = 'game_over'
                             game_over_data = {'message': f'Game Over: {killer_username} (Killer) Wins!', 'outcome': 'killer_win_vote', 'winner_id': killer_id, 'winner_username': killer_username, 'status': 'game_over'}
 
@@ -976,7 +1232,9 @@ def end_meeting(room_id):
 
             # --- Emit Game Over if necessary using socketio.emit ---
             if game_over_data:
+                achieve(player_list)
                 socketio.emit('game_over', game_over_data, room=room_id)
+                
 
         # --- Lock automatically released by `with` statement ---
 
@@ -1222,5 +1480,6 @@ def handle_meeting_chat(data):
         print(f"[CHAT ERROR] Room {room_id} not found during meeting_chat.")
     except Exception as e:
         print(f"[CHAT ERROR] Unexpected error during meeting_chat for room {room_id}: {e}")
+
 
 # Add other handlers (handle_meeting_chat, handle_player_vote) here later
